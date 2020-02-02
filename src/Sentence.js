@@ -19,40 +19,40 @@ module.exports = class Sentence {
         let matches = sentence.match(/([{](\s*([a-z-])*,?\s*)*[}])/gi)
 
         for(let match of matches) {
-            let a, p, split = match.replace(/{|}|\s/g, '').split(',')
-            
-            let alternatives = []
-            for(let key of split) {
-                if(key.substr(0, 2) == 'a-') {
-                    a = true
-                    key = key.slice(2)
-                }
-
-                if(key.slice(-1) === 's') {
-                    let trimmed = key.substr(0, key.length - 1)
-                    if(Object.keys(this.vocab).includes(trimmed)) {
-                        p = true
-                        key = trimmed
-                    }
-                }
-
-                alternatives = alternatives.concat(this.vocab[key])
-            }
-
-            let word = alternatives.any()
-            if(a) {
-                word = `${isVowel(word[0]) ? 'an' : 'a'} ${word}`
-            }
-            if(p) {
-                word += 's'
-            }
-
-            sentence = sentence.replace(match, word)
+            sentence = sentence.replace(match, this.resolveWord(match))
         }
 
         Object.defineProperty(this, 'sentence', {
             value: sentence
         })
+    }
+
+    resolveWord(mask) {
+        let a,
+            p,
+            alternatives = [],
+            split = mask.replace(/{|}|\s/g, '').split(',')
+
+        for(let key of split) {
+            if(key.substr(0, 2) == 'a-') {
+                a = true
+                key = key.slice(2)
+            }
+            if(key.slice(-2) === '-s') {
+                let trimmed = key.substr(0, key.length - 2)
+                if(Object.keys(this.vocab).includes(trimmed)) {
+                    p = true
+                    key = trimmed
+                }
+            }
+            alternatives = alternatives.concat(this.vocab[key])
+        }
+
+        let word = alternatives.any()
+        if(a) word = `${isVowel(word[0]) ? 'an' : 'a'} ${word}`
+        if(p) word += 's'
+
+        return word
     }
 
     get() {
