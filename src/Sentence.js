@@ -4,20 +4,10 @@ module.exports = class Sentence {
     constructor(template, vocab, options) {
         Object.defineProperties(this, {
             template: {
-                get() {
-                    return template
-                },
-                set(newTemplate) {
-                    template = Array.isArray(newTemplate) ? newTemplate.any() : newTemplate
-                }
+                value: Array.isArray(template) ? template.any() : template
             },
             vocab: {
-                get() {
-                    return vocab
-                },
-                set(newVocab) {
-                    vocab = newVocab
-                }
+                value: vocab
             }
         })
 
@@ -26,15 +16,38 @@ module.exports = class Sentence {
 
     generate() {
         let sentence = this.template
-        let matches = sentence.match(/([{](\s*(\w)*,?\s*)*[}])/gi)
+        let matches = sentence.match(/([{](\s*([a-z-])*,?\s*)*[}])/gi)
 
         for(let match of matches) {
-            let split = match.replace(/{|}|\s/g, '').split(',')
+            let a, p, split = match.replace(/{|}|\s/g, '').split(',')
             
             let alternatives = []
-            while(split.length) alternatives = alternatives.concat(this.vocab[split.pop()].any())
+            for(let key of split) {
+                if(key.substr(0, 2) == 'a-') {
+                    a = true
+                    key = key.slice(2)
+                }
 
-            sentence = sentence.replace(match, alternatives.any())
+                if(key.slice(-1) === 's') {
+                    let trimmed = key.substr(0, key.length - 1)
+                    if(Object.keys(this.vocab).includes(trimmed)) {
+                        p = true
+                        key = trimmed
+                    }
+                }
+
+                alternatives = alternatives.concat(this.vocab[key])
+            }
+
+            let word = alternatives.any()
+            if(a) {
+                word = `${isVowel(word[0]) ? 'an' : 'a'} ${word}`
+            }
+            if(p) {
+                word += 's'
+            }
+
+            sentence = sentence.replace(match, word)
         }
 
         Object.defineProperty(this, 'sentence', {
@@ -45,6 +58,11 @@ module.exports = class Sentence {
     get() {
         return this.sentence
     }
+}
+
+function isVowel(c) {
+    c = c.toLowerCase()
+    return ['a', 'e', 'i', 'o', 'u'].includes(c)
 }
 
 Array.prototype.any = function() {
