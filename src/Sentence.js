@@ -8,7 +8,7 @@ module.exports = class Sentence {
                     return template
                 },
                 set(newTemplate) {
-                    template = newTemplate
+                    template = Array.isArray(newTemplate) ? newTemplate.any() : newTemplate
                 }
             },
             vocab: {
@@ -16,7 +16,7 @@ module.exports = class Sentence {
                     return vocab
                 },
                 set(newVocab) {
-                    vocab = newVocab || getStandardVocabulary()
+                    vocab = newVocab
                 }
             }
         })
