@@ -13,7 +13,9 @@ const InitialVocabulary = {
     noun: ['world']
 }
 const InitialOptions = {
-    allowDuplicates: true
+    allowDuplicates: true,
+    capitalize: true,
+    preserveCurlyBrackets: false
 }
 
 /**
@@ -31,7 +33,7 @@ function SentenceInterface(template, vocabulary, options) {
     return new Sentence(
         template || standardTemplates,
         vocabulary || standardVocabulary,
-        options || standardOptions
+        Object.assign(standardOptions, options)
     )
 }
 

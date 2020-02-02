@@ -11,6 +11,7 @@ module.exports = class Sentence {
             }
         })
 
+        this.setOptions(options)
         this.generate()
     }
 
@@ -53,6 +54,26 @@ module.exports = class Sentence {
         if(p) word += 's'
 
         return word
+    }
+
+    setOptions(options) {
+        let {
+            allowDuplicates,
+            capitalize,
+            preserveCurlyBrackets
+        } = options
+
+        Object.defineProperties(this, {
+            allowDuplicates: {
+                value: allowDuplicates
+            },
+            capitalize: {
+                value: capitalize
+            },
+            preserveCurlyBrackets: {
+                value: preserveCurlyBrackets
+            }
+        })
     }
 
     get() {
