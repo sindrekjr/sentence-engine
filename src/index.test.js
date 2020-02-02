@@ -1,4 +1,4 @@
-const {Sentence} = require('./index.js')
+const Sentence = require('./index.js')
 
 /**
  * Constants
@@ -10,7 +10,7 @@ const Vocabulary = {
 
 test('toBeSameSentenceOnTwoGetCalls', () => {
     let template = 'This is a really {adjective} sentence that I don\'t think should ever {verb}.'
-    let sentence = new Sentence(template, Vocabulary)
+    let sentence = Sentence(template, Vocabulary)
 
     expect(sentence.get()).toBe(sentence.get())
 })

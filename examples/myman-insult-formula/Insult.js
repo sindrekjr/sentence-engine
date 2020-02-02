@@ -1,6 +1,6 @@
 'use strict'
 
-const { Sentence } = require('../../src')
+const Sentence = require('../../src')
 const {
     templates,
     vocabulary
