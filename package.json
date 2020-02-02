@@ -4,6 +4,7 @@
   "description": "Template-based sentence generator with full user control. ",
   "main": "./src/index.js",
   "scripts": {
+    "demo": "node ./examples/myman-insult-formula/index.js",
     "start": "node ./src/index.js",
     "test": "jest"
   },

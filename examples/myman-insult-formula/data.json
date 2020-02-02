@@ -1,0 +1,10 @@
+{
+    "templates": [
+        "Your {feature} looks like {a-genitalia}{suffix}, you {genitalia}{suffix}"
+    ],
+    "vocabulary": {
+        "feature": ["head", "nose", "mouth", "face"],
+        "genitalia": ["ass", "butt", "dick"],
+        "suffix": ["bag", "wipe", "muncher", "flap", "bomb"]
+    }
+}
