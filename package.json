@@ -1,0 +1,30 @@
+{
+  "name": "sentence-engine",
+  "version": "0.1.0",
+  "description": "Template-based sentence generator with full user control. ",
+  "main": "./src/index.js",
+  "scripts": {
+    "start": "node ./src/index.js",
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sindrekjr/sentence-engine.git"
+  },
+  "keywords": [
+    "sentence",
+    "language",
+    "template",
+    "comedy",
+    "text-gen"
+  ],
+  "author": "sindrekjr",
+  "license": "Unlicense",
+  "bugs": {
+    "url": "https://github.com/sindrekjr/sentence-engine/issues"
+  },
+  "homepage": "https://github.com/sindrekjr/sentence-engine#readme",
+  "dependencies": {
+    "jest": "^25.1.0"
+  }
+}
