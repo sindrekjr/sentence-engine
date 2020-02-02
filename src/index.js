@@ -35,9 +35,9 @@ function SentenceInterface(template, vocabulary, options) {
     )
 }
 
-SentenceInterface.setStandardTemplates = (templates) => standardTemplates = templates
-SentenceInterface.setStandardVocab = (vocab) => standardVocabulary = vocab
-SentenceInterface.setStandardOptions = (options) => standardOptions = options
+SentenceInterface.setStandardTemplates = (templates) => standardTemplates = templates || InitialTemplates
+SentenceInterface.setStandardVocab = (vocab) => standardVocabulary = vocab || InitialVocabulary
+SentenceInterface.setStandardOptions = (options) => standardOptions = options || InitialOptions
 
 // Export the interface
 module.exports = SentenceInterface

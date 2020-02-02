@@ -11,8 +11,34 @@ const vocabulary = {
 }
 
 // the Sentence constructor takes a template and vocabulary
-let sentence = new Sentence('This is {a-adjective} template.', vocabulary)
+let sentence = Sentence('This is {a-adjective} template.', vocabulary)
 
 // In this case the output could be "This is an awesome template."
 console.log(sentence.get())
 ```
+In the above example, we pass a small vocabulary as well as a template to the Sentence API as we call it, but it's also possible to define standard settings onto the module to persist throughout multiple uses. Like so: 
+```
+Sentence.setStandardTemplates([
+  '{a-animal} crossed the {object}.',
+  'We would {feeling} to help.'
+])
+Sentence.setStandardVocab({
+  animal: ['duck', 'fox'],
+  object: ['road', 'chessboard'],
+  feeling: ['love', 'hate']
+})
+
+// The following line will now create a sentence instance based on the above settings
+let sentence = Sentence()
+console.log(sentence.get())
+
+// Changing the standard variables in the future will not affect the previously created sentence object. 
+Sentence.setStandardTemplates()
+Sentence.setStandardVocab()
+
+// And so the following line will output the same as the previous console output
+console.log(sentence.get())
+```
+
+### Development
+This project is still in early stages and likely to see fundamental changes. 
