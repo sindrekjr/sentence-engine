@@ -1,3 +1,4 @@
+'use strict'
 
 const Sentence = require('../../src')
 
