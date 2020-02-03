@@ -1,6 +1,6 @@
 {
   "name": "sentence-engine",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Template-based sentence generator with full user control. ",
   "main": "./src/index.js",
   "scripts": {
@@ -26,6 +26,7 @@
   },
   "homepage": "https://github.com/sindrekjr/sentence-engine#readme",
   "dependencies": {
-    "jest": "^25.1.0"
+    "jest": "^25.1.0",
+    "lodash": "^4.17.15"
   }
 }
