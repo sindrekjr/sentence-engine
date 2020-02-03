@@ -5,18 +5,11 @@ const Sentence = require('./Sentence.js')
 /**
  * Constants that keep the initial settings
  */
-const InitialTemplates = [
-    '{greeting}, {noun}.'
-]
-const InitialVocabulary = {
-    greeting: ['hello'],
-    noun: ['world']
-}
-const InitialOptions = {
-    allowDuplicates: true,
-    capitalize: true,
-    preserveCurlyBrackets: false
-}
+const {
+    templates: InitialTemplates,
+    vocabulary: InitialVocabulary,
+    options: InitialOptions,
+} = require('./defaults.json')
 
 /**
  * Variables to store standard settings for the sentence engine

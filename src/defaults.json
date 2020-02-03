@@ -1,0 +1,14 @@
+{
+    "templates": [
+        "{greeting}, {noun}."
+    ],
+    "vocabulary": {
+        "greeting": ["hello"],
+        "noun": ["world"]
+    },
+    "options": {
+        "allowDuplicates": true,
+        "capitalize": true,
+        "preserveCurlyBrackets": false
+    }
+}
