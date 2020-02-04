@@ -1,44 +1,61 @@
 # sentence-engine
 This is a straightforward sentence generator which takes a template and a vocabulary that may be sorted in any way desired. It runs on [Node.js](https://nodejs.org/).
 
-The package was inspired by the formula for insults created on episode S2E8 "The Impertence of Communicationizing" of the TV show Better Off Ted, and initially just put together as an on-a-whim proof-of-concept.
+## Features
+* Unbound vocabulary; define use case-specific categories or adhere to conventional keywords
+* Object-oriented
+* Lightweight
 
-### Usage
+## Usage
+#### Install
 ```
+> npm i sentence-engine
+```
+#### Import & Use
+```
+// import: 
 const Sentence = require('sentence-engine')
-const vocabulary = {
+
+// initialize Sentence object, here with no arguments:
+let sentence1 = Sentence()
+console.log(sentence1) // <-- outputs "Sentence { }" (object instance)
+console.log(sentence1.get()) // <-- outputs "hello, world" (generated sentence string)
+```
+Calling Sentence() creates an object of a Sentence class which will store a template, vocabulary, and a set of options. In the case above we pass no arguments and the object is simply given some [default values](./src/defaults.json) and resolve to "hello, world". See [Sentence.js](./src/Sentence.js) for the class implementation. 
+
+By passing a template and/or vocabulary, the sentence engine becomes much more powerful. See examples below. 
+
+```
+let template = 'This is {a-adjective} template.'
+let vocabulary = {
   adjective: ['awesome', 'bad', 'great', 'repulsive']
 }
-
-// the Sentence constructor takes a template and vocabulary
-let sentence = Sentence('This is {a-adjective} template.', vocabulary)
-
-// In this case the output could be "This is an awesome template."
-console.log(sentence.get())
+console.log(Sentence(template, vocabulary).get()) // <-- might output "This is an awesome template"
 ```
-In the above example, we pass a small vocabulary as well as a template to the Sentence API as we call it, but it's also possible to define standard settings onto the module to persist throughout multiple uses. Like so: 
+In the above example, we pass a single template. We can also pass several templates for the engine to choose between. 
 ```
-Sentence.setStandardTemplates([
-  '{a-animal} crossed the {object}.',
-  'We would {feeling} to help.'
-])
-Sentence.setStandardVocab({
-  animal: ['duck', 'fox'],
-  object: ['road', 'chessboard'],
-  feeling: ['love', 'hate']
-})
-
-// The following line will now create a sentence instance based on the above settings
-let sentence = Sentence()
-console.log(sentence.get())
-
-// Changing the standard variables in the future will not affect the previously created sentence object. 
-Sentence.setStandardTemplates()
-Sentence.setStandardVocab()
-
-// And so the following line will output the same as the previous console output
-console.log(sentence.get())
+let templates = [
+  'This is {a-adjective} template.',
+  'This template is {adjective}.'
+]
+console.log(Sentence(templates, vocabulary).get())
+```
+Some use cases may want to store the instance of the Sentence object in a variable for later use. Doing this allows the object generate a new sentence with the arguments that were passed initially. 
+```
+let sentence = Sentence(templates, vocabulary) // Sentence constructor initializes itself with generate()
+sentence.generate() // user may call generate method to recreate the sentence on the object
 ```
 
-### Development
-This project is still in early stages and likely to see fundamental changes. 
+#### Examples
+* [Animal crossing](./examples/animal-crossing)
+* [Hello, world](./examples/hello-world)
+* [Nonsense](./examples/nonsense)
+
+## Development
+Early stages and likely to see fundamental changes. 
+
+### Contributing
+Sure!
+
+### Background
+The package is inspired by the TV show Better Off Ted's episode S2E8 "The Impertence of Communicationizing", and started off as a proof-of-concept for the insult formula introduced in the episode. 
