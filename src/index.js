@@ -16,9 +16,7 @@ const {
  * Variables to store standard settings for the sentence engine
  * The standard settings can be changed by the user
  */
-let standardTemplates = [...InitialTemplates]
-let standardVocabulary = _.cloneDeep(InitialVocabulary)
-let standardOptions = _.cloneDeep(InitialOptions)
+let standardTemplates, standardVocabulary, standardOptions
 
 /**
  * The function exported as the interface for the package
@@ -42,9 +40,52 @@ function SentenceInterface(template, vocabulary, options) {
     )
 }
 
-SentenceInterface.setStandardTemplates = (templates) => standardTemplates = Array.isArray(templates) ? templates : _.cloneDeep(InitialTemplates)
-SentenceInterface.setStandardVocab = (vocab) => standardVocabulary = vocab || _.cloneDeep(InitialVocabulary)
-SentenceInterface.setStandardOptions = (options) => standardOptions = options ? Object.assign(standardOptions, options) : _.cloneDeep(InitialOptions)
+/**
+ * Assign a set of public utility methods to the interface
+ */
+Object.assign(SentenceInterface, {
+    /**
+     * Adders
+     */
+    addTemplates(...templates) {
+        this.setTemplates(standardTemplates.concat(templates))
+    },
+    addVocab(vocab) {
+
+    },
+
+    /**
+     * Getters
+     */
+    getTemplates() {
+        return standardTemplates
+    },
+    getVocab() {
+        return standardVocabulary
+    },
+    getOptions() {
+        return standardOptions
+    },
+
+    /**
+     * Setters
+     */
+    setTemplates(...templates) {
+        templates = templates.flat()
+        standardTemplates = templates.length ? templates : [...InitialTemplates]
+    },
+    setVocab(vocab) {
+        standardVocabulary = vocab || _.cloneDeep(InitialVocabulary)
+    },
+    setOptions(options) {
+        standardOptions = options ? Object.assign(standardOptions, options) : _.cloneDeep(InitialOptions)
+    }
+})
+
+// Call setters to initialize standard settings
+SentenceInterface.setTemplates()
+SentenceInterface.setVocab()
+SentenceInterface.setOptions()
 
 // Export the interface
 module.exports = SentenceInterface
