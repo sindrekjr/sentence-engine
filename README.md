@@ -1,5 +1,5 @@
 # sentence-engine
-This is a straightforward sentence generator which takes a template and a vocabulary that may be sorted in any way desired. It runs on [Node.js](https://nodejs.org/).
+A simple sentence generator running on [Node.js](https://nodejs.org/). It takes a template and vocabulary freely defined by the user. 
 
 ## Features
 * Unbound vocabulary; define use case-specific categories or adhere to conventional keywords
@@ -21,7 +21,7 @@ let sentence1 = Sentence()
 console.log(sentence1) // <-- outputs "Sentence { }" (object instance)
 console.log(sentence1.get()) // <-- outputs "hello, world" (generated sentence string)
 ```
-Calling Sentence() creates an object of a Sentence class which will store a template, vocabulary, and a set of options. In the case above we pass no arguments and the object is simply given some [default values](./src/defaults.json) and resolve to "hello, world". See [Sentence.js](./src/Sentence.js) for the class implementation. 
+Calling Sentence() creates an object of a Sentence class which stores a template, vocabulary, and a set of options. In the case above we pass no arguments and the object is simply given some [default values](./src/defaults.json) and resolves to "hello, world". See [Sentence.js](./src/Sentence.js) for the class implementation. 
 
 By passing a template and/or vocabulary, the sentence engine becomes much more powerful. See examples below. 
 
@@ -40,7 +40,7 @@ let templates = [
 ]
 console.log(Sentence(templates, vocabulary).get())
 ```
-Some use cases may want to store the instance of the Sentence object in a variable for later use. Doing this allows the object generate a new sentence with the arguments that were passed initially. 
+Some use cases may want to store an instance of Sentence for later use. Doing this allows the user to generate a new sentence with the arguments that were passed initially. 
 ```
 let sentence = Sentence(templates, vocabulary) // Sentence constructor initializes itself with generate()
 sentence.generate() // user may call generate method to recreate the sentence on the object
