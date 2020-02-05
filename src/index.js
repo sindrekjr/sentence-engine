@@ -51,7 +51,7 @@ Object.assign(SentenceInterface, {
         this.setTemplates(standardTemplates.concat(templates))
     },
     addVocab(vocab) {
-
+        _.merge(standardVocabulary, vocab)
     },
 
     /**
