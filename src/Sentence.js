@@ -1,10 +1,12 @@
 'use strict'
 
+const _ = require('lodash')
+
 module.exports = class Sentence {
-    constructor(template, vocab, options) {
+    constructor(templates, vocab, options) {
         Object.defineProperties(this, {
-            template: {
-                value: Array.isArray(template) ? template.any() : template
+            templates: {
+                value: Array.isArray(templates) ? templates : [template]
             },
             vocab: {
                 value: vocab
@@ -16,7 +18,7 @@ module.exports = class Sentence {
     }
 
     generate() {
-        let sentence = this.template
+        let sentence = this.templates.any()
         let matches = sentence.match(/([{]+(\s*([a-z-])*,?\s*)*[}]+)/gi)
 
         for(let match of matches) {
@@ -56,6 +58,20 @@ module.exports = class Sentence {
         return word
     }
 
+    get() {
+        return this.sentence
+    }
+
+    /**
+     * Adders
+     */
+    addTemplates(...templates) {
+        this.templates = this.templates.concat(templates.flat())
+    }
+    addVocab(vocab) {
+        _.merge(this.vocab, vocab)
+    }
+
     setOptions(options) {
         let {
             allowDuplicates,
@@ -74,10 +90,6 @@ module.exports = class Sentence {
                 value: preserveCurlyBrackets
             }
         })
-    }
-
-    get() {
-        return this.sentence
     }
 }
 
