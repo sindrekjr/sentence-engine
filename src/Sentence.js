@@ -6,7 +6,7 @@ module.exports = class Sentence {
     constructor(templates, vocab, options) {
         Object.defineProperties(this, {
             templates: {
-                value: Array.isArray(templates) ? templates : [template]
+                value: Array.isArray(templates) ? templates : [templates]
             },
             vocab: {
                 value: vocab
