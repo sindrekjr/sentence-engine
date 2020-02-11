@@ -17,7 +17,7 @@ module.exports = class Sentence {
 
     generate() {
         let sentence = this.template
-        let matches = sentence.match(/([{]+(\s*([a-z-])*,?\s*)*[}]+)/gi)
+        let matches = sentence.match(/([{]+(\s*([a-z-0-9])*,?\s*)*[}]+)/gi)
 
         for(let match of matches) {
             sentence = sentence.replace(match, this.resolveWord(match))
