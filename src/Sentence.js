@@ -1,6 +1,6 @@
 'use strict'
 
-const _ = require('lodash')
+const { merge } = require('lodash')
 
 module.exports = class Sentence {
     constructor(templates, vocab, options) {
@@ -18,7 +18,7 @@ module.exports = class Sentence {
     }
 
     generate() {
-        let sentence = this.template
+        let sentence = this.templates.any()
         let matches = sentence.match(/([{]+(\s*([a-z-0-9])*,?\s*)*[}]+)/gi)
 
         for(let match of matches) {
@@ -69,7 +69,7 @@ module.exports = class Sentence {
         this.templates = this.templates.concat(templates.flat())
     }
     addVocab(vocab) {
-        _.merge(this.vocab, vocab)
+        merge(this.vocab, vocab)
     }
 
     setOptions(options) {

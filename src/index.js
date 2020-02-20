@@ -1,7 +1,7 @@
 'use strict'
 
 const Sentence = require('./Sentence.js')
-const _ = require('lodash')
+const { cloneDeep, merge } = require('lodash')
 
 /**
  * Constants that keep the initial settings
@@ -22,14 +22,22 @@ let standardTemplates, standardVocabulary, standardOptions
  * The function exported as the interface for the package
  */
 function SentenceInterface(template, vocabulary, options) {
-    if(vocabulary && typeof(vocabulary) != 'object') {
+    if(template 
+        && Object.prototype.toString.call(template) !== '[object String]'
+        && Object.prototype.toString.call(template[0]) !== '[object String]'
+    ) {
+        throw new TypeError('Argument "template" was expected to be a string or array containing a string.')
+    }
+
+    if(vocabulary && Object.prototype.toString.call(vocabulary) !== '[object Object]') {
         throw new TypeError('Argument "vocabulary" was expected to be an object.')
     }
-    if(options && typeof(options) != 'object') {
-        if(typeof(options) != 'object') {
+
+    if(options) {
+        if(Object.prototype.toString.call(options) !== '[object Object]') {
             throw new TypeError('Argument "options" was expected to be an object.')
         } else {
-            options = Object.assign(_.cloneDeep(standardOptions), options)
+            options = Object.assign(cloneDeep(standardOptions), options)
         }
     }
 
@@ -51,7 +59,7 @@ Object.assign(SentenceInterface, {
         this.setTemplates(standardTemplates.concat(templates.flat()))
     },
     addVocab(vocab) {
-        _.merge(standardVocabulary, vocab)
+        merge(standardVocabulary, vocab)
     },
 
     /**
@@ -75,10 +83,10 @@ Object.assign(SentenceInterface, {
         standardTemplates = templates.length ? templates : [...InitialTemplates]
     },
     setVocab(vocab) {
-        standardVocabulary = vocab || _.cloneDeep(InitialVocabulary)
+        standardVocabulary = vocab || cloneDeep(InitialVocabulary)
     },
     setOptions(options) {
-        standardOptions = options ? Object.assign(standardOptions, options) : _.cloneDeep(InitialOptions)
+        standardOptions = options ? Object.assign(standardOptions, options) : cloneDeep(InitialOptions)
     }
 })
 
