@@ -26,7 +26,10 @@
   },
   "homepage": "https://github.com/sindrekjr/sentence-engine#readme",
   "dependencies": {
-    "jest": "^25.1.0",
-    "lodash": "^4.17.15"
+    "lodash": "^4.17.19"
+  },
+  "devDependencies": {
+    "eslint": "^7.5.0",
+    "jest": "^25.5.4"
   }
 }
