@@ -6,11 +6,7 @@ const { cloneDeep, merge } = require('lodash')
 /**
  * Constants that keep the initial settings
  */
-const {
-    templates: InitialTemplates,
-    vocabulary: InitialVocabulary,
-    options: InitialOptions,
-} = require('./defaults.json')
+const defaults = require('./defaults')
 
 /**
  * Variables to store standard settings for the sentence engine
@@ -80,13 +76,13 @@ Object.assign(SentenceInterface, {
      */
     setTemplates(...templates) {
         templates = templates.flat()
-        standardTemplates = templates.length ? templates : [...InitialTemplates]
+        standardTemplates = templates.length ? templates : [...defaults.templates]
     },
     setVocab(vocab) {
-        standardVocabulary = vocab || cloneDeep(InitialVocabulary)
+        standardVocabulary = vocab || cloneDeep(defaults.vocabulary)
     },
     setOptions(options) {
-        standardOptions = options ? Object.assign(standardOptions, options) : cloneDeep(InitialOptions)
+        standardOptions = options ? Object.assign(standardOptions, options) : cloneDeep(defaults.options)
     }
 })
 
