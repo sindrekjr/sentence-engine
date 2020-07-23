@@ -6,7 +6,8 @@
   "scripts": {
     "demo": "node ./examples/hello-world/index.js",
     "start": "node ./src/index.js",
-    "test": "jest"
+    "test": "jest",
+    "eslint": "eslint src/"
   },
   "repository": {
     "type": "git",
@@ -30,6 +31,7 @@
   },
   "devDependencies": {
     "eslint": "^7.5.0",
+    "eslint-plugin-jest": "^23.18.0",
     "jest": "^25.5.4"
   }
 }
