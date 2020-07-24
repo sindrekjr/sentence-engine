@@ -18,7 +18,7 @@ describe('Sentence.js', () => {
     it('should not ever throw errors', () => {
       const sentence = new Sentence(template, vocab);
       expect(() => {
-        for(let i = 0; i < 100; i++) sentence.generate()
+        for(let i = 0; i < 100; i++) sentence.generate();
       }).not.toThrow();
     });
 
