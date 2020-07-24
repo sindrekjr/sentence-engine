@@ -1,9 +1,14 @@
 'use strict';
 
+const defaults = require('../defaults');
 const { merge } = require('lodash');
 
 module.exports = class Sentence {
-  constructor(templates, vocab, options) {
+  constructor(
+    templates = defaults.templates,
+    vocab = defaults.vocabulary,
+    options = defaults.options
+  ) {
     Object.defineProperties(this, {
       templates: {
         value: Array.isArray(templates) ? templates : [templates]
@@ -26,7 +31,8 @@ module.exports = class Sentence {
     }
 
     Object.defineProperty(this, 'sentence', {
-      value: sentence
+      value: sentence,
+      configurable: true,
     });
   }
 
