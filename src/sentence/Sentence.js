@@ -82,6 +82,7 @@ module.exports = class Sentence {
     let {
       allowDuplicates,
       capitalize,
+      forceDifference,
       preserveCurlyBrackets
     } = options;
 
@@ -91,6 +92,9 @@ module.exports = class Sentence {
       },
       capitalize: {
         value: capitalize
+      },
+      forceDifference: {
+        value: forceDifference
       },
       preserveCurlyBrackets: {
         value: preserveCurlyBrackets
