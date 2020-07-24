@@ -2,6 +2,7 @@
 
 const defaults = require('./defaults');
 const Sentence = require('./sentence');
+const { cloneDeep, merge } = require('lodash');
 
 function facade(template, vocabulary, options) {
   return new Sentence(
@@ -45,5 +46,35 @@ const validateOptions = (options) => {
   }
   return defaults.options;
 };
+
+Object.assign(facade, {
+  addTemplates(...templates) {
+    this.setTemplates(this.templates.concat(templates.flat()));
+  },
+  addVocab(vocab) {
+    merge(this.vocabulary, vocab);
+  },
+
+  getTemplates() {
+    return this.templates;
+  },
+  getVocab() {
+    return this.vocabulary;
+  },
+  getOptions() {
+    return this.options;
+  },
+
+  setTemplates(...templates) {
+    templates = templates.flat();
+    this.templates = templates.length ? templates : [...defaults.templates];
+  },
+  setVocab(vocab) {
+    this.vocabulary = vocab || cloneDeep(defaults.vocabulary);
+  },
+  setOptions(options) {
+    this.options = options ? Object.assign(this.options, options) : cloneDeep(defaults.options);
+  }
+});
 
 module.exports = facade;
