@@ -2,6 +2,9 @@ const Sentence = require('./facade.js');
 
 describe('facade.js', () => {
 
+  beforeEach(() => {
+    Sentence.restoreDefaults();
+  });
 
   describe('sentence generation', () => {
     it('should return default text when supplied no data', () => {
@@ -21,7 +24,7 @@ describe('facade.js', () => {
   describe('validation', () => {
     const arbitraryNum = 55;
     const arbitraryStr = 'Yes.';
-    const template = 'This is just {a-adjective} template.';
+    const template = 'This is just {a-adjective, verb} template.';
     const vocab = {
       adjective: ['big', 'long', 'short', 'tall', 'hopeless', 'helpful'],
       verb: ['change', 'surf', 'climb', 'defenestrate', 'optimize']
@@ -42,6 +45,23 @@ describe('facade.js', () => {
       expect(() => Sentence(template, vocab, [])).toThrow(TypeError);
       expect(() => Sentence(template, vocab, arbitraryStr)).toThrow(TypeError);
       expect(() => Sentence(template, vocab, arbitraryNum)).toThrow(TypeError);
+    });
+  });
+
+  describe('addTemplates', () => {
+    const template = 'Useless template.';
+    const templates = [template, template];
+
+    it('should add the given singular template', () => {
+      Sentence.addTemplates(template);
+      expect(Sentence.getTemplates()).toContain(template);
+    });
+
+    it('should add all the given templates', () => {
+      Sentence.addTemplates(templates);
+      const result = Sentence.getTemplates();
+      expect(result).toContain(template);
+      expect(result.length).toEqual(3);
     });
   });
 });

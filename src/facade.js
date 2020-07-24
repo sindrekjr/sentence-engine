@@ -48,6 +48,10 @@ const validateOptions = (options) => {
 };
 
 Object.assign(facade, {
+  templates: defaults.templates,
+  vocabulary: defaults.vocabulary,
+  options: defaults.options,
+
   addTemplates(...templates) {
     this.setTemplates(this.templates.concat(templates.flat()));
   },
@@ -74,6 +78,12 @@ Object.assign(facade, {
   },
   setOptions(options) {
     this.options = options ? Object.assign(this.options, options) : cloneDeep(defaults.options);
+  },
+
+  restoreDefaults() {
+    this.setTemplates(defaults.templates);
+    this.setVocab(defaults.vocabulary);
+    this.setOptions(defaults.options);
   }
 });
 
