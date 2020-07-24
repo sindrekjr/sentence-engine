@@ -23,45 +23,86 @@ module.exports = class Sentence {
   }
 
   generate() {
-    let sentence = this.templates.any();
-    let matches = sentence.match(/([{]+(\s*([a-z-0-9])*,?\s*)*[}]+)/gi);
+    const template = this.templates.any();
+    const matches = this.findMasks(template);
 
+    let sentence = template;
     for(let match of matches) {
       sentence = sentence.replace(match, this.resolveWord(match));
     }
 
-    Object.defineProperty(this, 'sentence', {
-      value: sentence,
-      configurable: true,
-    });
+    if(this.forceDifference
+      && this.sentence === sentence
+      && this.isForceDifferencePossible()
+    ) {
+      this.generate();
+    } else {
+      Object.defineProperty(this, 'sentence', {
+        value: sentence,
+        configurable: true,
+      });
+    }
+  }
+
+  findMasks(template) {
+    return template.match(/([{]+(\s*([a-z-0-9])*,?\s*)*[}]+)/gi);
   }
 
   resolveWord(mask) {
-    let a,
-      p,
-      alternatives = [],
-      split = mask.replace(/{|}|\s/g, '').split(',');
+    let alternatives = [];
+    let keys = mask.replace(/{|}|\s/g, '').split(',');
 
-    for(let key of split) {
-      if(key.substr(0, 2) == 'a-') {
-        a = true;
-        key = key.slice(2);
-      }
-      if(key.slice(-2) === '-s') {
-        let trimmed = key.substr(0, key.length - 2);
-        if(Object.keys(this.vocab).includes(trimmed)) {
-          p = true;
-          key = trimmed;
-        }
-      }
-      alternatives = alternatives.concat(this.vocab[key]);
+    for(let key of keys) {
+      alternatives = alternatives.concat(this.findAlternatives(key));
     }
 
     let word = alternatives.any();
-    if(a) word = `${isVowel(word[0]) ? 'an' : 'a'} ${word}`;
-    if(p) word += 's';
 
     return word;
+  }
+
+  findAlternatives(key) {
+    let a_an = false;
+    if(key.substr(0, 2) == 'a-') {
+      a_an = true;
+      key = key.slice(2);
+    }
+
+    let plural = false;
+    if(key.slice(-2) === '-s') {
+      let trimmed = key.substr(0, key.length - 2);
+      if(Object.keys(this.vocab).includes(trimmed)) {
+        plural = true;
+        key = trimmed;
+      }
+    }
+
+    return this.vocab[key]
+      ? this.articleAndPluralize(a_an, plural, this.vocab[key])
+      : [];
+  }
+
+  articleAndPluralize(a_an, plural, words) {
+    return words.map(w => `${a_an ? isVowel(w[0]) ? 'an ' : 'a ' : ''}${w}${plural ? 's' : ''}`);
+  }
+
+  isForceDifferencePossible() {
+    if(this.templates.length > 1) {
+      return true;
+    } else {
+      const theOnlyTemplate = this.templates[0];
+      if(theOnlyTemplate) {
+        for(let mask of this.findMasks(theOnlyTemplate)) {
+          let keys = mask.replace(/{|}|\s/g, '').split(',');
+          let alternatives = [];
+          for(let key of keys) {
+            alternatives = alternatives.concat(this.findAlternatives(key));
+          }
+          if(alternatives.length > 1) return true;
+        }
+      }
+    }
+    return false; 
   }
 
   get() {
@@ -79,12 +120,13 @@ module.exports = class Sentence {
   }
 
   setOptions(options) {
-    let {
+    const mergeWithDefaults = { ...defaults.options, ...options };
+    const {
       allowDuplicates,
       capitalize,
       forceDifference,
       preserveCurlyBrackets
-    } = options;
+    } = mergeWithDefaults;
 
     Object.defineProperties(this, {
       allowDuplicates: {
