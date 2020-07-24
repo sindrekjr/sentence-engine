@@ -24,8 +24,8 @@ describe('Sentence.js', () => {
 
     it('should result in a new sentence being generated', () => {
       const sentence = new Sentence(template, vocab, { forceDifference: true });
-      const firstResult = sentence.get(); 
-      
+      const firstResult = sentence.get();
+
       sentence.generate();
       const secondResult = sentence.get();
       expect(firstResult).not.toBe(secondResult);

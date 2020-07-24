@@ -14,7 +14,7 @@ let standardTemplates, standardVocabulary, standardOptions;
  * The function exported as the interface for the package
  */
 function SentenceInterface(template, vocabulary, options) {
-  if(template 
+  if(template
     && Object.prototype.toString.call(template) !== '[object String]'
     && Object.prototype.toString.call(template[0]) !== '[object String]'
   ) {

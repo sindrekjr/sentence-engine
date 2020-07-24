@@ -24,7 +24,7 @@ module.exports = class Sentence {
 
   /**
    * get()
-   * 
+   *
    * Returns the generated sentence, most uses will only ever require this method
    */
   get() {
@@ -32,8 +32,8 @@ module.exports = class Sentence {
   }
 
   /**
-   * generate() 
-   * 
+   * generate()
+   *
    * May be called repeatedly to randomly regenerate the sentence
    */
   generate() {
@@ -61,7 +61,7 @@ module.exports = class Sentence {
   /**
    * Returns masks/placeholders in the given template string
    * @param {string} template
-   * 
+   *
    * 'This is {a-adjective} example.' => ['{a-adjective}']
    */
   findMasks(template) {
@@ -70,7 +70,7 @@ module.exports = class Sentence {
 
   /**
    * Returns keys found in the given mask/placeholder
-   * @param {string} mask 
+   * @param {string} mask
    * '{a-adjective, a-curse, verb}' => ['a-adjective', 'a-curse', 'verb']
    */
   findKeys(mask) {
@@ -79,7 +79,7 @@ module.exports = class Sentence {
 
   /**
    * Returns a random word from a pool of alternatives depending on the given mask/placeholder
-   * @param {string} mask 
+   * @param {string} mask
    */
   resolveWord(mask) {
     const keys = this.findKeys(mask);
@@ -89,7 +89,7 @@ module.exports = class Sentence {
 
   /**
    * Returns an array of alternatives depending on the given mask/placeholder
-   * @param {string} mask 
+   * @param {string} mask
    */
   resolveAlternatives(keys) {
     return keys.map(key => {
@@ -109,7 +109,7 @@ module.exports = class Sentence {
       }
 
       if(this.isValidKey(key)) return articleAndPluralize(a_an, plural, this.vocab[key]);
-    }).flat();    
+    }).flat();
   }
 
   addTemplates(...templates) {
@@ -160,7 +160,7 @@ module.exports = class Sentence {
         }
       }
     }
-    return false; 
+    return false;
   }
 };
 
@@ -168,7 +168,7 @@ module.exports = class Sentence {
 
 const articleAndPluralize = (a_an, plural, words) => {
   return words.map(w => `${a_an ? isVowel(w[0]) ? 'an ' : 'a ' : ''}${w}${plural ? 's' : ''}`);
-}
+};
 
 const isVowel = c => {
   c = c.toLowerCase();
