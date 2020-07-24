@@ -1,12 +1,8 @@
 'use strict';
 
-const Sentence = require('./Sentence.js');
-const { cloneDeep, merge } = require('lodash');
-
-/**
- * Constants that keep the initial settings
- */
 const defaults = require('./defaults');
+const Sentence = require('./sentence');
+const { cloneDeep, merge } = require('lodash');
 
 /**
  * Variables to store standard settings for the sentence engine
