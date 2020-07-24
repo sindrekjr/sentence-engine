@@ -9,9 +9,18 @@
         "sourceType": "module"
     },
     "rules": {
+        "arrow-spacing": [
+            "error"
+        ],
         "indent": [
             "error",
             2
+        ],
+        "no-mixed-spaces-and-tabs": [
+            "error"
+        ],
+        "prefer-const": [
+            "error"
         ],
         "quotes": [
             "error",

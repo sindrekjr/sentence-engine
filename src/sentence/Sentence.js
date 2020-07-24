@@ -27,7 +27,7 @@ module.exports = class Sentence {
     const matches = this.findMasks(template);
 
     let sentence = template;
-    for(let match of matches) {
+    for(const match of matches) {
       sentence = sentence.replace(match, this.resolveWord(match));
     }
 
@@ -50,15 +50,12 @@ module.exports = class Sentence {
 
   resolveWord(mask) {
     let alternatives = [];
-    let keys = mask.replace(/{|}|\s/g, '').split(',');
+    const keys = mask.replace(/{|}|\s/g, '').split(',');
 
-    for(let key of keys) {
+    for(const key of keys) {
       alternatives = alternatives.concat(this.findAlternatives(key));
     }
-
-    let word = alternatives.any();
-
-    return word;
+    return alternatives.any();
   }
 
   findAlternatives(key) {
@@ -70,7 +67,7 @@ module.exports = class Sentence {
 
     let plural = false;
     if(key.slice(-2) === '-s') {
-      let trimmed = key.substr(0, key.length - 2);
+      const trimmed = key.substr(0, key.length - 2);
       if(Object.keys(this.vocab).includes(trimmed)) {
         plural = true;
         key = trimmed;
@@ -92,10 +89,10 @@ module.exports = class Sentence {
     } else {
       const theOnlyTemplate = this.templates[0];
       if(theOnlyTemplate) {
-        for(let mask of this.findMasks(theOnlyTemplate)) {
-          let keys = mask.replace(/{|}|\s/g, '').split(',');
+        for(const mask of this.findMasks(theOnlyTemplate)) {
+          const keys = mask.replace(/{|}|\s/g, '').split(',');
           let alternatives = [];
-          for(let key of keys) {
+          for(const key of keys) {
             alternatives = alternatives.concat(this.findAlternatives(key));
           }
           if(alternatives.length > 1) return true;
@@ -145,10 +142,10 @@ module.exports = class Sentence {
   }
 };
 
-function isVowel(c) {
+const isVowel = c => {
   c = c.toLowerCase();
   return ['a', 'e', 'i', 'o', 'u'].includes(c);
-}
+};
 
 Array.prototype.any = function() {
   return this[Math.floor(Math.random() * this.length)];
