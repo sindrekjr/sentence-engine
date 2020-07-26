@@ -2,82 +2,44 @@
 
 const defaults = require('./defaults');
 const Sentence = require('./sentence');
-const { cloneDeep, merge } = require('lodash');
+const { Validator } = require('./validator');
+const { cloneDeep } = require('lodash');
 
 function facade(template, vocabulary, options) {
   return new Sentence(
-    validateTemplates(template),
-    validateVocabulary(vocabulary),
-    validateOptions(options)
+    Validator.validateTemplates(template),
+    Validator.validateVocabulary(vocabulary),
+    Validator.validateOptions(options)
   );
 }
 
-const validateTemplates = (templates) => {
-  if(templates) {
-    if(Object.prototype.toString.call(templates) === '[object String]') {
-      return [templates];
-    } else if(Object.prototype.toString.call(templates[0]) === '[object String]') {
-      return templates;
-    } else {
-      throw new TypeError('Argument "template" was expected to be a string or array containing a string.');
-    }
-  }
-  return defaults.template;
-};
-
-const validateVocabulary = (vocabulary) => {
-  if(vocabulary) {
-    if(Object.prototype.toString.call(vocabulary) === '[object Object]') {
-      return vocabulary;
-    } else {
-      throw new TypeError('Argument "vocabulary" was expected to be an object.');
-    }
-  }
-  return defaults.vocabulary;
-};
-
-const validateOptions = (options) => {
-  if(options) {
-    if(Object.prototype.toString.call(options) === '[object Object]') {
-      return options;
-    } else {
-      throw new TypeError('Argument "options" was expected to be an object.');
-    }
-  }
-  return defaults.options;
-};
-
 Object.assign(facade, {
-  templates: defaults.templates,
-  vocabulary: defaults.vocabulary,
-  options: defaults.options,
-
   addTemplates(...templates) {
-    this.setTemplates(this.templates.concat(templates.flat()));
+    this.setTemplates(this.getTemplates().concat(templates.flat()));
   },
   addVocab(vocab) {
-    merge(this.vocabulary, vocab);
+    this.setVocab(Object.assign(this.getVocab(), (vocab)));
   },
 
   getTemplates() {
-    return this.templates;
+    return Validator.templates;
   },
   getVocab() {
-    return this.vocabulary;
+    return Validator.vocabulary;
   },
   getOptions() {
-    return this.options;
+    return Validator.options;
   },
 
   setTemplates(...templates) {
     templates = templates.flat();
-    this.templates = templates.length ? templates : [...defaults.templates];
+    Validator.templates = templates.length ? templates : [...defaults.templates];
   },
   setVocab(vocab) {
-    this.vocabulary = vocab || cloneDeep(defaults.vocabulary);
+    Validator.vocabulary = vocab || cloneDeep(defaults.vocabulary);
   },
   setOptions(options) {
-    this.options = options ? Object.assign(this.options, options) : cloneDeep(defaults.options);
+    Validator.options = options ? Object.assign(this.getOptions(), options) : cloneDeep(defaults.options);
   },
 
   restoreDefaults() {
