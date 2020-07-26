@@ -21,14 +21,30 @@ describe('Sentence.js', () => {
         for(let i = 0; i < 100; i++) sentence.generate();
       }).not.toThrow();
     });
+  });
 
-    it('should result in a new sentence being generated', () => {
-      const sentence = new Sentence(template, vocab, { forceDifference: true });
-      const firstResult = sentence.get();
+  /**
+   * OPTIONS
+   */
+  describe('options', () => {
+    /**
+     * FORCE DIFFERENCE
+     */
+    describe('forceDifference', () => {
+      it('should result in a new sentence being generated if true', () => {
+        const sentence = new Sentence(template, vocab, { forceDifference: true });
+        expect(sentence.generate().get()).not.toBe(sentence.generate().get());
+      });
 
-      sentence.generate();
-      const secondResult = sentence.get();
-      expect(firstResult).not.toBe(secondResult);
+      it('should result in same sentence even if true when there is only one possible outcome', () => {
+        const template = '{greeting}, {noun}.';
+        const vocab = {
+          greeting: [ 'hello' ],
+          noun: [ 'world' ]
+        };
+        const sentence = new Sentence(template, vocab, { forceDifference: true });
+        expect(sentence.generate().get()).toEqual(sentence.generate().get());
+      });
     });
   });
 });

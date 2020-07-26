@@ -44,6 +44,8 @@ module.exports = class Sentence {
         configurable: true,
       });
     }
+
+    return this;
   }
 
   /**
