@@ -1,24 +1,12 @@
 'use strict';
 
-const defaults = require('../defaults');
-const { merge } = require('lodash');
+const { validateOptions, validateTemplates, validateVocabulary } = require('../validator');
 
 module.exports = class Sentence {
-  constructor(
-    templates = defaults.templates,
-    vocab = defaults.vocabulary,
-    options = defaults.options
-  ) {
-    Object.defineProperties(this, {
-      templates: {
-        value: Array.isArray(templates) ? templates : [templates]
-      },
-      vocab: {
-        value: vocab
-      }
-    });
-
+  constructor(templates, vocab, options) {
     this.setOptions(options);
+    this.setTemplates(templates);
+    this.setVocab(vocab);
     this.generate();
   }
 
@@ -113,20 +101,20 @@ module.exports = class Sentence {
   }
 
   addTemplates(...templates) {
-    this.templates = this.templates.concat(templates.flat());
+    this.setTemplates(this.templates.concat(templates.flat()));
   }
+
   addVocab(vocab) {
-    merge(this.vocab, vocab);
+    this.setVocab(Object.assign(this.vocab, vocab));
   }
 
   setOptions(options) {
-    const mergeWithDefaults = { ...defaults.options, ...options };
     const {
       allowDuplicates,
       capitalize,
       forceDifference,
       preserveCurlyBrackets
-    } = mergeWithDefaults;
+    } = validateOptions(options);
 
     Object.defineProperties(this, {
       allowDuplicates: {
@@ -140,6 +128,22 @@ module.exports = class Sentence {
       },
       preserveCurlyBrackets: {
         value: preserveCurlyBrackets
+      }
+    });
+  }
+
+  setTemplates(templates) {
+    Object.defineProperties(this, {
+      templates: {
+        value: validateTemplates(templates)
+      }
+    });
+  }
+
+  setVocab(vocabulary) {
+    Object.defineProperties(this, {
+      vocab: {
+        value: validateVocabulary(vocabulary)
       }
     });
   }
