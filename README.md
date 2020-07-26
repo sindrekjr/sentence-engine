@@ -1,5 +1,6 @@
 [![npm version](https://badge.fury.io/js/sentence-engine.svg)](https://badge.fury.io/js/sentence-engine)
-[![Test](https://github.com/sindrekjr/sentence-engine/workflows/Test/badge.svg)](https://github.com/sindrekjr/sentence-engine/actions)
+[![master](https://github.com/sindrekjr/sentence-engine/workflows/master/badge.svg?branch=master)](https://github.com/sindrekjr/sentence-engine/actions)
+[![develop](https://github.com/sindrekjr/sentence-engine/workflows/develop/badge.svg?branch=develop)](https://github.com/sindrekjr/sentence-engine/actions)
 
 # Sentence Engine
 A simple sentence generator running on [Node.js](https://nodejs.org/). It takes a template and vocabulary freely defined by the user. 
