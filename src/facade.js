@@ -14,13 +14,6 @@ function facade(template, vocabulary, options) {
 }
 
 Object.assign(facade, {
-  addTemplates(...templates) {
-    this.setTemplates(this.getTemplates().concat(templates.flat()));
-  },
-  addVocab(vocab) {
-    this.setVocab(Object.assign(this.getVocab(), (vocab)));
-  },
-
   getTemplates() {
     return Validator.templates;
   },
@@ -40,6 +33,13 @@ Object.assign(facade, {
   },
   setOptions(options) {
     Validator.options = options ? Object.assign(this.getOptions(), options) : cloneDeep(defaults.options);
+  },
+
+  addTemplates(...templates) {
+    this.setTemplates(this.getTemplates().concat(templates.flat()));
+  },
+  addVocab(vocab) {
+    this.setVocab(Object.assign(this.getVocab(), (vocab)));
   },
 
   restoreDefaults() {
