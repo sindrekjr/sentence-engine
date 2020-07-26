@@ -30,9 +30,9 @@ describe('Sentence.js', () => {
     /**
      * FORCE DIFFERENCE
      */
-    describe('forceDifference', () => {
+    describe('forceNewSentence', () => {
       it('should result in a new sentence being generated if true', () => {
-        const sentence = new Sentence(template, vocab, { forceDifference: true });
+        const sentence = new Sentence(template, vocab, { forceNewSentence: true });
         expect(sentence.generate().get()).not.toBe(sentence.generate().get());
       });
 
@@ -42,7 +42,7 @@ describe('Sentence.js', () => {
           greeting: [ 'hello' ],
           noun: [ 'world' ]
         };
-        const sentence = new Sentence(template, vocab, { forceDifference: true });
+        const sentence = new Sentence(template, vocab, { forceNewSentence: true });
         expect(sentence.generate().get()).toEqual(sentence.generate().get());
       });
     });

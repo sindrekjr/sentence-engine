@@ -33,9 +33,9 @@ module.exports = class Sentence {
       sentence = sentence.replace(match, this.resolveWord(match));
     }
 
-    if(this.forceDifference
+    if(this.forceNewSentence
       && this.sentence === sentence
-      && this.isForceDifferencePossible()
+      && this.isforceNewSentencePossible()
     ) {
       this.generate();
     } else {
@@ -114,7 +114,7 @@ module.exports = class Sentence {
     const {
       allowDuplicates,
       capitalize,
-      forceDifference,
+      forceNewSentence,
       preserveCurlyBrackets
     } = validateOptions(options);
 
@@ -125,8 +125,8 @@ module.exports = class Sentence {
       capitalize: {
         value: capitalize
       },
-      forceDifference: {
-        value: forceDifference
+      forceNewSentence: {
+        value: forceNewSentence
       },
       preserveCurlyBrackets: {
         value: preserveCurlyBrackets
@@ -154,7 +154,7 @@ module.exports = class Sentence {
     return key in this.vocab;
   }
 
-  isForceDifferencePossible() {
+  isforceNewSentencePossible() {
     if(this.templates.length > 1) {
       return true;
     } else {
