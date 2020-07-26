@@ -4,7 +4,6 @@
   "description": "Template-based sentence generator with full user control. ",
   "main": "./src/index.js",
   "scripts": {
-    "demo": "node ./examples/hello-world/index.js",
     "start": "node ./src/index.js",
     "test": "jest",
     "eslint": "eslint src/"
