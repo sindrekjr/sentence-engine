@@ -1,6 +1,14 @@
 const Sentence = require('./facade.js');
 
 describe('facade.js', () => {
+  const templates = [
+    '{a-animal} crossed the {object}.',
+    'The {animal} crossed the {object}.'
+  ];
+  const vocabulary = {
+    animal: ['duck', 'fox', 'bear', 'comodo dragon'],
+    object: ['road', 'chessboard', 'window', 'tic-tac-toe']
+  };
 
   beforeEach(() => {
     Sentence.restoreDefaults();
@@ -49,19 +57,27 @@ describe('facade.js', () => {
   });
 
   describe('addTemplates', () => {
-    const template = 'Useless template.';
-    const templates = [template, template];
-
     it('should add the given singular template', () => {
-      Sentence.addTemplates(template);
-      expect(Sentence.getTemplates()).toContain(template);
+      Sentence.addTemplates(templates[0]);
+      expect(Sentence.getTemplates()).toContain(templates[0]);
     });
 
     it('should add all the given templates', () => {
       Sentence.addTemplates(templates);
       const result = Sentence.getTemplates();
-      expect(result).toContain(template);
+      expect(result).toContain(templates[0]);
       expect(result.length).toEqual(3);
+    });
+  });
+
+  describe('addVocab', () => {
+    it('should add the given vocab', () => {
+      Sentence.addVocab(vocabulary);
+      const expectedKeys = Object.keys(vocabulary);
+      const expectedValues = Object.values(vocabulary).flat();
+      const resultingVocab = Sentence.getVocab();
+      expect(Object.keys(resultingVocab)).toContain(...expectedKeys);
+      expect(Object.values(resultingVocab).flat()).toContain(...expectedValues);
     });
   });
 });
