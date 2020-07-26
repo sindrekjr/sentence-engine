@@ -13,14 +13,15 @@ const Validator = {
 };
 
 const validateOptions = (options, alt = defaults.options) => {
+  const mergedWithDefaultOptions = { ...defaults.options, ...alt };
   if(options) {
     if(Object.prototype.toString.call(options) === '[object Object]') {
-      return options;
+      return { ...mergedWithDefaultOptions, ...options };
     } else {
       throw new TypeError('Options is expected to be an object.');
     }
   }
-  return alt;
+  return mergedWithDefaultOptions;
 };
 
 const validateTemplates = (templates, alt = defaults.templates) => {
