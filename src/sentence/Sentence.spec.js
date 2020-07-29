@@ -2,6 +2,7 @@ const Sentence = require('./Sentence.js');
 
 describe('Sentence.js', () => {
   const template = 'Let\'s {verb} this, and hope for the {adjective}.';
+  const templates = [template];
   const vocab = {
     adjective: ['best', 'worst', 'hilarious'],
     verb: ['try', 'do']
@@ -27,6 +28,25 @@ describe('Sentence.js', () => {
    * OPTIONS
    */
   describe('options', () => {
+    /**
+     * ALLOW DUPLICATES
+     */
+    describe('allowDuplicates', () => {
+      it('should store duplicates if true', () => {
+        const sentence = new Sentence(templates, vocab, { allowDuplicates: true });
+        const initialLength = sentence.templates.length;
+        sentence.addTemplates(templates);
+        expect(sentence.templates.length).toBe(initialLength + templates.length);
+      });
+
+      it('should not store duplicates if false', () => {
+        const sentence = new Sentence(templates, vocab, { allowDuplicates: false });
+        const initialLength = sentence.templates.length;
+        sentence.addTemplates(templates);
+        expect(sentence.templates.length).toBe(initialLength);
+      });
+    });
+
     /**
      * FORCE DIFFERENCE
      */

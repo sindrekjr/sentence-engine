@@ -11,8 +11,6 @@ module.exports = class Sentence {
   }
 
   /**
-   * get()
-   *
    * Returns the generated sentence, most uses will only ever require this method
    */
   get() {
@@ -20,8 +18,6 @@ module.exports = class Sentence {
   }
 
   /**
-   * generate()
-   *
    * May be called repeatedly to randomly regenerate the sentence
    */
   generate() {
@@ -102,6 +98,18 @@ module.exports = class Sentence {
     }).flat();
   }
 
+  get templates() {
+    return this.templates;
+  }
+
+  get vocabulary() {
+    return this.vocab;
+  }
+
+  get options() {
+    return this.options;
+  }
+
   addTemplates(...templates) {
     this.setTemplates(this.templates.concat(templates.flat()));
   }
@@ -135,18 +143,16 @@ module.exports = class Sentence {
   }
 
   setTemplates(templates) {
-    Object.defineProperties(this, {
-      templates: {
-        value: this.allowDuplicates ? validateTemplates(templates) : validateTemplates(templates.unique())
-      }
+    Object.defineProperty(this, 'templates', {
+      value: this.allowDuplicates ? validateTemplates(templates) : validateTemplates(templates).unique(),
+      writable: true,
     });
   }
 
   setVocab(vocabulary) {
-    Object.defineProperties(this, {
-      vocab: {
-        value: validateVocabulary(vocabulary)
-      }
+    Object.defineProperty(this, 'vocab', {
+      value: validateVocabulary(vocabulary),
+      writable: true,
     });
   }
 
