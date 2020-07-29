@@ -29,11 +29,11 @@ module.exports = class Sentence {
     const matches = this.findMasks(template);
 
     let sentence = template;
-    for(const match of matches) {
+    for (const match of matches) {
       sentence = sentence.replace(match, this.resolveWord(match));
     }
 
-    if(this.forceNewSentence
+    if (this.forceNewSentence
       && this.sentence === sentence
       && this.isforceNewSentencePossible()
     ) {
@@ -84,21 +84,21 @@ module.exports = class Sentence {
   resolveAlternatives(keys) {
     return keys.map(key => {
       let a_an = false;
-      if(key.substr(0, 2) == 'a-') {
+      if (key.substr(0, 2) == 'a-') {
         a_an = true;
         key = key.slice(2);
       }
 
       let plural = false;
-      if(key.slice(-2) === '-s') {
+      if (key.slice(-2) === '-s') {
         const trimmed = key.substr(0, key.length - 2);
-        if(Object.keys(this.vocab).includes(trimmed)) {
+        if (Object.keys(this.vocab).includes(trimmed)) {
           plural = true;
           key = trimmed;
         }
       }
 
-      if(this.isValidKey(key)) return articleAndPluralize(a_an, plural, this.vocab[key]);
+      if (this.isValidKey(key)) return articleAndPluralize(a_an, plural, this.vocab[key]);
     }).flat();
   }
 
@@ -155,14 +155,14 @@ module.exports = class Sentence {
   }
 
   isforceNewSentencePossible() {
-    if(this.templates.length > 1) {
+    if (this.templates.length > 1) {
       return true;
     } else {
       const theOnlyTemplate = this.templates[0];
-      if(theOnlyTemplate) {
-        for(const mask of this.findMasks(theOnlyTemplate)) {
+      if (theOnlyTemplate) {
+        for (const mask of this.findMasks(theOnlyTemplate)) {
           const alternatives = this.resolveAlternatives(this.findKeys(mask));
-          if(alternatives.length > 1) return true;
+          if (alternatives.length > 1) return true;
         }
       }
     }
