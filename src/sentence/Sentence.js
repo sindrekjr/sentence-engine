@@ -26,7 +26,8 @@ module.exports = class Sentence {
 
     let sentence = template;
     for (const match of matches) {
-      sentence = sentence.replace(match, this.resolveWord(match));
+      const replacement = this.resolveWord(match, this.shouldCapitalize(sentence, match));
+      sentence = sentence.replace(match, replacement);
     }
 
     if (this.forceNewSentence
@@ -67,10 +68,11 @@ module.exports = class Sentence {
    * Returns a random word from a pool of alternatives depending on the given mask/placeholder
    * @param {string} mask
    */
-  resolveWord(mask) {
+  resolveWord(mask, shouldCapitalize = false) {
     const keys = this.findKeys(mask);
     const alternatives = this.resolveAlternatives(keys);
-    return alternatives.any();
+    const chosenWord = alternatives.any();
+    return shouldCapitalize ? capitalize(chosenWord) : chosenWord;
   }
 
   /**
@@ -156,6 +158,15 @@ module.exports = class Sentence {
     });
   }
 
+  shouldCapitalize(sentence, mask) {
+    if (this.capitalize) {
+      const index = sentence.indexOf(mask);
+      const findPunctuationRegex = /[.!?:]+[\s]*$/;
+      return index === 0 || findPunctuationRegex.test(sentence.substr(0, index));
+    }
+    return false;
+  }
+
   isValidKey(key) {
     return key in this.vocab;
   }
@@ -181,6 +192,8 @@ module.exports = class Sentence {
 const articleAndPluralize = (a_an, plural, words) => {
   return words.map(w => `${a_an ? isVowel(w[0]) ? 'an ' : 'a ' : ''}${w}${plural ? 's' : ''}`);
 };
+
+const capitalize = (str) => str.replace(/^[']*(\w)/, c => c.toUpperCase());
 
 const isVowel = c => {
   c = c.toLowerCase();

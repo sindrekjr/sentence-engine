@@ -48,6 +48,35 @@ describe('Sentence.js', () => {
     });
 
     /**
+     * CAPITALIZE
+     */
+    describe('capitalize', () => {
+      it('should correctly capitalize the sentence if true', () => {
+        const sentence = new Sentence(
+          '{greeting}, {noun}. {smalltalk}',
+          {
+            greeting: ['hello'],
+            noun: ['world'],
+            smalltalk: ['fine weather, I reckon.']
+          },
+          { capitalize: true }
+        );
+        expect(sentence.get()).toEqual('Hello, world. Fine weather, I reckon.');
+
+        sentence.setVocab({
+          greeting: ['\'sup'],
+          noun: ['man'],
+          smalltalk: ['is everything alright?']
+        });
+        expect(sentence.generate().get()).toEqual('\'Sup, man. Is everything alright?');
+      });
+
+      /*it('should not capitalize the sentence if false', () => {
+        const sentence = new Sentence(simpleTemplate, lowercaseVocab, { capitalize: false });
+      });*/
+    });
+
+    /**
      * FORCE DIFFERENCE
      */
     describe('forceNewSentence', () => {
