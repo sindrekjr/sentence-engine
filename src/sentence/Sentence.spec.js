@@ -51,29 +51,33 @@ describe('Sentence.js', () => {
      * CAPITALIZE
      */
     describe('capitalize', () => {
+      const capitalizeTemplate = '{greeting}, {noun}. {smalltalk}';
+      const firstVocab = {
+        greeting: ['hello'],
+        noun: ['world'],
+        smalltalk: ['fine weather, I reckon.']
+      };
+      const secondVocab = {
+        greeting: ['\'sup'],
+        noun: ['man'],
+        smalltalk: ['is everything alright?']
+      };
+
       it('should correctly capitalize the sentence if true', () => {
-        const sentence = new Sentence(
-          '{greeting}, {noun}. {smalltalk}',
-          {
-            greeting: ['hello'],
-            noun: ['world'],
-            smalltalk: ['fine weather, I reckon.']
-          },
-          { capitalize: true }
-        );
+        const sentence = new Sentence(capitalizeTemplate, firstVocab, { capitalize: true });
         expect(sentence.get()).toEqual('Hello, world. Fine weather, I reckon.');
 
-        sentence.setVocab({
-          greeting: ['\'sup'],
-          noun: ['man'],
-          smalltalk: ['is everything alright?']
-        });
+        sentence.setVocab(secondVocab);
         expect(sentence.generate().get()).toEqual('\'Sup, man. Is everything alright?');
       });
 
-      /*it('should not capitalize the sentence if false', () => {
-        const sentence = new Sentence(simpleTemplate, lowercaseVocab, { capitalize: false });
-      });*/
+      it('should not capitalize the sentence if false', () => {
+        const sentence = new Sentence(capitalizeTemplate, firstVocab, { capitalize: false });
+        expect(sentence.get()).toEqual('hello, world. fine weather, I reckon.');
+
+        sentence.setVocab(secondVocab);
+        expect(sentence.generate().get()).toEqual('\'sup, man. is everything alright?');
+      });
     });
 
     /**
