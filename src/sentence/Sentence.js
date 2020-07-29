@@ -131,6 +131,9 @@ module.exports = class Sentence {
   }
 
   setOptions(options) {
+    // TODO: Consolidate option in single options property
+    // Also? Make sure previously created options take precedence over default options!
+
     const {
       allowDuplicates,
       capitalize,
