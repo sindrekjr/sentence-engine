@@ -1,9 +1,9 @@
+# Sentence Engine
 [![npm version](https://badge.fury.io/js/sentence-engine.svg)](https://badge.fury.io/js/sentence-engine)
 [![master](https://github.com/sindrekjr/sentence-engine/workflows/master/badge.svg?branch=master)](https://github.com/sindrekjr/sentence-engine/actions)
 [![develop](https://github.com/sindrekjr/sentence-engine/workflows/develop/badge.svg?branch=develop)](https://github.com/sindrekjr/sentence-engine/actions)
-
-# Sentence Engine
-A simple sentence generator running on [Node.js](https://nodejs.org/). It takes a template and vocabulary freely defined by the user. 
+-
+An easy-to-use sentence generator running on [Node.js](https://nodejs.org/). It takes a template and vocabulary freely defined by the user. 
 
 ## Features
 * Unbound vocabulary; define use case-specific categories or adhere to conventional keywords
@@ -11,18 +11,13 @@ A simple sentence generator running on [Node.js](https://nodejs.org/). It takes 
 * Lightweight
 
 ## Usage
-#### Install
-```
-> npm i sentence-engine
-```
-#### Import & Use
 ```
 const Sentence = require('sentence-engine');
 
 const defaultSentence = Sentence(); // instantiates Sentence object
 console.log(defaultSentence.get()); // outputs "hello, world"
 ```
-Calling Sentence() creates an object of a Sentence class which stores a template, vocabulary, and a set of options. In the case above we pass no arguments and the object is simply given some [default values](./src/defaults) and resolves to "hello, world". See [Sentence.js](./src/sentence/Sentence.js) for the class implementation.
+Calling Sentence() creates an object of the Sentence class which stores a template, vocabulary, and a set of options. In the case above we pass no arguments and the object is simply given some [default values](./src/defaults) and resolves to "hello, world". See [Sentence.js](./src/sentence/Sentence.js) for the class implementation.
 
 By passing a template and/or vocabulary, the engine becomes much more powerful. See examples below.
 
