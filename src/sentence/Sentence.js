@@ -137,7 +137,7 @@ module.exports = class Sentence {
   setTemplates(templates) {
     Object.defineProperties(this, {
       templates: {
-        value: validateTemplates(templates)
+        value: this.allowDuplicates ? validateTemplates(templates) : validateTemplates(templates.unique())
       }
     });
   }
@@ -184,3 +184,15 @@ const isVowel = c => {
 Array.prototype.any = function() {
   return this[Math.floor(Math.random() * this.length)];
 };
+
+Array.prototype.unique = function () {
+  const a = this.concat();
+  for (let i = 0; i < a.length; ++i) {
+    for (let j = i + 1; j < a.length; ++j) {
+      if (a[i] === a[j]) a.splice(j--, 1);
+    }
+  }
+
+  return a;
+};
+
