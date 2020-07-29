@@ -71,8 +71,8 @@ module.exports = class Sentence {
   resolveWord(mask, shouldCapitalize = false) {
     const keys = this.findKeys(mask);
     const alternatives = this.resolveAlternatives(keys);
-    const chosenWord = alternatives.any();
-    return shouldCapitalize ? capitalize(chosenWord) : chosenWord;
+    const chosenWord = shouldCapitalize ? capitalize(alternatives.any()) : alternatives.any();
+    return this.preserveCurlyBrackets ? `{${chosenWord}}` : chosenWord;
   }
 
   /**

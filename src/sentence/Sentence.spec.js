@@ -99,5 +99,19 @@ describe('Sentence.js', () => {
         expect(sentence.generate().get()).toEqual(sentence.generate().get());
       });
     });
+
+    /**
+     * PRESERVE CURLY BRACKETS
+     */
+    describe('preserveCurlyBrackets', () => {
+      it('should preserve curly brackets if true', () => {
+        const sentence = new Sentence(
+          '{test}',
+          { test: ['Yup, just a test.']},
+          { preserveCurlyBrackets: true }
+        );
+        expect(sentence.get()).toBe('{Yup, just a test.}');
+      });
+    });
   });
 });
