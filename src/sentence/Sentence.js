@@ -22,7 +22,7 @@ module.exports = class Sentence {
    */
   generate() {
     const template = this.templates.any();
-    const matches = this.findMasks(template);
+    const matches = this.findPlaceholders(template);
 
     let sentence = template;
     for (const match of matches) {
@@ -46,40 +46,40 @@ module.exports = class Sentence {
   }
 
   /**
-   * Returns masks/placeholders in the given template string
+   * Returns placeholders in the given template string
    * @param {string} template
    *
    * 'This is {a-adjective} example.' => ['{a-adjective}']
    */
-  findMasks(template) {
-    return template.match(/([{]+(\s*([a-z-0-9])*,?\s*)*[}]+)/gi);
+  findPlaceholders(template) {
+    const { start, end } = this.placeholderNotation;
+    const regex = new RegExp(`([${start}]+(\\s*([a-z-0-9])*,?\\s*)*[${end}]+)`, 'gi');
+    return template.match(regex);
+    //return template.match(/([{]+(\s*([a-z-0-9])*,?\s*)*[}]+)/gi);
   }
 
   /**
-   * Returns keys found in the given mask/placeholder
-   * @param {string} mask
-   * '{a-adjective, a-curse, verb}' => ['a-adjective', 'a-curse', 'verb']
+   * Returns a random word from a pool of alternatives depending on the given placeholder
+   * @param {string} placeholder
    */
-  findKeys(mask) {
-    return mask.replace(/{|}|\s/g, '').split(',');
-  }
-
-  /**
-   * Returns a random word from a pool of alternatives depending on the given mask/placeholder
-   * @param {string} mask
-   */
-  resolveWord(mask, shouldCapitalize = false) {
-    const keys = this.findKeys(mask);
-    const alternatives = this.resolveAlternatives(keys);
+  resolveWord(placeholder, shouldCapitalize = false) {
+    const alternatives = this.resolveAlternatives(placeholder);
     const chosenWord = shouldCapitalize ? capitalize(alternatives.any()) : alternatives.any();
-    return this.preserveCurlyBrackets ? `{${chosenWord}}` : chosenWord;
+
+    if (this.preservePlaceholderNotation) {
+      const { start, end } = this.placeholderNotation;
+      return `${start}${chosenWord}${end}`;
+    } else {
+      return chosenWord;
+    }
   }
 
   /**
-   * Returns an array of alternatives depending on the given mask/placeholder
-   * @param {string} mask
+   * Returns an array of alternatives depending on the given placeholder
+   * @param {string} placeholder
    */
-  resolveAlternatives(keys) {
+  resolveAlternatives(placeholder) {
+    const keys = this.findKeys(placeholder);
     return keys.map(key => {
       let a_an = false;
       if (key.substr(0, 2) == 'a-') {
@@ -98,6 +98,16 @@ module.exports = class Sentence {
 
       if (this.isValidKey(key)) return articleAndPluralize(a_an, plural, this.vocab[key]);
     }).flat();
+  }
+
+  /**
+   * Returns keys found in the given placeholder
+   * @param {string} placeholder
+   * '{a-adjective, a-curse, verb}' => ['a-adjective', 'a-curse', 'verb']
+   */
+  findKeys(placeholder) {
+    const { start, end } = this.placeholderNotation;
+    return placeholder.replace(new RegExp(`${start}|${end}|\\s`, 'g'), '').split(',');
   }
 
   get templates() {
@@ -125,7 +135,8 @@ module.exports = class Sentence {
       allowDuplicates,
       capitalize,
       forceNewSentence,
-      preserveCurlyBrackets
+      placeholderNotation,
+      preservePlaceholderNotation
     } = validateOptions(options);
 
     Object.defineProperties(this, {
@@ -138,8 +149,11 @@ module.exports = class Sentence {
       forceNewSentence: {
         value: forceNewSentence
       },
-      preserveCurlyBrackets: {
-        value: preserveCurlyBrackets
+      placeholderNotation: {
+        value: this.parsePlaceholderNotation(placeholderNotation)
+      },
+      preservePlaceholderNotation: {
+        value: preservePlaceholderNotation
       }
     });
   }
@@ -158,9 +172,17 @@ module.exports = class Sentence {
     });
   }
 
-  shouldCapitalize(sentence, mask) {
+  parsePlaceholderNotation(notation) {
+    const splitBySpace = notation.split(' ');
+    return {
+      start: splitBySpace[0],
+      end: splitBySpace[1],
+    };
+  }
+
+  shouldCapitalize(sentence, placeholder) {
     if (this.capitalize) {
-      const index = sentence.indexOf(mask);
+      const index = sentence.indexOf(placeholder);
       const findPunctuationRegex = /[.!?:]+[\s]*$/;
       return index === 0 || findPunctuationRegex.test(sentence.substr(0, index));
     }
@@ -177,8 +199,8 @@ module.exports = class Sentence {
     } else {
       const theOnlyTemplate = this.templates[0];
       if (theOnlyTemplate) {
-        for (const mask of this.findMasks(theOnlyTemplate)) {
-          const alternatives = this.resolveAlternatives(this.findKeys(mask));
+        for (const placeholder of this.findPlaceholders(theOnlyTemplate)) {
+          const alternatives = this.resolveAlternatives(placeholder);
           if (alternatives.length > 1) return true;
         }
       }

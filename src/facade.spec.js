@@ -23,7 +23,7 @@ describe('facade.js', () => {
       expect(Sentence().get()).toBe('hello, world.');
     });
 
-    it('should be able to handle numeric template masks', () => {
+    it('should be able to handle numeric template placeholders', () => {
       const template = 'This is a really {1} sentence that I don\'t think should ever {2}.';
       const vocab = {
         1: ['big', 'bad', 'wolf'],

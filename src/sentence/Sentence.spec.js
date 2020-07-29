@@ -8,6 +8,12 @@ describe('Sentence.js', () => {
     verb: ['try', 'do']
   };
 
+  const helloWorldTemplate = '{greeting}, {noun}.';
+  const helloWorldVocab = {
+    greeting: [ 'hello' ],
+    noun: [ 'world' ]
+  };
+
   describe('get()', () => {
     it('should return same text when called twice', () => {
       const sentence = new Sentence(template, vocab);
@@ -90,25 +96,30 @@ describe('Sentence.js', () => {
       });
 
       it('should result in same sentence even if true when there is only one possible outcome', () => {
-        const template = '{greeting}, {noun}.';
-        const vocab = {
-          greeting: [ 'hello' ],
-          noun: [ 'world' ]
-        };
-        const sentence = new Sentence(template, vocab, { forceNewSentence: true });
+        const sentence = new Sentence(helloWorldTemplate, helloWorldVocab, { forceNewSentence: true });
         expect(sentence.generate().get()).toEqual(sentence.generate().get());
       });
     });
 
     /**
-     * PRESERVE CURLY BRACKETS
+     * PLACEHOLDER NOTATION
      */
-    describe('preserveCurlyBrackets', () => {
-      it('should preserve curly brackets if true', () => {
+    describe('placeholderNotation', () => {
+      it('should default to curly brackets', () => {
+        const sentence = new Sentence(helloWorldTemplate, helloWorldVocab);
+        expect(sentence.get()).toEqual('hello, world.');
+      });
+    });
+
+    /**
+     * PRESERVE PLACEHOLDER NOTATION
+     */
+    describe('preservePlaceholderNotation', () => {
+      it('should preserve placeholder notation if true', () => {
         const sentence = new Sentence(
           '{test}',
           { test: ['Yup, just a test.']},
-          { preserveCurlyBrackets: true }
+          { preservePlaceholderNotation: true }
         );
         expect(sentence.get()).toBe('{Yup, just a test.}');
       });
