@@ -8,11 +8,10 @@ module.exports = class Sentence {
     this.setTemplates(templates);
     this.setVocab(vocab);
     this.generate();
+    this.initialized = true;
   }
 
   /**
-   * get()
-   *
    * Returns the generated sentence, most uses will only ever require this method
    */
   get() {
@@ -20,20 +19,20 @@ module.exports = class Sentence {
   }
 
   /**
-   * generate()
-   *
    * May be called repeatedly to randomly regenerate the sentence
    */
   generate() {
     const template = this.templates.any();
-    const matches = this.findMasks(template);
+    const matches = this.findPlaceholders(template);
 
     let sentence = template;
-    for(const match of matches) {
-      sentence = sentence.replace(match, this.resolveWord(match));
+    for (const match of matches) {
+      const replacement = this.resolveWord(match, this.shouldCapitalize(sentence, match));
+      sentence = sentence.replace(match, replacement);
     }
 
-    if(this.forceNewSentence
+    const { forceNewSentence } = this.options;
+    if (forceNewSentence
       && this.sentence === sentence
       && this.isforceNewSentencePossible()
     ) {
@@ -49,57 +48,85 @@ module.exports = class Sentence {
   }
 
   /**
-   * Returns masks/placeholders in the given template string
+   * Returns placeholders in the given template string
    * @param {string} template
-   *
    * 'This is {a-adjective} example.' => ['{a-adjective}']
    */
-  findMasks(template) {
-    return template.match(/([{]+(\s*([a-z-0-9])*,?\s*)*[}]+)/gi);
+  findPlaceholders(template) {
+    const { start, end } = this.options.placeholderNotation;
+    const regex = new RegExp(`([${start}]+(\\s*([a-z-0-9])*,?\\s*)*[${end}]+)`, 'gi');
+    return template.match(regex);
   }
 
   /**
-   * Returns keys found in the given mask/placeholder
-   * @param {string} mask
-   * '{a-adjective, a-curse, verb}' => ['a-adjective', 'a-curse', 'verb']
+   * Returns a random word from a pool of alternatives depending on the given placeholder
+   * @param {string} placeholder
    */
-  findKeys(mask) {
-    return mask.replace(/{|}|\s/g, '').split(',');
+  resolveWord(placeholder, shouldCapitalize = false) {
+    const alternatives = this.resolveAlternatives(placeholder);
+    const chosenWord = shouldCapitalize ? capitalize(alternatives.any()) : alternatives.any();
+
+    const { placeholderNotation, preservePlaceholderNotation } = this.options;
+    if (preservePlaceholderNotation) {
+      const { start, end } = placeholderNotation;
+      return `${start}${chosenWord}${end}`;
+    } else {
+      return chosenWord;
+    }
   }
 
   /**
-   * Returns a random word from a pool of alternatives depending on the given mask/placeholder
-   * @param {string} mask
+   * Returns an array of alternatives depending on the given placeholder
+   * @param {string} placeholder
    */
-  resolveWord(mask) {
-    const keys = this.findKeys(mask);
-    const alternatives = this.resolveAlternatives(keys);
-    return alternatives.any();
-  }
-
-  /**
-   * Returns an array of alternatives depending on the given mask/placeholder
-   * @param {string} mask
-   */
-  resolveAlternatives(keys) {
+  resolveAlternatives(placeholder) {
+    const keys = this.findKeys(placeholder);
     return keys.map(key => {
       let a_an = false;
-      if(key.substr(0, 2) == 'a-') {
+      if (key.substr(0, 2) == 'a-') {
         a_an = true;
         key = key.slice(2);
       }
 
       let plural = false;
-      if(key.slice(-2) === '-s') {
+      if (key.slice(-2) === '-s') {
         const trimmed = key.substr(0, key.length - 2);
-        if(Object.keys(this.vocab).includes(trimmed)) {
+        if (Object.keys(this.vocab).includes(trimmed)) {
           plural = true;
           key = trimmed;
         }
       }
 
-      if(this.isValidKey(key)) return articleAndPluralize(a_an, plural, this.vocab[key]);
+      if (this.isValidKey(key)) return articleAndPluralize(a_an, plural, this.vocab[key]);
     }).flat();
+  }
+
+  /**
+   * Returns keys found in the given placeholder
+   * @param {string} placeholder
+   * '{a-adjective, a-curse, verb}' => ['a-adjective', 'a-curse', 'verb']
+   */
+  findKeys(placeholder) {
+    const { start, end } = this.options.placeholderNotation;
+    return placeholder.replace(new RegExp(`${start}|${end}|\\s`, 'g'), '').split(',');
+  }
+
+  get templates() {
+    return this.templates;
+  }
+
+  get vocabulary() {
+    return this.vocab;
+  }
+
+  get options() {
+    return {
+      allowDuplicates: this.allowDuplicates,
+      capitalize: this.capitalize,
+      forceNewSentence: this.forceNewSentence,
+      placeholderNotation: this.placeholderNotation,
+      preservePlaceholderNotation: this.preservePlaceholderNotation,
+    };
   }
 
   addTemplates(...templates) {
@@ -115,8 +142,11 @@ module.exports = class Sentence {
       allowDuplicates,
       capitalize,
       forceNewSentence,
-      preserveCurlyBrackets
-    } = validateOptions(options);
+      placeholderNotation,
+      preservePlaceholderNotation,
+    } = this.initialized
+      ? validateOptions(options, this.options)
+      : validateOptions(options);
 
     Object.defineProperties(this, {
       allowDuplicates: {
@@ -128,26 +158,50 @@ module.exports = class Sentence {
       forceNewSentence: {
         value: forceNewSentence
       },
-      preserveCurlyBrackets: {
-        value: preserveCurlyBrackets
+      placeholderNotation: {
+        value: this.parsePlaceholderNotation(placeholderNotation)
+      },
+      preservePlaceholderNotation: {
+        value: preservePlaceholderNotation
       }
     });
   }
 
   setTemplates(templates) {
-    Object.defineProperties(this, {
-      templates: {
-        value: validateTemplates(templates)
-      }
+    const { allowDuplicates } = this.options;
+    Object.defineProperty(this, 'templates', {
+      value: allowDuplicates ? validateTemplates(templates) : validateTemplates(templates).unique(),
+      writable: true,
     });
   }
 
   setVocab(vocabulary) {
-    Object.defineProperties(this, {
-      vocab: {
-        value: validateVocabulary(vocabulary)
-      }
+    Object.defineProperty(this, 'vocab', {
+      value: validateVocabulary(vocabulary),
+      writable: true,
     });
+  }
+
+  parsePlaceholderNotation(notation) {
+    if (notation.start && notation.end) {
+      return notation;
+    } else {
+      const splitBySpace = notation.split(' ');
+      return {
+        start: splitBySpace[0],
+        end: splitBySpace[1],
+      };
+    }
+  }
+
+  shouldCapitalize(sentence, placeholder) {
+    const { capitalize } = this.options;
+    if (capitalize) {
+      const index = sentence.indexOf(placeholder);
+      const findPunctuationRegex = /[.!?:]+[\s]*$/;
+      return index === 0 || findPunctuationRegex.test(sentence.substr(0, index));
+    }
+    return false;
   }
 
   isValidKey(key) {
@@ -155,14 +209,14 @@ module.exports = class Sentence {
   }
 
   isforceNewSentencePossible() {
-    if(this.templates.length > 1) {
+    if (this.templates.length > 1) {
       return true;
     } else {
       const theOnlyTemplate = this.templates[0];
-      if(theOnlyTemplate) {
-        for(const mask of this.findMasks(theOnlyTemplate)) {
-          const alternatives = this.resolveAlternatives(this.findKeys(mask));
-          if(alternatives.length > 1) return true;
+      if (theOnlyTemplate) {
+        for (const placeholder of this.findPlaceholders(theOnlyTemplate)) {
+          const alternatives = this.resolveAlternatives(placeholder);
+          if (alternatives.length > 1) return true;
         }
       }
     }
@@ -170,11 +224,11 @@ module.exports = class Sentence {
   }
 };
 
-
-
 const articleAndPluralize = (a_an, plural, words) => {
   return words.map(w => `${a_an ? isVowel(w[0]) ? 'an ' : 'a ' : ''}${w}${plural ? 's' : ''}`);
 };
+
+const capitalize = (str) => str.replace(/^[']*(\w)/, c => c.toUpperCase());
 
 const isVowel = c => {
   c = c.toLowerCase();
@@ -184,3 +238,15 @@ const isVowel = c => {
 Array.prototype.any = function() {
   return this[Math.floor(Math.random() * this.length)];
 };
+
+Array.prototype.unique = function () {
+  const a = this.concat();
+  for (let i = 0; i < a.length; ++i) {
+    for (let j = i + 1; j < a.length; ++j) {
+      if (a[i] === a[j]) a.splice(j--, 1);
+    }
+  }
+
+  return a;
+};
+

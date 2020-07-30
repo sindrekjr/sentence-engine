@@ -1,6 +1,7 @@
 {
   "allowDuplicates": true,
-  "capitalize": true,
+  "capitalize": false,
   "forceNewSentence": false,
-  "preserveCurlyBrackets": false
+  "placeholderNotation": "{ }",
+  "preservePlaceholderNotation": false
 }

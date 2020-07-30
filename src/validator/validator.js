@@ -14,8 +14,8 @@ const Validator = {
 
 const validateOptions = (options, alt = defaults.options) => {
   const mergedWithDefaultOptions = { ...defaults.options, ...alt };
-  if(options) {
-    if(Object.prototype.toString.call(options) === '[object Object]') {
+  if (options) {
+    if (Object.prototype.toString.call(options) === '[object Object]') {
       return { ...mergedWithDefaultOptions, ...options };
     } else {
       throw new TypeError('Options is expected to be an object.');
@@ -25,10 +25,10 @@ const validateOptions = (options, alt = defaults.options) => {
 };
 
 const validateTemplates = (templates, alt = defaults.templates) => {
-  if(templates) {
-    if(Object.prototype.toString.call(templates) === '[object String]') {
+  if (templates) {
+    if (Object.prototype.toString.call(templates) === '[object String]') {
       return [templates];
-    } else if(Object.prototype.toString.call(templates[0]) === '[object String]') {
+    } else if (Object.prototype.toString.call(templates[0]) === '[object String]') {
       return templates;
     } else {
       throw new TypeError('Templates are expected to be a string or array of strings.');
@@ -38,8 +38,8 @@ const validateTemplates = (templates, alt = defaults.templates) => {
 };
 
 const validateVocabulary = (vocabulary, alt = defaults.vocabulary) => {
-  if(vocabulary) {
-    if(Object.prototype.toString.call(vocabulary) === '[object Object]') {
+  if (vocabulary) {
+    if (Object.prototype.toString.call(vocabulary) === '[object Object]') {
       return vocabulary;
     } else {
       throw new TypeError('Vocabulary is expected to be an object.');
