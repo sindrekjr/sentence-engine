@@ -8,6 +8,7 @@ module.exports = class Sentence {
     this.setTemplates(templates);
     this.setVocab(vocab);
     this.generate();
+    this.initialized = true;
   }
 
   /**
@@ -30,7 +31,8 @@ module.exports = class Sentence {
       sentence = sentence.replace(match, replacement);
     }
 
-    if (this.forceNewSentence
+    const { forceNewSentence } = this.options;
+    if (forceNewSentence
       && this.sentence === sentence
       && this.isforceNewSentencePossible()
     ) {
@@ -48,14 +50,12 @@ module.exports = class Sentence {
   /**
    * Returns placeholders in the given template string
    * @param {string} template
-   *
    * 'This is {a-adjective} example.' => ['{a-adjective}']
    */
   findPlaceholders(template) {
-    const { start, end } = this.placeholderNotation;
+    const { start, end } = this.options.placeholderNotation;
     const regex = new RegExp(`([${start}]+(\\s*([a-z-0-9])*,?\\s*)*[${end}]+)`, 'gi');
     return template.match(regex);
-    //return template.match(/([{]+(\s*([a-z-0-9])*,?\s*)*[}]+)/gi);
   }
 
   /**
@@ -66,8 +66,9 @@ module.exports = class Sentence {
     const alternatives = this.resolveAlternatives(placeholder);
     const chosenWord = shouldCapitalize ? capitalize(alternatives.any()) : alternatives.any();
 
-    if (this.preservePlaceholderNotation) {
-      const { start, end } = this.placeholderNotation;
+    const { placeholderNotation, preservePlaceholderNotation } = this.options;
+    if (preservePlaceholderNotation) {
+      const { start, end } = placeholderNotation;
       return `${start}${chosenWord}${end}`;
     } else {
       return chosenWord;
@@ -106,7 +107,7 @@ module.exports = class Sentence {
    * '{a-adjective, a-curse, verb}' => ['a-adjective', 'a-curse', 'verb']
    */
   findKeys(placeholder) {
-    const { start, end } = this.placeholderNotation;
+    const { start, end } = this.options.placeholderNotation;
     return placeholder.replace(new RegExp(`${start}|${end}|\\s`, 'g'), '').split(',');
   }
 
@@ -119,7 +120,13 @@ module.exports = class Sentence {
   }
 
   get options() {
-    return this.options;
+    return {
+      allowDuplicates: this.allowDuplicates,
+      capitalize: this.capitalize,
+      forceNewSentence: this.forceNewSentence,
+      placeholderNotation: this.placeholderNotation,
+      preservePlaceholderNotation: this.preservePlaceholderNotation,
+    };
   }
 
   addTemplates(...templates) {
@@ -131,16 +138,15 @@ module.exports = class Sentence {
   }
 
   setOptions(options) {
-    // TODO: Consolidate option in single options property
-    // Also? Make sure previously created options take precedence over default options!
-
     const {
       allowDuplicates,
       capitalize,
       forceNewSentence,
       placeholderNotation,
-      preservePlaceholderNotation
-    } = validateOptions(options);
+      preservePlaceholderNotation,
+    } = this.initialized
+      ? validateOptions(options, this.options)
+      : validateOptions(options);
 
     Object.defineProperties(this, {
       allowDuplicates: {
@@ -162,8 +168,9 @@ module.exports = class Sentence {
   }
 
   setTemplates(templates) {
+    const { allowDuplicates } = this.options;
     Object.defineProperty(this, 'templates', {
-      value: this.allowDuplicates ? validateTemplates(templates) : validateTemplates(templates).unique(),
+      value: allowDuplicates ? validateTemplates(templates) : validateTemplates(templates).unique(),
       writable: true,
     });
   }
@@ -176,15 +183,20 @@ module.exports = class Sentence {
   }
 
   parsePlaceholderNotation(notation) {
-    const splitBySpace = notation.split(' ');
-    return {
-      start: splitBySpace[0],
-      end: splitBySpace[1],
-    };
+    if (notation.start && notation.end) {
+      return notation;
+    } else {
+      const splitBySpace = notation.split(' ');
+      return {
+        start: splitBySpace[0],
+        end: splitBySpace[1],
+      };
+    }
   }
 
   shouldCapitalize(sentence, placeholder) {
-    if (this.capitalize) {
+    const { capitalize } = this.options;
+    if (capitalize) {
       const index = sentence.indexOf(placeholder);
       const findPunctuationRegex = /[.!?:]+[\s]*$/;
       return index === 0 || findPunctuationRegex.test(sentence.substr(0, index));
@@ -211,8 +223,6 @@ module.exports = class Sentence {
     return false;
   }
 };
-
-
 
 const articleAndPluralize = (a_an, plural, words) => {
   return words.map(w => `${a_an ? isVowel(w[0]) ? 'an ' : 'a ' : ''}${w}${plural ? 's' : ''}`);
