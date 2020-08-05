@@ -5,7 +5,7 @@ export class Validator {
   templates = defaults.templates;
   vocabulary = defaults.vocabulary;
 
-  public validateOptions(options: {}, alt: {} = this.options): {} {
+  public validateOptions(options: Options, alt: Options = this.options): Options {
     return validateOptions(options, alt);
   }
 
@@ -18,7 +18,7 @@ export class Validator {
   }
 }
 
-export const validateOptions = (options: {}, alt: {}): {} => {
+export const validateOptions = (options: Options, alt: Options): Options => {
   return { ...defaults.options, ...alt, ...options };
 }
 
