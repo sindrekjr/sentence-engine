@@ -2,6 +2,9 @@
   "allowDuplicates": true,
   "capitalize": false,
   "forceNewSentence": false,
-  "placeholderNotation": "{ }",
+  "placeholderNotation": {
+    "start": "{",
+    "end": "}"
+  },
   "preservePlaceholderNotation": false
 }
