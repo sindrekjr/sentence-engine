@@ -18,14 +18,14 @@ export class Validator {
   }
 }
 
-export const validateOptions = (options: Options, alt: Options): Options => {
+export const validateOptions = (options: Options, alt?: Options): Options => {
   return { ...defaults.options, ...alt, ...options };
 }
 
-export const validateTemplates = (templates: string[], alt: string[]): string[] => {
+export const validateTemplates = (templates: string[], alt?: string[]): string[] => {
   return templates || alt || defaults.templates;
 }
 
-export const validateVocabulary = (vocabulary: Vocabulary, alt: Vocabulary): Vocabulary => {
+export const validateVocabulary = (vocabulary: Vocabulary, alt?: Vocabulary): Vocabulary => {
   return vocabulary || alt || defaults.vocabulary;
 }
