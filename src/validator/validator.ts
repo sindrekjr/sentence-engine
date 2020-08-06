@@ -9,7 +9,7 @@ export class Validator {
     return validateOptions(options, alt);
   }
 
-  public validateTemplates(templates: string[], alt: string[] = this.templates): string[] {
+  public validateTemplates(templates: string[] | string, alt: string[] | string = this.templates): string[] {
     return validateTemplates(templates, alt);
   }
 
@@ -22,8 +22,8 @@ export const validateOptions = (options: Options, alt?: Options): Options => {
   return { ...defaults.options, ...alt, ...options };
 }
 
-export const validateTemplates = (templates: string[], alt?: string[]): string[] => {
-  return templates || alt || defaults.templates;
+export const validateTemplates = (templates: string[] | string, alt?: string[] | string): string[] => {
+  return [templates || alt || defaults.templates].flat();
 }
 
 export const validateVocabulary = (vocabulary: Vocabulary, alt?: Vocabulary): Vocabulary => {
