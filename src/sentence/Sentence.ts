@@ -1,3 +1,4 @@
+import defaults from '../defaults';
 import { validateOptions, validateTemplates, validateVocabulary } from '../validator';
 
 export default class Sentence {
@@ -9,10 +10,10 @@ export default class Sentence {
   
   sentence: string = '';
 
-  constructor(templates: string[] | string, vocab: Vocabulary, options: Options) {
-    this.setOptions(options);
-    this.setTemplates(templates);
-    this.setVocab(vocab);
+  constructor(config: Configuration = defaults) {
+    this.setOptions(config.options);
+    this.setTemplates(config.templates);
+    this.setVocab(config.vocabulary);
     this.generate();
     this.initialized = true;
   }  
@@ -117,7 +118,7 @@ export default class Sentence {
     return placeholder.replace(new RegExp(`${start}|${end}|\\s`, 'g'), '').split(',');
   }
 
-  addTemplates(...templates: string[]): void {
+  addTemplates(...templates: Templates | Templates[]): void {
     this.setTemplates(this.templates.concat(templates.flat()));
   }
 
