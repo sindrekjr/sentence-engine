@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.4.2](../../tree/v0.4.2) - 11.08.2020
+#### Documentation
+* :nut_and_bolt: **Change** package keywords
+* :nut_and_bolt: **Change** package description
+* :nut_and_bolt: **Change** README
+
 ## [0.4.1](../../tree/v0.4.1) - 30.07.2020
 * :tada: **New** option `allowDuplicates` now functions as expected
 * :tada: **New** option `capitalize` now functions as expected
