@@ -1,7 +1,7 @@
 {
   "name": "sentence-engine",
   "version": "0.4.1",
-  "description": "Template-based sentence generator with full user control. ",
+  "description": "Template-based sentence generator with full user control.",
   "main": "./src/index.js",
   "scripts": {
     "start": "node ./src/index.js",
@@ -14,9 +14,9 @@
   },
   "keywords": [
     "sentence",
-    "language",
+    "sentences",
     "template",
-    "comedy",
+    "random",
     "text-gen"
   ],
   "author": "sindrekjr",
