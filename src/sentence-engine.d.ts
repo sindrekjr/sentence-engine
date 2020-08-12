@@ -1,10 +1,10 @@
-declare type Configuration = {
-  options: Options;
-  templates: Templates | Template;
-  vocabulary: Vocabulary;
+declare interface Configuration {
+  options?: MaybeOptions;
+  templates?: Templates;
+  vocabulary?: Vocabulary;
 }
 
-declare type Options = {
+declare interface Options {
   allowDuplicates: boolean;
   capitalize: boolean;
   forceNewSentence: boolean;
@@ -13,6 +13,17 @@ declare type Options = {
     end: string;
   };
   preservePlaceholderNotation: boolean;
+};
+
+declare interface MaybeOptions {
+  allowDuplicates?: boolean;
+  capitalize?: boolean;
+  forceNewSentence?: boolean;
+  placeholderNotation?: {
+    start: string;
+    end: string;
+  } | string;
+  preservePlaceholderNotation?: boolean;
 };
 
 declare type Template = string;
