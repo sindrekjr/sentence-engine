@@ -1,34 +1,96 @@
-import defaults from '../defaults';
-import { validateOptions, validateTemplates, validateVocabulary } from '../validator';
+const defaultOptions = {
+  allowDuplicates: true,
+  capitalize: true,
+  forceNewSentence: false,
+  placeholderNotation: {
+    start: '{',
+    end: '}'
+  },
+  preservePlaceholderNotation: false,
+};
 
 export default class Sentence {
-  initialized: boolean = false;
-  
-  templates!: string[];
-  vocab!: Vocabulary;
-  options!: Options;
-  
-  sentence: string = '';
+  private _templates: Templates = [];
+  private _vocabulary: Vocabulary = {};
+  private _options: Options = defaultOptions;
 
-  constructor(config: Configuration = defaults) {
-    this.setOptions(config.options);
-    this.setTemplates(config.templates);
-    this.setVocab(config.vocabulary);
+  public sentence: string = '';
+
+  constructor(
+    templates: Template | Templates,
+    vocabulary: Vocabulary,
+    options?: MaybeOptions,
+  ) {
+    this.configure({
+      options: options,
+      templates: [templates].flat(),
+      vocabulary: vocabulary
+    });
     this.generate();
-    this.initialized = true;
-  }  
+  }
+
+  public configure(config: Configuration) {
+    const { options, templates, vocabulary } = config;
+    if (options) this.setOptions(options);
+    if (templates) this.templates = templates;
+    if (vocabulary) this.vocabulary = vocabulary;
+  }
+
+  public addTemplates(...templates: Templates | Templates[]): void {
+    this.templates = this.templates.concat(...templates.flat());
+  }
+
+  public addVocab(vocab: Vocabulary): void {
+    this.vocabulary = Object.assign(this.vocabulary, vocab);
+  }
+
+  public setOptions(options: MaybeOptions): void {
+    const { placeholderNotation } = options;
+    if (placeholderNotation) {
+      options.placeholderNotation = this.parsePlaceholderNotation(placeholderNotation);
+    }
+    this._options = {
+      ...this.options,
+      ...options,
+    } as Options;
+  }
+
+  public restoreDefaultOptions(): void {
+    this._options = defaultOptions;
+  }
+
+  public get options(): Options {
+    return this._options;
+  }
+
+  public get templates(): Templates {
+    return this._templates;
+  }
+
+  public set templates(templates: Templates) {
+    const { allowDuplicates } = this.options;
+    this._templates = allowDuplicates ? templates : templates.unique();
+  }
+
+  public get vocabulary(): Vocabulary {
+    return this._vocabulary;
+  }
+
+  public set vocabulary(vocab: Vocabulary) {
+    this._vocabulary = vocab;
+  }
 
   /**
    * Returns the generated sentence, most uses will only ever require this method
    */
-  get(): string {
+  public get(): string {
     return this.sentence;
   }
 
   /**
    * May be called repeatedly to randomly regenerate the sentence
    */
-  generate(): Sentence {
+  public generate(): Sentence {
     const template = this.templates.any();
     const matches = this.findPlaceholders(template);
 
@@ -51,13 +113,24 @@ export default class Sentence {
       return this;
     }
   }
+  
+  private parsePlaceholderNotation(notation: string | { start: string; end: string; }): { start: string; end: string; } {
+    if (typeof notation === 'string') {
+      const splitBySpace = notation.split(' ');
+      return {
+        start: splitBySpace[0],
+        end: splitBySpace[1],
+      };
+    }
+    return notation;
+  }
 
   /**
    * Returns placeholders in the given template string
    * @param {string} template
    * 'This is {a-adjective} example.' => ['{a-adjective}']
    */
-  findPlaceholders(template: string): RegExpMatchArray | null {
+  private findPlaceholders(template: string): RegExpMatchArray | null {
     const { start, end } = this.options.placeholderNotation;
     const regex = new RegExp(`([${start}]+(\\s*([a-z-0-9])*,?\\s*)*[${end}]+)`, 'gi');
     return template.match(regex);
@@ -67,7 +140,7 @@ export default class Sentence {
    * Returns a random word from a pool of alternatives depending on the given placeholder
    * @param {string} placeholder
    */
-  resolveWord(placeholder: string, shouldCapitalize: boolean = false): string {
+  private resolveWord(placeholder: string, shouldCapitalize: boolean = false): string {
     const alternatives = this.resolveAlternatives(placeholder);
     const chosenWord = shouldCapitalize ? capitalize(alternatives.any()) : alternatives.any();
 
@@ -84,7 +157,7 @@ export default class Sentence {
    * Returns an array of alternatives depending on the given placeholder
    * @param {string} placeholder
    */
-  resolveAlternatives(placeholder: string): string[] {
+  private resolveAlternatives(placeholder: string): string[] {
     const keys = this.findKeys(placeholder);
     return keys.flatMap(key => {
       if (!this.isValidKey(key)) return [];
@@ -98,13 +171,13 @@ export default class Sentence {
       let plural = false;
       if (key.slice(-2) === '-s') {
         const trimmed = key.substr(0, key.length - 2);
-        if (Object.keys(this.vocab).includes(trimmed)) {
+        if (Object.keys(this.vocabulary).includes(trimmed)) {
           plural = true;
           key = trimmed;
         }
       }
 
-      return articleAndPluralize(a_an, plural, this.vocab[key]);
+      return articleAndPluralize(a_an, plural, this.vocabulary[key]);
     });
     }
 
@@ -113,76 +186,12 @@ export default class Sentence {
    * @param {string} placeholder
    * '{a-adjective, a-curse, verb}' => ['a-adjective', 'a-curse', 'verb']
    */
-  findKeys(placeholder: string): string[] {
+  private findKeys(placeholder: string): string[] {
     const { start, end } = this.options.placeholderNotation;
     return placeholder.replace(new RegExp(`${start}|${end}|\\s`, 'g'), '').split(',');
   }
 
-  addTemplates(...templates: Templates | Templates[]): void {
-    this.setTemplates(this.templates.concat(templates.flat()));
-  }
-
-  addVocab(vocab: Vocabulary): void {
-    this.setVocab(Object.assign(this.vocab, vocab));
-  }
-
-  setOptions(options: Options): void {
-    const {
-      allowDuplicates,
-      capitalize,
-      forceNewSentence,
-      placeholderNotation,
-      preservePlaceholderNotation,
-    } = this.initialized
-      ? validateOptions(options, this.options)
-      : validateOptions(options);
-
-    Object.defineProperties(this, {
-      allowDuplicates: {
-        value: allowDuplicates
-      },
-      capitalize: {
-        value: capitalize
-      },
-      forceNewSentence: {
-        value: forceNewSentence
-      },
-      placeholderNotation: {
-        value: this.parsePlaceholderNotation(placeholderNotation)
-      },
-      preservePlaceholderNotation: {
-        value: preservePlaceholderNotation
-      }
-    });
-  }
-
-  setTemplates(templates: string[] | string): void {
-    const { allowDuplicates } = this.options;
-    Object.defineProperty(this, 'templates', {
-      value: allowDuplicates ? validateTemplates(templates) : validateTemplates(templates).unique(),
-      writable: true,
-    });
-  }
-
-  setVocab(vocabulary: Vocabulary): void {
-    Object.defineProperty(this, 'vocab', {
-      value: validateVocabulary(vocabulary),
-      writable: true,
-    });
-  }
-
-  parsePlaceholderNotation(notation: string | { start: string; end: string; }): { start: string; end: string; } {
-    if (typeof notation === 'string') {
-      const splitBySpace = notation.split(' ');
-      return {
-        start: splitBySpace[0],
-        end: splitBySpace[1],
-      };
-    }
-    return notation;
-  }
-
-  shouldCapitalize(sentence: string, placeholder: string): boolean {
+  private shouldCapitalize(sentence: string, placeholder: string): boolean {
     const { capitalize } = this.options;
     if (capitalize) {
       const index = sentence.indexOf(placeholder);
@@ -192,11 +201,11 @@ export default class Sentence {
     return false;
   }
 
-  isValidKey(key: string | number): boolean {
-    return key in this.vocab;
+  private isValidKey(key: string | number): boolean {
+    return key in this.vocabulary;
   }
 
-  isforceNewSentencePossible(): boolean {
+  private isforceNewSentencePossible(): boolean {
     if (this.templates.length > 1) {
       return true;
     } else {
@@ -219,3 +228,17 @@ const articleAndPluralize = (a_an: boolean, plural: boolean, words: string[]): s
 const capitalize = (str: string): string => str.replace(/^[']*(\w)/, c => c.toUpperCase());
 
 const isVowel = (c: string): boolean => ['a', 'e', 'i', 'o', 'u'].includes(c);
+
+Array.prototype.any = function() {
+  return this[Math.floor(Math.random() * this.length)];
+};
+
+Array.prototype.unique = function() {
+  const a = this.concat();
+  for (let i = 0; i < a.length; ++i) {
+    for (let j = i + 1; j < a.length; ++j) {
+      if (a[i] === a[j]) a.splice(j--, 1);
+    }
+  }
+  return a;
+};

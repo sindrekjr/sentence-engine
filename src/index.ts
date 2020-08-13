@@ -1,3 +1,21 @@
-import SentenceFacade from './facade';
+import SentenceFactory from './factory';
+import Sentence from './sentence';
 
-export default SentenceFacade;
+const { 
+  create, 
+  configure,
+  addDefaultOptions,
+  addDefaultTemplates,
+  addDefaultVocabulary,
+  restoreDefaults,
+} = new SentenceFactory();
+export default create;
+export {
+  Sentence,
+  SentenceFactory,
+  configure,
+  addDefaultOptions,
+  addDefaultTemplates,
+  addDefaultVocabulary,
+  restoreDefaults,
+};
