@@ -6,7 +6,7 @@ export default class SentenceFactory {
   public defaultVocabulary: Vocabulary = defaults.vocabulary;
   public defaultOptions?: MaybeOptions;
 
-  public create(
+  public createSentence(
     templates?: Templates | Template,
     vocabulary?: Vocabulary,
     options?: MaybeOptions

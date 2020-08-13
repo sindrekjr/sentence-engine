@@ -2,14 +2,14 @@ import SentenceFactory from './factory';
 import Sentence from './sentence';
 
 const { 
-  create, 
+  createSentence, 
   configure,
   addDefaultOptions,
   addDefaultTemplates,
   addDefaultVocabulary,
   restoreDefaults,
 } = new SentenceFactory();
-export default create;
+export default createSentence;
 export {
   Sentence,
   SentenceFactory,

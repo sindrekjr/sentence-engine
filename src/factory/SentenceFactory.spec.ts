@@ -21,7 +21,7 @@ describe('SentenceFactory.js', () => {
    */
   describe('sentence generation', () => {
     it('should return default text when supplied no data', () => {
-      const defaultOutput = Factory.create().get();
+      const defaultOutput = Factory.createSentence().get();
       expect(defaultOutput).toBeDefined();
       expect(defaultOutput.length).toBeGreaterThan(0);
     });
@@ -32,7 +32,7 @@ describe('SentenceFactory.js', () => {
         1: ['big', 'bad', 'wolf'],
         2: ['change', 'climb']
       };
-      expect(() => Factory.create(template, vocab).get()).not.toThrow();
+      expect(() => Factory.createSentence(template, vocab).get()).not.toThrow();
     });
   });
 
