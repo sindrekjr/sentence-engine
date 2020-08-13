@@ -9,6 +9,7 @@ const {
   addDefaultVocabulary,
   restoreDefaults,
 } = new SentenceFactory();
+module.exports = createSentence;
 export default createSentence;
 export {
   Sentence,
