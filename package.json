@@ -8,7 +8,8 @@
     "test": "jest",
     "eslint": "eslint ./src/**/*.ts",
     "clean": "rm -rf dist",
-    "build": "npm run clean && tsc -p tsconfig.build.json"
+    "build": "npm run clean && tsc -p tsconfig.build.json",
+    "prepack": "npm run build"
   },
   "repository": {
     "type": "git",
