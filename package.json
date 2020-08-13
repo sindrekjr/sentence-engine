@@ -5,9 +5,10 @@
   "main": "./dist/index.js",
   "scripts": {
     "start": "node ./src/index.js",
-    "build": "tsc",
     "test": "jest",
-    "eslint": "eslint ./src/**/*.ts"
+    "eslint": "eslint ./src/**/*.ts",
+    "clean": "rm -rf dist",
+    "build": "npm run clean && tsc -p tsconfig.build.json"
   },
   "repository": {
     "type": "git",
