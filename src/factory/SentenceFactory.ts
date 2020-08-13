@@ -2,12 +2,12 @@ import defaults from './defaults';
 import Sentence from '../sentence';
 
 export default class SentenceFactory {
-  public defaultTemplates: Templates | Template = defaults.templates;
+  public defaultTemplates: Template[] | Template = defaults.templates;
   public defaultVocabulary: Vocabulary = defaults.vocabulary;
   public defaultOptions?: MaybeOptions;
 
   public createSentence(
-    templates?: Templates | Template,
+    templates?: Template[] | Template,
     vocabulary?: Vocabulary,
     options?: MaybeOptions
   ): Sentence {
@@ -32,7 +32,7 @@ export default class SentenceFactory {
     };
   }
 
-  public addDefaultTemplates(...templates: Templates | Templates[]): void {
+  public addDefaultTemplates(...templates: Template[]): void {
     this.defaultTemplates = this.defaultTemplates.concat(...templates.flat());
   }
 

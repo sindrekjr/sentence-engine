@@ -107,7 +107,7 @@ describe('SentenceFactory.js', () => {
       });
 
       it('should add all the given templates', () => {
-        Factory.addDefaultTemplates(templates);
+        Factory.addDefaultTemplates(...templates);
         const result = Factory.defaultTemplates;
         expect(result).toContain(templates[0]);
         expect(result.length).toEqual(3);

@@ -28,10 +28,9 @@ declare interface MaybeOptions {
 
 declare type Template = string;
 
-declare type Templates = Template[];
-
-declare type WeightedTemplates = {
-  [fieldName: number]: Template
+declare type WeightedTemplate = {
+  template: Template;
+  weight?: number;
 };
 
 declare type Vocabulary = {
@@ -40,8 +39,9 @@ declare type Vocabulary = {
 
 declare type WeightedVocabulary = {
   [fieldName: string]: {
-    [fieldName: number]: string
-  }
+    entry: string;
+    weight?: number;
+  }[]
 };
 
 declare interface Array<T> {

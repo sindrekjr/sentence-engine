@@ -10,14 +10,14 @@ const defaultOptions = {
 };
 
 export default class Sentence {
-  private _templates: Templates = [];
+  private _templates: Template[] = [];
   private _vocabulary: Vocabulary = {};
   private _options: Options = defaultOptions;
 
   public sentence: string = '';
 
   constructor(
-    templates: Template | Templates,
+    templates: Template[] | Template,
     vocabulary: Vocabulary,
     options?: MaybeOptions,
   ) {
@@ -36,7 +36,7 @@ export default class Sentence {
     if (vocabulary) this.vocabulary = vocabulary;
   }
 
-  public addTemplates(...templates: Templates | Templates[]): void {
+  public addTemplates(...templates: Template[]): void {
     this.templates = this.templates.concat(...templates.flat());
   }
 
@@ -63,11 +63,11 @@ export default class Sentence {
     return this._options;
   }
 
-  public get templates(): Templates {
+  public get templates(): Template[] {
     return this._templates;
   }
 
-  public set templates(templates: Templates) {
+  public set templates(templates: Template[]) {
     const { allowDuplicates } = this.options;
     this._templates = allowDuplicates ? templates : templates.unique();
   }

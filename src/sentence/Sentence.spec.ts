@@ -2,7 +2,7 @@ import Sentence from './Sentence';
 
 describe('Sentence.js', () => {
   const template: Template = 'Let\'s {verb} this, and hope for the {adjective}.';
-  const templates: Templates = [template];
+  const templates: Template[] = [template];
   const vocab: Vocabulary = {
     adjective: ['best', 'worst', 'hilarious'],
     verb: ['try', 'do']
@@ -41,14 +41,14 @@ describe('Sentence.js', () => {
       it('should store duplicates if true', () => {
         const sentence = new Sentence(templates, vocab, { allowDuplicates: true });
         const initialLength = sentence.templates.length;
-        sentence.addTemplates(templates);
+        sentence.addTemplates(...templates);
         expect(sentence.templates.length).toBe(initialLength + templates.length);
       });
 
       it('should not store duplicates if false', () => {
         const sentence = new Sentence(templates, vocab, { allowDuplicates: false });
         const initialLength = sentence.templates.length;
-        sentence.addTemplates(templates);
+        sentence.addTemplates(...templates);
         expect(sentence.templates.length).toBe(initialLength);
       });
     });
