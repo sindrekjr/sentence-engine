@@ -24,7 +24,7 @@ export default class SentenceFactory {
     if (templates) this.defaultTemplates = templates;
     if (vocabulary) this.defaultOptions = vocabulary;
   }
-  
+
   public addDefaultOptions(options: MaybeOptions): void {
     this.defaultOptions = {
       ...this.defaultOptions,

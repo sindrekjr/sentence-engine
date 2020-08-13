@@ -123,7 +123,7 @@ describe('SentenceFactory.js', () => {
         const expectedKeys: string[] = Object.keys(vocabulary);
         const expectedValues: string[] = Object.values(vocabulary).flat();
         const resultingVocab: Vocabulary = Factory.defaultVocabulary;
-        
+
         expectedKeys.forEach(key => {
           expect(Object.keys(resultingVocab)).toContain(key);
         });

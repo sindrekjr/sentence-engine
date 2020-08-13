@@ -95,13 +95,13 @@ export default class Sentence {
     const matches = this.findPlaceholders(template);
 
     let sentence = template;
-    if(matches) {
+    if (matches) {
       for (const match of matches) {
         const replacement = this.resolveWord(match, this.shouldCapitalize(sentence, match));
         sentence = sentence.replace(match, replacement);
       }
     }
-    
+
     const { forceNewSentence } = this.options;
     if (forceNewSentence
       && this.sentence === sentence
@@ -113,7 +113,7 @@ export default class Sentence {
       return this;
     }
   }
-  
+
   private parsePlaceholderNotation(notation: string | { start: string; end: string; }): { start: string; end: string; } {
     if (typeof notation === 'string') {
       const splitBySpace = notation.split(' ');
@@ -179,7 +179,7 @@ export default class Sentence {
 
       return articleAndPluralize(a_an, plural, this.vocabulary[key]);
     });
-    }
+  }
 
   /**
    * Returns keys found in the given placeholder
@@ -219,7 +219,7 @@ export default class Sentence {
     }
     return false;
   }
-};
+}
 
 const articleAndPluralize = (a_an: boolean, plural: boolean, words: string[]): string[] => {
   return words.map(w => `${a_an ? isVowel(w[0]) ? 'an ' : 'a ' : ''}${w}${plural ? 's' : ''}`);

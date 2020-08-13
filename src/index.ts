@@ -1,8 +1,8 @@
 import SentenceFactory from './factory';
 import Sentence from './sentence';
 
-const { 
-  createSentence, 
+const {
+  createSentence,
   configure,
   addDefaultOptions,
   addDefaultTemplates,

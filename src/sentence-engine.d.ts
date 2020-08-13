@@ -13,7 +13,7 @@ declare interface Options {
     end: string;
   };
   preservePlaceholderNotation: boolean;
-};
+}
 
 declare interface MaybeOptions {
   allowDuplicates?: boolean;
@@ -24,7 +24,7 @@ declare interface MaybeOptions {
     end: string;
   } | string;
   preservePlaceholderNotation?: boolean;
-};
+}
 
 declare type Template = string;
 
