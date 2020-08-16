@@ -107,8 +107,8 @@ createSentence(template, vocabulary, { preservePlaceholderNotation: true });
 ```
 If true, then sentence generation will retain the placeholder notation around generated words/phrases.
 
-### Contributing
+## Contributing
 Sure! Feel free to submit PRs or issues.
 
-### Background
+## Background
 The package is inspired by the TV show Better Off Ted's episode S2E8 "The Impertence of Communicationizing", and started off as a proof-of-concept for the insult formula introduced in the episode.
