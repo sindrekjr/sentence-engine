@@ -10,9 +10,9 @@ const defaultOptions = {
 };
 
 export class Sentence {
-  private _templates: Template[] = [];
-  private _vocabulary: Vocabulary = {};
-  private _options: Options = defaultOptions;
+  #templates: Template[] = [];
+  #vocabulary: Vocabulary = {};
+  #options: Options = defaultOptions;
 
   public sentence: string = '';
 
@@ -49,35 +49,35 @@ export class Sentence {
     if (placeholderNotation) {
       options.placeholderNotation = this.parsePlaceholderNotation(placeholderNotation);
     }
-    this._options = {
+    this.#options = {
       ...this.options,
       ...options,
     } as Options;
   }
 
   public restoreDefaultOptions(): void {
-    this._options = defaultOptions;
+    this.#options = defaultOptions;
   }
 
   public get options(): Options {
-    return this._options;
+    return this.#options;
   }
 
   public get templates(): Template[] {
-    return this._templates;
+    return this.#templates;
   }
 
   public set templates(templates: Template[]) {
     const { allowDuplicates } = this.options;
-    this._templates = allowDuplicates ? templates : templates.unique();
+    this.#templates = allowDuplicates ? templates : templates.unique();
   }
 
   public get vocabulary(): Vocabulary {
-    return this._vocabulary;
+    return this.#vocabulary;
   }
 
   public set vocabulary(vocab: Vocabulary) {
-    this._vocabulary = vocab;
+    this.#vocabulary = vocab;
   }
 
   /**
