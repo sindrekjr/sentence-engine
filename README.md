@@ -6,7 +6,7 @@ An easy-to-use sentence generator running on [Node.js](https://nodejs.org/). It 
 
 ## Features
 #### TypeScript
-Written in [TypeScript](https://www.typescriptlang.org/); compiles to ES2019 Javascript
+Written in [TypeScript](https://www.typescriptlang.org/); compiles to ES2019 Javascript.
 
 #### Full User Control
 The project follows an ideal where templates and vocabulary should be fully customizable by the user. Vocabularies have no predefined keys and template placeholders are configurable.
@@ -42,6 +42,40 @@ These methods may be used to extend the configurations you've already set with a
 
 #### `restoreDefaults()`
 This function will simply restore the default templates, vocabularies, and options.
+
+### Sentence
+```
+const { Sentence } = require('sentence-engine');
+const helloWorldSentence = new Sentence(
+  '{greeting}, {noun}',
+  { greeting: ['hello'], noun: ['world'] },
+);
+```
+The Sentence class may be utilized if wanting to control sentence generation at the lowest possible level. See the class implementation [here](./src/sentence/Sentence.ts).
+#### Properties
+* `value: string`
+* `options: {}`
+* `templates: string[]`
+* `vocabulary: {}`
+#### Methods
+* `get() => string` returns the currently stored sentence value
+* `generate() => Sentence` - (re)generates the stored sentence value
+* `configure(config)`
+* `addTemplates(templates)`
+* `addVocabulary(vocabulary)`
+* `setOptions(options)`
+* `restoreDefaultOptions()`
+
+### SentenceFactory
+```
+const { SentenceFactory } = require('sentence-engine');
+const mySentenceFactory = new SentenceFactory();
+```
+The SentenceFactory class contains all of the functions summaried above as exposed entry functions. The sole purpose of instantiating further factories locally would be to run more than one of them within the same module. For most use cases this is probably not necessary at all. See the class implementation [here](./src/factory/SentenceFactory.ts).
+#### Properties
+* `defaultOptions: {}`
+* `defaultTemplates: string[] | string`
+* `defaultVocabulary: {}`
 
 ### Options
 #### `allowDuplicates: boolean`
