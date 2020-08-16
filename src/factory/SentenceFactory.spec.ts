@@ -20,10 +20,10 @@ describe('SentenceFactory.js', () => {
    * CREATE SENTENCE
    */
   describe('createSentence()', () => {
-    it('should return default text when supplied no data', () => {
-      const defaultOutput = Factory.createSentence().get();
-      expect(defaultOutput).toBeDefined();
-      expect(defaultOutput.length).toBeGreaterThan(0);
+    it('should create sentence with defaults if no params are provided', () => {
+      const DefaultSentence: Sentence = Factory.createSentence();
+      expect(DefaultSentence.templates).toEqual(defaults.templates);
+      expect(DefaultSentence.vocabulary).toEqual(defaults.vocabulary);
     });
 
     it('should be able to handle numeric template placeholders', () => {
