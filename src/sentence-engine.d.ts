@@ -1,3 +1,16 @@
+declare interface Sentence {
+  options: Options;
+  templates: Template[];
+  vocabulary: Vocabulary;
+  sentence: string;
+}
+
+declare interface SentenceFactory {
+  defaultOptions: MaybeOptions;
+  defaultTemplates: Template | Template[];
+  defaultVocabulary: Vocabulary;
+}
+
 declare interface Configuration {
   options?: MaybeOptions;
   templates?: Templates;

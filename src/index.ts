@@ -1,31 +1,17 @@
 import { SentenceFactory } from './factory';
 import { Sentence } from './sentence';
 
-/**
- * Create default instance of SentenceFactory for basic usage
- */
-const {
-  createSentence,
-  configure,
-  addDefaultOptions,
-  addDefaultTemplates,
-  addDefaultVocabulary,
-  restoreDefaults,
-} = new SentenceFactory();
+const Facade = new SentenceFactory();
 
-/**
- * Exports a facade that includes the methods available in the instantiated factory,
- * as well as the classes Sentence and SentenceFactory.
- *
- * The function createSentence should cover most use cases
- */
-export {
-  createSentence,
-  configure,
-  addDefaultOptions,
-  addDefaultTemplates,
-  addDefaultVocabulary,
-  restoreDefaults,
-  Sentence,
-  SentenceFactory,
-};
+export const createSentence = (
+  templates?: Template[] | Template,
+  vocabulary?: Vocabulary,
+  options?: MaybeOptions,
+) => Facade.createSentence(templates, vocabulary, options);
+export const configure = (config: Configuration) => Facade.configure(config);
+export const addDefaultOptions = (options: MaybeOptions) => Facade.addDefaultOptions(options);
+export const addDefaultTemplates = (...templates: Template[]) => Facade.addDefaultTemplates(...templates);
+export const addDefaultVocabulary = (vocab: Vocabulary) => Facade.addDefaultVocabulary(vocab);
+export const restoreDefaults = () => Facade.restoreDefaults();
+
+export { Sentence, SentenceFactory };

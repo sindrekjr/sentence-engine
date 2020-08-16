@@ -9,7 +9,7 @@ export class SentenceFactory {
   public createSentence(
     templates?: Template[] | Template,
     vocabulary?: Vocabulary,
-    options?: MaybeOptions
+    options?: MaybeOptions,
   ): Sentence {
     return new Sentence(
       templates || this.defaultTemplates,
