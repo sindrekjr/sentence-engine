@@ -38,8 +38,10 @@ const { value } = createSentence(someOtherTemplate); // will use someOtherTempla
 `configure` may be used to define default values for your templates, vocabulary, and options. If these are defined, they will automatically be provided to any sentence you call for through the default `createSentence` entry point, unless you provide new arguments to that method.
 
 #### `addDefaultOptions(options)` `addDefaultTemplates(...templates)` `addDefaultVocabulary(vocabulary)`
-These methods may be used to extend the configurations you've already set with additional templates and vocabularies. Note that "adding" more options is essentially the same as passing them through the `configure` method. 
+These methods may be used to extend the configurations you've already set with additional templates and vocabularies. Note that "adding" more options is essentially the same as passing them through the `configure` function. If you need to remove templates or vocabularies, use the `configure` function or `restoreDefaults`. 
 
+#### `restoreDefaults()`
+This function will simply restore the default templates, vocabularies, and options.
   
 
 ### Templates, Vocabulary
