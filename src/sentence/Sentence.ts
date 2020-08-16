@@ -14,7 +14,7 @@ export class Sentence {
   #vocabulary: Vocabulary = {};
   #options: Options = defaultOptions;
 
-  public sentence: string = '';
+  public value: string = '';
 
   constructor(
     templates: Template[] | Template,
@@ -84,7 +84,7 @@ export class Sentence {
    * Returns the generated sentence, most uses will only ever require this method
    */
   public get(): string {
-    return this.sentence;
+    return this.value;
   }
 
   /**
@@ -104,12 +104,12 @@ export class Sentence {
 
     const { forceNewSentence } = this.options;
     if (forceNewSentence
-      && this.sentence === sentence
+      && this.value === sentence
       && this.isforceNewSentencePossible()
     ) {
       return this.generate();
     } else {
-      this.sentence = sentence;
+      this.value = sentence;
       return this;
     }
   }

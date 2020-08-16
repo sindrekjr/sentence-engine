@@ -2,7 +2,7 @@ declare interface Sentence {
   options: Options;
   templates: Template[];
   vocabulary: Vocabulary;
-  sentence: string;
+  value: string;
 }
 
 declare interface SentenceFactory {
