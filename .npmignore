@@ -1,15 +1,13 @@
-# git
+# dotfiles, configs
 .gitattributes
 .gitignore
-
-# workflows
 .github/workflows/
-
-# configs
 .eslintrc*
+jest.*
+tsconfig.*
 
-# tests
-*.spec.js
+# folders
+src/
 
-# examples
-examples/
+# misc
+*.tgz

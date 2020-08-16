@@ -1,16 +1,16 @@
-const Sentence = require('./Sentence.js');
+import { Sentence } from './Sentence';
 
 describe('Sentence.js', () => {
-  const template = 'Let\'s {verb} this, and hope for the {adjective}.';
-  const templates = [template];
-  const vocab = {
+  const template: Template = 'Let\'s {verb} this, and hope for the {adjective}.';
+  const templates: Template[] = [template];
+  const vocab: Vocabulary = {
     adjective: ['best', 'worst', 'hilarious'],
     verb: ['try', 'do']
   };
 
-  const helloWorldTemplate = '{greeting}, {noun}.';
-  const helloWorldVocab = {
-    greeting: [ 'hello' ],
+  const helloWorldTemplate: Template = '{greeting}, {noun}.';
+  const helloWorldVocab: Vocabulary = {
+    greeting: [ 'Hello' ],
     noun: [ 'world' ]
   };
 
@@ -41,14 +41,14 @@ describe('Sentence.js', () => {
       it('should store duplicates if true', () => {
         const sentence = new Sentence(templates, vocab, { allowDuplicates: true });
         const initialLength = sentence.templates.length;
-        sentence.addTemplates(templates);
+        sentence.addTemplates(...templates);
         expect(sentence.templates.length).toBe(initialLength + templates.length);
       });
 
       it('should not store duplicates if false', () => {
         const sentence = new Sentence(templates, vocab, { allowDuplicates: false });
         const initialLength = sentence.templates.length;
-        sentence.addTemplates(templates);
+        sentence.addTemplates(...templates);
         expect(sentence.templates.length).toBe(initialLength);
       });
     });
@@ -57,13 +57,13 @@ describe('Sentence.js', () => {
      * CAPITALIZE
      */
     describe('capitalize', () => {
-      const capitalizeTemplate = '{greeting}, {noun}. {smalltalk}';
-      const firstVocab = {
+      const capitalizeTemplate: Template = '{greeting}, {noun}. {smalltalk}';
+      const firstVocab: Vocabulary = {
         greeting: ['hello'],
         noun: ['world'],
         smalltalk: ['fine weather, I reckon.']
       };
-      const secondVocab = {
+      const secondVocab: Vocabulary = {
         greeting: ['\'sup'],
         noun: ['man'],
         smalltalk: ['is everything alright?']
@@ -73,7 +73,7 @@ describe('Sentence.js', () => {
         const sentence = new Sentence(capitalizeTemplate, firstVocab, { capitalize: true });
         expect(sentence.get()).toEqual('Hello, world. Fine weather, I reckon.');
 
-        sentence.setVocab(secondVocab);
+        sentence.vocabulary = secondVocab;
         expect(sentence.generate().get()).toEqual('\'Sup, man. Is everything alright?');
       });
 
@@ -81,7 +81,7 @@ describe('Sentence.js', () => {
         const sentence = new Sentence(capitalizeTemplate, firstVocab, { capitalize: false });
         expect(sentence.get()).toEqual('hello, world. fine weather, I reckon.');
 
-        sentence.setVocab(secondVocab);
+        sentence.vocabulary = secondVocab;
         expect(sentence.generate().get()).toEqual('\'sup, man. is everything alright?');
       });
     });
@@ -107,7 +107,7 @@ describe('Sentence.js', () => {
     describe('placeholderNotation', () => {
       it('should default to curly brackets', () => {
         const sentence = new Sentence(helloWorldTemplate, helloWorldVocab);
-        expect(sentence.get()).toEqual('hello, world.');
+        expect(sentence.get()).toEqual('Hello, world.');
       });
     });
 
@@ -119,7 +119,9 @@ describe('Sentence.js', () => {
         const sentence = new Sentence(
           '{test}',
           { test: ['Yup, just a test.']},
-          { preservePlaceholderNotation: true }
+          {
+            preservePlaceholderNotation: true
+          }
         );
         expect(sentence.get()).toBe('{Yup, just a test.}');
       });

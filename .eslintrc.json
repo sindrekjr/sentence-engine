@@ -4,10 +4,12 @@
         "es2020": true
     },
     "extends": ["eslint:recommended", "plugin:jest/recommended"],
+    "parser": "@typescript-eslint/parser",
     "parserOptions": {
         "ecmaVersion": 11,
         "sourceType": "module"
     },
+    "plugins": ["@typescript-eslint"],
     "rules": {
         "arrow-spacing": 2,
         "indent": [
@@ -30,5 +32,6 @@
             "error",
             "always"
         ]
-    }
+    },
+    "ignorePatterns": ["node_modules", "dist"]
 }
