@@ -1,24 +1,46 @@
 # Sentence Engine
 [![npm version](https://badge.fury.io/js/sentence-engine.svg)](https://badge.fury.io/js/sentence-engine)
-[![master](https://github.com/sindrekjr/sentence-engine/workflows/master/badge.svg?branch=master)](https://github.com/sindrekjr/sentence-engine/actions)
-[![develop](https://github.com/sindrekjr/sentence-engine/workflows/develop/badge.svg?branch=develop)](https://github.com/sindrekjr/sentence-engine/actions)
+[![build](https://github.com/sindrekjr/sentence-engine/workflows/build/badge.svg?branch=master)](https://github.com/sindrekjr/sentence-engine/actions)
 -
 An easy-to-use sentence generator running on [Node.js](https://nodejs.org/). It takes a template and vocabulary freely defined by the user. 
 
 ## Features
-* Unbound vocabulary; define use case-specific categories or adhere to conventional keywords
-* Object-oriented
-* Lightweight
+#### TypeScript
+Written in [TypeScript](https://www.typescriptlang.org/); compiles to ES2019 Javascript
+
+#### Full User Control
+The project follows an ideal where templates and vocabulary should be fully customizable by the user. Vocabularies have no predefined keys and template placeholders are configurable. 
+
+#### Lightweight and object-oriented
+Usage may be done easily through a set of simple entry methods, which utilize underlying classes Sentence and SentenceFactory. However, these classes are also exposed in case they are better interacted with directly, or extended into local class implementations.
 
 ## Usage
-### Sentence
+#### `createSentence(templates, vocabulary, options) => Sentence`
 ```
-const Sentence = require('sentence-engine');
+const { createSentence } = require('sentence-engine');
+const anInstanceOfTheSentenceClass = createSentence(someTemplate, someVocabulary);
+const { value } = sentence;
+```
+`createSentence` can be considered the default method of the project. It will return a Sentence object which you may choose to store for later usage, or immediately deconstruct for the generated sentence.
 
-const defaultSentence = Sentence(); // instantiates Sentence object
-console.log(defaultSentence.get()); // outputs "hello, world"
+#### `configure(config)`
 ```
-Calling Sentence() creates an object of the Sentence class which stores a template, vocabulary, and a set of options. In the case above we pass no arguments and the object is simply given some [default values](./src/defaults) and resolves to "hello, world". See [Sentence.js](./src/sentence/Sentence.js) for the class implementation.
+const { createSentence, configure } = require('sentence-engine');
+const configuration = {
+  options: someOptions,
+  templates: someTemplates,
+  vocabulary: someVocabulary,
+};
+configure(configuration);
+const { value } = createSentence(); // will use the above configuration by default
+const { value } = createSentence(someOtherTemplate); // will use someOtherTemplate
+```
+`configure` may be used to define default values for your templates, vocabulary, and options. If these are defined, they will automatically be provided to any sentence you call for through the default `createSentence` entry point, unless you provide new arguments to that method.
+
+#### `addDefaultOptions(options)` `addDefaultTemplates(...templates)` `addDefaultVocabulary(vocabulary)`
+These methods may be used to extend the configurations you've already set with additional templates and vocabularies. Note that "adding" more options is essentially the same as passing them through the `configure` method. 
+
+  
 
 ### Templates, Vocabulary
 By passing a template and/or vocabulary, the engine becomes much more powerful. See examples below.
