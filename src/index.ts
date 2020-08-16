@@ -1,6 +1,9 @@
 import SentenceFactory from './factory';
 import Sentence from './sentence';
 
+/**
+ * Create default instance of SentenceFactory for basic usage
+ */
 const {
   createSentence,
   configure,
@@ -9,14 +12,20 @@ const {
   addDefaultVocabulary,
   restoreDefaults,
 } = new SentenceFactory();
-module.exports = createSentence;
-export default createSentence;
+
+/**
+ * Exports a facade that includes the methods available in the instantiated factory,
+ * as well as the classes Sentence and SentenceFactory.
+ *
+ * The function createSentence should cover most use cases
+ */
 export {
-  Sentence,
-  SentenceFactory,
+  createSentence,
   configure,
   addDefaultOptions,
   addDefaultTemplates,
   addDefaultVocabulary,
   restoreDefaults,
+  Sentence,
+  SentenceFactory,
 };
