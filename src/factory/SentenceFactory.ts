@@ -14,7 +14,7 @@ export class SentenceFactory {
     return new Sentence(
       templates || this.defaultTemplates,
       vocabulary || this.defaultVocabulary,
-      options || this.defaultOptions,
+      { ...this.defaultOptions, ...options },
     );
   }
 
