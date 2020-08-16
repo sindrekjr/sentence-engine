@@ -45,6 +45,7 @@ export class SentenceFactory {
   }
 
   public restoreDefaults(): SentenceFactory {
+    this.defaultOptions = {};
     this.defaultTemplates = defaults.templates;
     this.defaultVocabulary = defaults.vocabulary;
     return this;
