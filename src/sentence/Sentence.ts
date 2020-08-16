@@ -91,27 +91,23 @@ export class Sentence {
    * May be called repeatedly to randomly regenerate the sentence
    */
   public generate(): Sentence {
-    const template = this.templates.any();
-    const matches = this.findPlaceholders(template);
-
-    let sentence = template;
-    if (matches) {
-      for (const match of matches) {
-        const replacement = this.resolveWord(match, this.shouldCapitalize(sentence, match));
-        sentence = sentence.replace(match, replacement);
-      }
-    }
-
     const { forceNewSentence } = this.options;
-    if (forceNewSentence
-      && this.value === sentence
-      && this.isforceNewSentencePossible()
-    ) {
-      return this.generate();
-    } else {
-      this.value = sentence;
-      return this;
-    }
+    const shouldForceNewSentence = forceNewSentence && this.isforceNewSentencePossible();
+
+    let sentence;
+    do {
+      sentence = this.templates.any();
+      const matches = this.findPlaceholders(sentence);
+      if (matches) {
+        for (const match of matches) {
+          const replacement = this.resolveWord(match, this.shouldCapitalize(sentence, match));
+          sentence = sentence.replace(match, replacement);
+        }
+      }
+    } while (sentence === this.value && shouldForceNewSentence);
+
+    this.value = sentence;
+    return this;
   }
 
   private parsePlaceholderNotation(notation: string | { start: string; end: string; }): { start: string; end: string; } {
