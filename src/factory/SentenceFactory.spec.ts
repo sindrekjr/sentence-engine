@@ -1,5 +1,5 @@
 import defaults from './defaults';
-import SentenceFactory from './SentenceFactory';
+import { SentenceFactory} from './SentenceFactory';
 
 describe('SentenceFactory.js', () => {
   const Factory = new SentenceFactory();

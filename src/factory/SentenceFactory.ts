@@ -1,7 +1,7 @@
 import defaults from './defaults';
-import Sentence from '../sentence';
+import { Sentence } from '../sentence';
 
-export default class SentenceFactory {
+export class SentenceFactory {
   public defaultTemplates: Template[] | Template = defaults.templates;
   public defaultVocabulary: Vocabulary = defaults.vocabulary;
   public defaultOptions?: MaybeOptions;

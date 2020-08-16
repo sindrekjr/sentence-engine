@@ -1,4 +1,4 @@
-import Sentence from './Sentence';
+import { Sentence } from './Sentence';
 
 describe('Sentence.js', () => {
   const template: Template = 'Let\'s {verb} this, and hope for the {adjective}.';

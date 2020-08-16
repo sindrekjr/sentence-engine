@@ -1,5 +1,5 @@
-import SentenceFactory from './factory';
-import Sentence from './sentence';
+import { SentenceFactory } from './factory';
+import { Sentence } from './sentence';
 
 /**
  * Create default instance of SentenceFactory for basic usage

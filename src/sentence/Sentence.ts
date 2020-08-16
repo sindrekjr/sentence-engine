@@ -9,7 +9,7 @@ const defaultOptions = {
   preservePlaceholderNotation: false,
 };
 
-export default class Sentence {
+export class Sentence {
   private _templates: Template[] = [];
   private _vocabulary: Vocabulary = {};
   private _options: Options = defaultOptions;

@@ -1,1 +1,1 @@
-export { default } from './SentenceFactory';
+export { SentenceFactory } from './SentenceFactory';

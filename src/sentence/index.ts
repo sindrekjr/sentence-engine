@@ -1,1 +1,1 @@
-export { default } from './Sentence';
+export { Sentence } from './Sentence';
