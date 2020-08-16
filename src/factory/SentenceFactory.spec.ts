@@ -1,5 +1,5 @@
 import defaults from './defaults';
-import { SentenceFactory} from './SentenceFactory';
+import { SentenceFactory } from './SentenceFactory';
 
 describe('SentenceFactory.js', () => {
   const Factory = new SentenceFactory();
@@ -17,9 +17,9 @@ describe('SentenceFactory.js', () => {
   });
 
   /**
-   * SENTENCE
+   * CREATE SENTENCE
    */
-  describe('sentence generation', () => {
+  describe('createSentence()', () => {
     it('should return default text when supplied no data', () => {
       const defaultOutput = Factory.createSentence().get();
       expect(defaultOutput).toBeDefined();
@@ -37,20 +37,50 @@ describe('SentenceFactory.js', () => {
   });
 
   /**
+   * CONFIGURE
+   */
+  describe('configure()', () => {
+    it('should correctly configure all provided values', () => {
+      const testTemplate = 'test';
+      const testVocab = { test: ['test'] };
+
+      Factory.configure({
+        options: { allowDuplicates: false },
+        templates: testTemplate,
+        vocabulary: testVocab,
+      });
+
+      expect(Factory.defaultOptions).toEqual({ allowDuplicates: false });
+      expect(Factory.defaultTemplates).toBe(testTemplate);
+      expect(Factory.defaultVocabulary).toBe(testVocab);
+    });
+
+    it('should not change options if none were provided', () => {
+      const prevOptions = Factory.defaultOptions;
+
+      Factory.configure({
+        options: undefined,
+      });
+
+      expect(Factory.defaultOptions).toEqual(prevOptions);
+    });
+  });
+
+  /**
    * GET
    */
-  describe('public get methods', () => {
+  describe('get', () => {
     /**
      * TEMPLATES
      */
-    describe('getTemplates', () => {
+    describe('templates', () => {
       it('should return default templates by default', () => expect(Factory.defaultTemplates).toEqual(defaults.templates));
     });
 
     /**
      * VOCABULARY
      */
-    describe('getVocab', () => {
+    describe('vocab', () => {
       it('should return default vocab by default', () => expect(Factory.defaultVocabulary).toEqual(defaults.vocabulary));
     });
   });
@@ -58,11 +88,11 @@ describe('SentenceFactory.js', () => {
   /**
    * SET
    */
-  describe('public set methods', () => {
+  describe('set', () => {
     /**
      * TEMPLATES
      */
-    describe('setTemplates', () => {
+    describe('templates', () => {
       it('should correctly set the given template', () => {
         Factory.defaultTemplates = templates;
         expect(Factory.defaultTemplates).toEqual(templates);
@@ -72,7 +102,7 @@ describe('SentenceFactory.js', () => {
     /**
      * VOCABULARY
      */
-    describe('setVocab', () => {
+    describe('vocabulary', () => {
       it('should correctly set the given vocabulary', () => {
         Factory.defaultVocabulary = vocabulary;
         expect(Factory.defaultVocabulary).toEqual(vocabulary);
@@ -82,7 +112,7 @@ describe('SentenceFactory.js', () => {
     /**
      * OPTIONS
      */
-    describe('setOptions', () => {
+    describe('options', () => {
       it('should correctly set the given options', () => {
         const newOptions = {
           capitalize: !Factory.defaultOptions?.capitalize,
@@ -96,11 +126,11 @@ describe('SentenceFactory.js', () => {
   /**
    * ADD
    */
-  describe('public add methods', () => {
+  describe('add', () => {
     /**
      * TEMPLATES
      */
-    describe('addDefaultTemplates', () => {
+    describe('addDefaultTemplates()', () => {
       it('should add the given singular template', () => {
         Factory.addDefaultTemplates(templates[0]);
         expect(Factory.defaultTemplates).toContain(templates[0]);
@@ -117,7 +147,7 @@ describe('SentenceFactory.js', () => {
     /**
      * VOCABULARY
      */
-    describe('addDefaultVocabulary', () => {
+    describe('addDefaultVocabulary()', () => {
       it('should add the given vocab', () => {
         Factory.addDefaultVocabulary(vocabulary);
         const expectedKeys: string[] = Object.keys(vocabulary);

@@ -22,7 +22,7 @@ export class SentenceFactory {
     const { options, templates, vocabulary } = config;
     if (options) this.defaultOptions = { ...this.defaultOptions, ...options };
     if (templates) this.defaultTemplates = templates;
-    if (vocabulary) this.defaultOptions = vocabulary;
+    if (vocabulary) this.defaultVocabulary = vocabulary;
     return this;
   }
 
