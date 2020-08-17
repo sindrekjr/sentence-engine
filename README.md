@@ -16,20 +16,6 @@ Focused on versatility, where templates and vocabulary should be fully customiza
 Easy to use with `createSentence`, while underlying classes Sentence and SentenceFactory allow for more customizability. 
 
 ## Usage
-### Template
-A template is simply defined as string. When templates are asked for, a single template or an array of templates can be given.
-
-### Vocabulary
-A vocabulary is defined as an object where keys should be string and values should be arrays of strings, like so:
-```js
-const vocabulary = {
-  noun: ['table', 'car', 'house'],
-  animal: ['bear', 'cat', 'comodo dragon'],
-  smalltalk: ['well well well', 'how about that weather?'],
-};
-```
-Notice that vocabularies may be used very widely, whether formally within terms of adjectives, nouns, etc, or for made-up categories or longer phrases.
-
 ### `createSentence(templates, vocabulary, options) => Sentence`
 ```js
 const { createSentence } = require('sentence-engine');
@@ -60,7 +46,7 @@ const { value } = createSentence(someOtherTemplate); // will use someOtherTempla
 ```
 `configure` may be used to define default values for your templates, vocabulary, and options. If these are defined, they will automatically be provided to any sentence you call for through the default `createSentence` entry point, unless you provide new arguments to that method.
 
-### Sentence
+### `Sentence`
 ```js
 const { Sentence } = require('sentence-engine');
 
@@ -71,7 +57,7 @@ const helloWorldSentence = new Sentence(
 ```
 The Sentence class may be utilized if wanting to control sentence generation at the lowest possible level. See the class implementation [here](./src/sentence/Sentence.ts).
 
-### SentenceFactory
+### `SentenceFactory`
 ```js
 const { SentenceFactory } = require('sentence-engine');
 
@@ -79,7 +65,23 @@ const mySentenceFactory = new SentenceFactory();
 ```
 The SentenceFactory class contains all of the functions summaried above as exposed entry functions. The sole purpose of instantiating further factories locally would be to run more than one of them within the same module. For most use cases this is probably not necessary at all. See the class implementation [here](./src/factory/SentenceFactory.ts).
 
+## Types
+### Template
+A template is simply defined as string. When templates are asked for, a single template or an array of templates can be given.
+
+### Vocabulary
+A vocabulary is defined as an object where keys should be string and values should be arrays of strings, like so:
+```js
+const vocabulary = {
+  noun: ['table', 'car', 'house'],
+  animal: ['bear', 'cat', 'comodo dragon'],
+  smalltalk: ['well well well', 'how about that weather?'],
+};
+```
+Notice that vocabularies may be used very widely, whether formally within terms of adjectives, nouns, etc, or for made-up categories or longer phrases.
+
 ### Options
+Options is defined as an object with the fields listed below.
 #### `allowDuplicates: boolean`
 ```js
 createSentence(template, vocabulary, { allowDuplicates: true });
