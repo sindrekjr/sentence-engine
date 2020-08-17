@@ -1,4 +1,4 @@
-const defaultOptions = {
+const defaultOptions: Options = {
   allowDuplicates: true,
   capitalize: true,
   forceNewSentence: false,
@@ -46,7 +46,7 @@ export class Sentence {
 
   public setOptions(options: MaybeOptions): void {
     const { placeholderNotation } = options;
-    if (placeholderNotation) {
+    if (placeholderNotation && typeof placeholderNotation == 'string') {
       options.placeholderNotation = this.parsePlaceholderNotation(placeholderNotation);
     }
     this.#options = {
@@ -110,7 +110,7 @@ export class Sentence {
     return this;
   }
 
-  private parsePlaceholderNotation(notation: string | { start: string; end: string; }): { start: string; end: string; } {
+  private parsePlaceholderNotation(notation: string): PlaceholderNotation {
     if (typeof notation === 'string') {
       const splitBySpace = notation.split(' ');
       return {
@@ -173,8 +173,12 @@ export class Sentence {
         }
       }
 
-      return articleAndPluralize(a_an, plural, this.vocabulary[key]);
+      return articleAndPluralize(a_an, plural, this.resolveVocabularyEntries(this.vocabulary[key]));
     });
+  }
+
+  private resolveVocabularyEntries(entries: StringResolvable[]): string[] {
+    return entries.map(entry => typeof entry === 'string' ? entry : entry());
   }
 
   /**

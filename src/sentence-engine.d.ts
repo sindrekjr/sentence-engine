@@ -32,12 +32,14 @@ declare interface MaybeOptions {
   allowDuplicates?: boolean;
   capitalize?: boolean;
   forceNewSentence?: boolean;
-  placeholderNotation?: {
-    start: string;
-    end: string;
-  } | string;
+  placeholderNotation?: PlaceholderNotation | string;
   preservePlaceholderNotation?: boolean;
 }
+
+declare type PlaceholderNotation = {
+  start: string;
+  end: string;
+};
 
 declare type Template = string;
 
@@ -47,15 +49,19 @@ declare type WeightedTemplate = {
 };
 
 declare type Vocabulary = {
-  [fieldName: string]: string[];
+  [fieldName: string]: StringResolvable[];
 };
 
 declare type WeightedVocabulary = {
   [fieldName: string]: {
-    entry: string;
+    entry: StringResolvable;
     weight?: number;
   }[]
 };
+
+declare type StringResolvable = {
+  (): string
+} | string;
 
 declare interface Array<T> {
   any(): T;
