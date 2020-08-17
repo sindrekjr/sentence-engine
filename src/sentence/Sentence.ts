@@ -92,7 +92,7 @@ export class Sentence {
    */
   public generate(): Sentence {
     const { forceNewSentence } = this.options;
-    const shouldForceNewSentence = forceNewSentence && this.isforceNewSentencePossible();
+    const shouldForceNewSentence = forceNewSentence && this.isForceNewSentencePossible();
 
     let sentence;
     do {
@@ -201,16 +201,16 @@ export class Sentence {
     return key in this.vocabulary;
   }
 
-  private isforceNewSentencePossible(): boolean {
+  private isForceNewSentencePossible(): boolean {
     if (this.templates.length > 1) {
       return true;
     } else {
       const theOnlyTemplate = this.templates[0];
       if (theOnlyTemplate) {
-        this.findPlaceholders(theOnlyTemplate)?.forEach(placeholder => {
+        return this.findPlaceholders(theOnlyTemplate)?.some(placeholder => {
           const alternatives = this.resolveAlternatives(placeholder);
           if (alternatives.length > 1) return true;
-        });
+        }) || false;
       }
     }
     return false;

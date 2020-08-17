@@ -92,7 +92,9 @@ describe('Sentence.js', () => {
     describe('forceNewSentence', () => {
       it('should result in a new sentence being generated if true', () => {
         const sentence = new Sentence(template, vocab, { forceNewSentence: true });
-        expect(sentence.generate().get()).not.toBe(sentence.generate().get());
+        const { value: first } = sentence;
+        const { value: second } = sentence.generate();
+        expect(first).not.toEqual(second);
       });
 
       it('should result in same sentence even if true when there is only one possible outcome', () => {
