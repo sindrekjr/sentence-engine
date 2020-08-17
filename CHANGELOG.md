@@ -1,5 +1,8 @@
 # Changelog
 
+## [0.5.1](../../tree/v0.5.1) - 17.08.2020
+* :bug: **Fix** issue where option `forceNewSentence` would have no effect
+
 ## [0.5.0](../../tree/v0.5.0) - 16.08.2020
 ### Breaking :boom:
 * **Refactored** entire project to TypeScript
