@@ -1,9 +1,18 @@
 # Changelog
 
-## [0.5.1](../../tree/v0.5.1) - 17.08.2020
+## [0.5.2](../../tree/v0.5.2) - StringResolvable
+> 18.08.2020
+### Features :tada: 
+* **Added** type `StringResolvable`
+* **Change** type `Template` to accept StringResolvable
+* **Change** type `Vocabulary` to accept StringResolvable
+
+## [0.5.1](../../tree/v0.5.1)
+> 17.08.2020
 * :bug: **Fix** issue where option `forceNewSentence` would have no effect
 
-## [0.5.0](../../tree/v0.5.0) - 16.08.2020
+## [0.5.0](../../tree/v0.5.0) - TypeScript
+> 16.08.2020
 ### Breaking :boom:
 * **Refactored** entire project to TypeScript
 * **Removed** default export, should now defer to importing `createSentence` for the default behaviour
