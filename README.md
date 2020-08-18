@@ -12,8 +12,11 @@ Written in [TypeScript](https://www.typescriptlang.org/); compiles to ES2019 Jav
 #### Full User Control
 Focused on versatility, where templates and vocabulary should be fully customizable by the user.
 
+#### Resolvable Strings
+Templates and vocabularies are able to handle both normal strings and functions that return strings. See the [Types](#Types) section for examples.
+
 #### Lightweight and object-oriented
-Easy to use with `createSentence`, while underlying classes Sentence and SentenceFactory allow for more customizability. 
+[Usage](#Usage) is simple with `createSentence` and `configure`, while underlying classes Sentence and SentenceFactory allow for more customizability. 
 
 ## Usage
 ### `createSentence(templates, vocabulary, options) => Sentence`
@@ -55,7 +58,7 @@ const helloWorldSentence = new Sentence(
   { greeting: ['hello'], noun: ['world'] },
 );
 ```
-The Sentence class may be utilized if wanting to control sentence generation at the lowest possible level. See the class implementation [here](./src/sentence/Sentence.ts).
+The Sentence class may be utilized if wanting to control sentence generation at the lowest possible level. See the class implementation [here](https://github.com/sindrekjr/sentence-engine/blob/master/src/sentence/Sentence.ts).
 
 ### `SentenceFactory`
 ```js
@@ -63,19 +66,26 @@ const { SentenceFactory } = require('sentence-engine');
 
 const mySentenceFactory = new SentenceFactory();
 ```
-The SentenceFactory class contains all of the functions summaried above as exposed entry functions. The sole purpose of instantiating further factories locally would be to run more than one of them within the same module. For most use cases this is probably not necessary at all. See the class implementation [here](./src/factory/SentenceFactory.ts).
+The SentenceFactory class contains all of the functions summaried above as exposed entry functions. The sole purpose of instantiating further factories locally would be to run more than one of them within the same module. For most use cases this is probably not necessary at all. See the class implementation [here](https://github.com/sindrekjr/sentence-engine/blob/master/src/factory/SentenceFactory.ts).
 
-## Types
+## Common Types
 ### Template
-A template is simply defined as string. When templates are asked for, a single template or an array of templates can be given.
+A template is defined as a string or function that returns a string. When templates are asked for, a single template or an array of templates can be given.
 
 ### Vocabulary
-A vocabulary is defined as an object where keys should be string and values should be arrays of strings, like so:
+A vocabulary is defined as an object where keys should be string and values should be arrays of strings (or functions that return strings), like so:
 ```js
 const vocabulary = {
-  noun: ['table', 'car', 'house'],
+  noun: ['table', 'car', 'house', () => 'plate'],
   animal: ['bear', 'cat', 'comodo dragon'],
-  smalltalk: ['well well well', 'how about that weather?'],
+  smalltalk: [
+    'well well well.',
+    () => {
+      const currentHour = new Date().getHours();
+      const isNightTime = currentHour > 21 || currentHour < 6;
+      return isNightTime ? 'it\'s a nice night out.' : 'how about that weather?';
+    },
+  ],
 };
 ```
 Notice that vocabularies may be used very widely, whether formally within terms of adjectives, nouns, etc, or for made-up categories or longer phrases.
