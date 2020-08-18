@@ -2,12 +2,15 @@
   "name": "sentence-engine",
   "version": "0.5.2",
   "description": "Sentence generator focused on versatility and user control.",
-  "main": "./dist/index.js",
+  "main": "./dist/cjs/index.js",
+  "module": ".dist/es/index.js",
   "scripts": {
     "test": "jest",
     "eslint": "eslint ./src/**/*.ts",
     "clean": "rm -rf dist",
-    "build": "npm run clean && tsc -p tsconfig.build.json",
+    "build": "npm run clean && npm run build:cjs && npm run build:es",
+    "build:cjs": "tsc -p tsconfig.build.cjs.json",
+    "build:es": "tsc -p tsconfig.build.es.json",
     "prepack": "npm run build"
   },
   "repository": {
