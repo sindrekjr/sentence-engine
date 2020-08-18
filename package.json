@@ -1,6 +1,6 @@
 {
   "name": "sentence-engine",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "description": "Sentence generator focused on versatility and user control.",
   "main": "./dist/index.js",
   "scripts": {
