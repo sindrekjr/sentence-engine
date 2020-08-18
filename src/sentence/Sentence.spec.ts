@@ -134,26 +134,35 @@ describe('Sentence.js', () => {
    * RESOLVABLES
    */
   describe('resolvables', () => {
-    describe('vocabulary', () => {
-      const normalVocab: Vocabulary = {
-        test: ['tested'],
-        forSure: ['tested for sure'],
-      };
-      const resolvableVocab: Vocabulary = {
-        test: [
-          () => {
-            return 'tested';
-          },
-        ],
-        forSure: [
-          () => 'tested for sure',
-        ],
-      };
+    const normalTemplate: Template = '{test}. {forSure}.';
+    const resolvedTemplate: Template = () => '{test}. {forSure}.';
+    const normalVocab: Vocabulary = {
+      test: ['tested'],
+      forSure: ['tested for sure'],
+    };
+    const resolvableVocab: Vocabulary = {
+      test: [
+        () => {
+          return 'tested';
+        },
+      ],
+      forSure: [
+        () => 'tested for sure',
+      ],
+    };
 
+    describe('templates', () => {
+      it('should give the same result as a normal template', () => {
+        const { value: normal } = new Sentence(normalTemplate, normalVocab);
+        const { value: resolved } = new Sentence(resolvedTemplate, normalVocab);
+        expect(normal).toEqual(resolved);
+      });
+    });
+
+    describe('vocabulary', () => {
       it('should give the same results as a normal vocabulary', () => {
-        const staticLocalTemplate = '{test}. {forSure}.';
-        const { value: normal } = new Sentence(staticLocalTemplate, normalVocab);
-        const { value: resolved } = new Sentence(staticLocalTemplate, resolvableVocab);
+        const { value: normal } = new Sentence(normalTemplate, normalVocab);
+        const { value: resolved } = new Sentence(normalTemplate, resolvableVocab);
         expect(normal).toEqual(resolved);
       });
     });

@@ -41,7 +41,7 @@ declare type PlaceholderNotation = {
   end: string;
 };
 
-declare type Template = string;
+declare type Template = StringResolvable;
 
 declare type WeightedTemplate = {
   template: Template;

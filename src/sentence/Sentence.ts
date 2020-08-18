@@ -37,7 +37,7 @@ export class Sentence {
   }
 
   public addTemplates(...templates: Template[]): void {
-    this.templates = this.templates.concat(...templates.flat());
+    this.templates = templates.concat(this.templates);
   }
 
   public addVocab(vocab: Vocabulary): void {
@@ -96,7 +96,8 @@ export class Sentence {
 
     let sentence;
     do {
-      sentence = this.templates.any();
+      const chosenTemplate = this.templates.any();
+      sentence = typeof chosenTemplate === 'string' ? chosenTemplate : chosenTemplate();
       const matches = this.findPlaceholders(sentence);
       if (matches) {
         for (const match of matches) {
@@ -126,10 +127,10 @@ export class Sentence {
    * @param {string} template
    * 'This is {a-adjective} example.' => ['{a-adjective}']
    */
-  private findPlaceholders(template: string): RegExpMatchArray | null {
+  private findPlaceholders(template: StringResolvable): RegExpMatchArray | null {
     const { start, end } = this.options.placeholderNotation;
     const regex = new RegExp(`([${start}]+(\\s*([a-z-0-9])*,?\\s*)*[${end}]+)`, 'gi');
-    return template.match(regex);
+    return (typeof template === 'string') ? template.match(regex) : template().match(regex);
   }
 
   /**

@@ -35,7 +35,7 @@ export class SentenceFactory {
   }
 
   public addDefaultTemplates(...templates: Template[]): SentenceFactory {
-    this.defaultTemplates = this.defaultTemplates.concat(...templates.flat());
+    this.defaultTemplates = templates.concat(this.defaultTemplates);
     return this;
   }
 
