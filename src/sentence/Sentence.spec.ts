@@ -129,4 +129,33 @@ describe('Sentence.js', () => {
       });
     });
   });
+
+  /**
+   * RESOLVABLES
+   */
+  describe('resolvables', () => {
+    describe('vocabulary', () => {
+      const normalVocab: Vocabulary = {
+        test: ['tested'],
+        forSure: ['tested for sure'],
+      };
+      const resolvableVocab: Vocabulary = {
+        test: [
+          () => {
+            return 'tested';
+          },
+        ],
+        forSure: [
+          () => 'tested for sure',
+        ],
+      };
+
+      it('should give the same results as a normal vocabulary', () => {
+        const staticLocalTemplate = '{test}. {forSure}.';
+        const { value: normal } = new Sentence(staticLocalTemplate, normalVocab);
+        const { value: resolved } = new Sentence(staticLocalTemplate, resolvableVocab);
+        expect(normal).toEqual(resolved);
+      });
+    });
+  });
 });
