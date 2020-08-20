@@ -47,6 +47,15 @@ describe('Sentence.js', () => {
         }).not.toThrow();
         expect(sentence).toEqual(new Sentence(helloWorldTemplate, helloWorldVocab).get());
       });
+
+      it('should default weight to 1 if given 0', () => {
+        const zeroWeightTemplate: WeightedTemplate = {
+          template: helloWorldTemplate,
+          weight: 0,
+        };
+        const { weightedTemplates } = new Sentence(zeroWeightTemplate, helloWorldVocab);
+        expect(weightedTemplates[0].weight).toEqual(1);
+      });
     });
   });
 

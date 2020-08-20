@@ -68,22 +68,27 @@ export class Sentence {
     return this.#templates.map(template => template.template);
   }
 
+  public get weightedTemplates(): WeightedTemplate[] {
+    return this.#templates;
+  }
+
   public set templates(templates: Template[]) {
     const { allowDuplicates } = this.options;
     this.#totalTemplatesWeight = 0;
     this.#templates = templates.map(toResolveWithWeight => {
+      const defaultWeight = 1;
       if (typeof toResolveWithWeight === 'object') {
-        const { template, weight = 1 } = toResolveWithWeight;
-        this.#totalTemplatesWeight += weight;
+        const { template, weight } = toResolveWithWeight;
+        this.#totalTemplatesWeight += weight || defaultWeight;
         return {
           template: template,
-          weight: weight,
+          weight: weight || defaultWeight,
         };
       } else {
         this.#totalTemplatesWeight++;
         return {
           template: toResolveWithWeight,
-          weight: 1,
+          weight: defaultWeight,
         };
       }
     });
