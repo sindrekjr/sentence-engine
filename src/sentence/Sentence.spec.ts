@@ -31,6 +31,26 @@ describe('Sentence.js', () => {
   });
 
   /**
+   * TEMPLATES
+   */
+  describe('templates', () => {
+    describe('WeightedTemplate', () => {
+      const weightedTemplate: WeightedTemplate = {
+        template: helloWorldTemplate,
+        weight: 5,
+      };
+
+      it('should be able to resolve single weighted template', () => {
+        let sentence;
+        expect(() => {
+          sentence = new Sentence(weightedTemplate, helloWorldVocab).get();
+        }).not.toThrow();
+        expect(sentence).toEqual(new Sentence(helloWorldTemplate, helloWorldVocab));
+      });
+    });
+  });
+
+  /**
    * OPTIONS
    */
   describe('options', () => {
