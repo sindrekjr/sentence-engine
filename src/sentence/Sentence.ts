@@ -10,7 +10,8 @@ const defaultOptions: Options = {
 };
 
 export class Sentence {
-  #templates: Template[] = [];
+  #templates: WeightedTemplate[] = [];
+  #totalTemplatesWeight: number = 0;
   #vocabulary: Vocabulary = {};
   #options: Options = defaultOptions;
 
@@ -64,12 +65,38 @@ export class Sentence {
   }
 
   public get templates(): Template[] {
-    return this.#templates;
+    return this.#templates.map(template => template.template);
   }
 
   public set templates(templates: Template[]) {
     const { allowDuplicates } = this.options;
-    this.#templates = allowDuplicates ? templates : templates.unique();
+    this.#totalTemplatesWeight = 0;
+    this.#templates = templates.map(toResolveWithWeight => {
+      if (typeof toResolveWithWeight === 'object') {
+        const { template, weight = 1 } = toResolveWithWeight;
+        this.#totalTemplatesWeight += weight;
+        return {
+          template: template,
+          weight: weight,
+        };
+      } else {
+        this.#totalTemplatesWeight++;
+        return {
+          template: toResolveWithWeight,
+          weight: 1,
+        };
+      }
+    });
+
+    if (!allowDuplicates) {
+      this.#templates = this.#templates.filter((toInspect, i) => {
+        if (this.templates.slice(0, i).includes(toInspect.template)) {
+          this.#totalTemplatesWeight -= toInspect.weight;
+          return false;
+        }
+        return true;
+      });
+    }
   }
 
   public get vocabulary(): Vocabulary {
@@ -96,8 +123,7 @@ export class Sentence {
 
     let sentence;
     do {
-      const chosenTemplate = this.templates.any();
-      sentence = typeof chosenTemplate === 'string' ? chosenTemplate : chosenTemplate();
+      sentence = this.pickRandomTemplate();
       const matches = this.findPlaceholders(sentence);
       if (matches) {
         for (const match of matches) {
@@ -109,6 +135,15 @@ export class Sentence {
 
     this.value = sentence;
     return this;
+  }
+
+  private pickRandomTemplate(): string {
+    let math = Math.floor((Math.random() * this.#totalTemplatesWeight) + 1);
+    const { template } = this.#templates.find(template => {
+      math -= template.weight;
+      return math <= 0;
+    }) as WeightedTemplate;
+    return typeof template === 'string' ? template : template();
   }
 
   private parsePlaceholderNotation(notation: string): PlaceholderNotation {
@@ -210,7 +245,7 @@ export class Sentence {
     if (this.templates.length > 1) {
       return true;
     } else {
-      const theOnlyTemplate = this.templates[0];
+      const theOnlyTemplate = this.pickRandomTemplate();
       if (theOnlyTemplate) {
         return this.findPlaceholders(theOnlyTemplate)?.some(placeholder => {
           const alternatives = this.resolveAlternatives(placeholder);

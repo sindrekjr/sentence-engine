@@ -45,7 +45,7 @@ describe('Sentence.js', () => {
         expect(() => {
           sentence = new Sentence(weightedTemplate, helloWorldVocab).get();
         }).not.toThrow();
-        expect(sentence).toEqual(new Sentence(helloWorldTemplate, helloWorldVocab));
+        expect(sentence).toEqual(new Sentence(helloWorldTemplate, helloWorldVocab).get());
       });
     });
   });

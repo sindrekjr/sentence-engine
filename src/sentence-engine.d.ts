@@ -41,11 +41,11 @@ declare type PlaceholderNotation = {
   end: string;
 };
 
-declare type Template = StringResolvable;
+declare type Template = StringResolvable | WeightedTemplate;
 
 declare type WeightedTemplate = {
-  template: Template;
-  weight?: number;
+  template: StringResolvable;
+  weight: number;
 };
 
 declare type Vocabulary = {
