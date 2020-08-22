@@ -60,6 +60,32 @@ describe('Sentence.js', () => {
   });
 
   /**
+   * VOCABULARY
+   */
+  describe('vocabulary', () => {
+    describe('WeightedVocabulary', () => {
+      const weightedVocabulary: WeightedVocabulary = {
+        adjective: [
+          { entry: 'best', weight: 5 },
+          { entry: 'worst', weight: 2 },
+        ],
+        verb: [
+          { entry: 'try', weight: 1 },
+          { entry: 'do', weight: 10 },
+        ]
+      };
+
+      it('should be able to resolve a weighted vocabulary', () => {
+        let sentence;
+        expect(() => {
+          sentence = new Sentence(template, weightedVocabulary);
+        }).not.toThrow();
+        expect(sentence).toBeDefined();
+      });
+    });
+  });
+
+  /**
    * OPTIONS
    */
   describe('options', () => {

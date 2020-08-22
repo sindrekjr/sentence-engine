@@ -50,13 +50,15 @@ declare type WeightedTemplate = {
 
 declare type Vocabulary = {
   [fieldName: string]: StringResolvable[];
-};
+} | WeightedVocabulary;
 
 declare type WeightedVocabulary = {
-  [fieldName: string]: {
-    entry: StringResolvable;
-    weight?: number;
-  }[]
+  [fieldName: string]: WeightedEntry[]
+};
+
+declare type WeightedEntry = {
+  entry: StringResolvable;
+  weight: number;
 };
 
 declare type StringResolvable = {
