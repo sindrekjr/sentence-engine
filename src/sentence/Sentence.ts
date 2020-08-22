@@ -294,17 +294,3 @@ const articleAndPluralize = (a_an: boolean, plural: boolean, w: string): string 
 const capitalize = (str: string): string => str.replace(/^[']*(\w)/, c => c.toUpperCase());
 
 const isVowel = (c: string): boolean => ['a', 'e', 'i', 'o', 'u'].includes(c);
-
-Array.prototype.any = function() {
-  return this[Math.floor(Math.random() * this.length)];
-};
-
-Array.prototype.unique = function() {
-  const a = this.concat();
-  for (let i = 0; i < a.length; ++i) {
-    for (let j = i + 1; j < a.length; ++j) {
-      if (a[i] === a[j]) a.splice(j--, 1);
-    }
-  }
-  return a;
-};

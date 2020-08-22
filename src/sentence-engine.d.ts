@@ -61,8 +61,3 @@ declare type WeightedEntry = {
 declare type StringResolvable = {
   (): string
 } | string;
-
-declare interface Array<T> {
-  any(): T;
-  unique(): T[];
-}
