@@ -1,3 +1,4 @@
+import { mockRandom, resetMockRandom } from 'jest-mock-random';
 import { Sentence } from './Sentence';
 
 describe('Sentence.js', () => {
@@ -39,6 +40,14 @@ describe('Sentence.js', () => {
         entry: helloWorldTemplate,
         weight: 5,
       };
+      const unevenTemplates: WeightedTemplate[] = [
+        weightedTemplate,
+        { entry: 'Fail', weight: 1 },
+      ];
+
+      afterEach(() => {
+        resetMockRandom();
+      });
 
       it('should be able to resolve single weighted template', () => {
         expect(() => {
@@ -55,6 +64,20 @@ describe('Sentence.js', () => {
         };
         const { weightedTemplates } = new Sentence(zeroWeightTemplate, helloWorldVocab);
         expect(weightedTemplates[0].weight).toEqual(1);
+      });
+
+      it('should correctly resolve to the lightest entry', () => {
+        mockRandom(0.90);
+        const { value } = new Sentence(unevenTemplates, helloWorldVocab);
+        expect(value).toEqual('Fail');
+      });
+
+      it('should correctly resolve to the heaviest entry', () => {
+        mockRandom([0.1, 0.2, 0.17, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.83]);
+        for (let i = 0; i < 100; i++) {
+          const { value } = new Sentence(unevenTemplates, helloWorldVocab);
+          expect(value).not.toEqual('Fail');
+        }
       });
     });
   });
