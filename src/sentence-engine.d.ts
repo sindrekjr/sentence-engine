@@ -43,10 +43,7 @@ declare type PlaceholderNotation = {
 
 declare type Template = StringResolvable | WeightedTemplate;
 
-declare type WeightedTemplate = {
-  template: StringResolvable;
-  weight: number;
-};
+declare type WeightedTemplate = WeightedEntry;
 
 declare type Vocabulary = {
   [fieldName: string]: StringResolvable[];

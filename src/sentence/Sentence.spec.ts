@@ -36,7 +36,7 @@ describe('Sentence.js', () => {
   describe('templates', () => {
     describe('WeightedTemplate', () => {
       const weightedTemplate: WeightedTemplate = {
-        template: helloWorldTemplate,
+        entry: helloWorldTemplate,
         weight: 5,
       };
 
@@ -50,7 +50,7 @@ describe('Sentence.js', () => {
 
       it('should default weight to 1 if given 0', () => {
         const zeroWeightTemplate: WeightedTemplate = {
-          template: helloWorldTemplate,
+          entry: helloWorldTemplate,
           weight: 0,
         };
         const { weightedTemplates } = new Sentence(zeroWeightTemplate, helloWorldVocab);

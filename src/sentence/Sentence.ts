@@ -65,7 +65,7 @@ export class Sentence {
   }
 
   public get templates(): Template[] {
-    return this.#templates.map(template => template.template);
+    return this.#templates.map(template => template.entry);
   }
 
   public get weightedTemplates(): WeightedTemplate[] {
@@ -78,16 +78,16 @@ export class Sentence {
     this.#templates = templates.map(toResolveWithWeight => {
       const defaultWeight = 1;
       if (typeof toResolveWithWeight === 'object') {
-        const { template, weight } = toResolveWithWeight;
+        const { entry, weight } = toResolveWithWeight;
         this.#totalTemplatesWeight += weight || defaultWeight;
         return {
-          template: template,
+          entry: entry,
           weight: weight || defaultWeight,
         };
       } else {
         this.#totalTemplatesWeight++;
         return {
-          template: toResolveWithWeight,
+          entry: toResolveWithWeight,
           weight: defaultWeight,
         };
       }
@@ -95,7 +95,7 @@ export class Sentence {
 
     if (!allowDuplicates) {
       this.#templates = this.#templates.filter((toInspect, i) => {
-        if (this.templates.slice(0, i).includes(toInspect.template)) {
+        if (this.templates.slice(0, i).includes(toInspect.entry)) {
           this.#totalTemplatesWeight -= toInspect.weight;
           return false;
         }
@@ -161,11 +161,11 @@ export class Sentence {
 
   private pickRandomTemplate(): string {
     let math = Math.floor((Math.random() * this.#totalTemplatesWeight) + 1);
-    const { template } = this.#templates.find(template => {
+    const { entry } = this.#templates.find(template => {
       math -= template.weight;
       return math <= 0;
     }) as WeightedTemplate;
-    return typeof template === 'string' ? template : template();
+    return typeof entry === 'string' ? entry : entry();
   }
 
   private parsePlaceholderNotation(notation: string): PlaceholderNotation {
