@@ -32,7 +32,7 @@ export class Sentence {
 
   public configure(config: Configuration) {
     const { options, templates, vocabulary } = config;
-    if (options) this.setOptions(options);
+    if (options) this.options = options;
     if (templates) this.templates = templates;
     if (vocabulary) this.vocabulary = vocabulary;
   }
@@ -45,7 +45,15 @@ export class Sentence {
     this.vocabulary = Object.assign(this.vocabulary, vocab);
   }
 
-  public setOptions(options: MaybeOptions): void {
+  public restoreDefaultOptions(): void {
+    this.options = defaultOptions;
+  }
+
+  public get options(): MaybeOptions {
+    return this.#options;
+  }
+
+  public set options(options: MaybeOptions) {
     const { placeholderNotation } = options;
     if (placeholderNotation && typeof placeholderNotation == 'string') {
       options.placeholderNotation = this.parsePlaceholderNotation(placeholderNotation);
@@ -54,14 +62,6 @@ export class Sentence {
       ...this.options,
       ...options,
     } as Options;
-  }
-
-  public restoreDefaultOptions(): void {
-    this.#options = defaultOptions;
-  }
-
-  public get options(): Options {
-    return this.#options;
   }
 
   public get templates(): Template[] {
@@ -168,7 +168,8 @@ export class Sentence {
    * 'This is {a-adjective} example.' => ['{a-adjective}']
    */
   private findPlaceholders(template: StringResolvable): RegExpMatchArray | null {
-    const { start, end } = this.options.placeholderNotation;
+    const { placeholderNotation } = this.options as Options;
+    const { start, end } = placeholderNotation;
     const regex = new RegExp(`([${start}]+(\\s*([a-z-0-9])*,?\\s*)*[${end}]+)`, 'gi');
     return (typeof template === 'string') ? template.match(regex) : template().match(regex);
   }
@@ -181,7 +182,7 @@ export class Sentence {
     const alternatives = this.resolveAlternatives(placeholder);
     const chosenWord = shouldCapitalize ? capitalize(alternatives.any()) : alternatives.any();
 
-    const { placeholderNotation, preservePlaceholderNotation } = this.options;
+    const { placeholderNotation, preservePlaceholderNotation } = this.options as Options;
     if (preservePlaceholderNotation) {
       const { start, end } = placeholderNotation;
       return `${start}${chosenWord}${end}`;
@@ -228,7 +229,8 @@ export class Sentence {
    * '{a-adjective, a-curse, verb}' => ['a-adjective', 'a-curse', 'verb']
    */
   private findKeys(placeholder: string): string[] {
-    const { start, end } = this.options.placeholderNotation;
+    const { placeholderNotation } = this.options as Options;
+    const { start, end } = placeholderNotation;
     return placeholder.replace(new RegExp(`${start}|${end}|\\s`, 'g'), '').split(',');
   }
 
