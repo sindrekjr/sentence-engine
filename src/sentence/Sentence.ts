@@ -196,7 +196,7 @@ export class Sentence {
   }
 
   private pickRandomEntryByWeight(entries: WeightedEntry[]): string {
-    const totalWeight = entries.reduce((acc, entry) => entry ? acc + entry.weight : acc, 0);
+    const totalWeight = getTotalWeightOfEntries(entries);
     let math = Math.floor((Math.random() * totalWeight) + 1);
     const { entry } = entries.find(entry => {
       math -= entry.weight;
@@ -294,3 +294,5 @@ const articleAndPluralize = (a_an: boolean, plural: boolean, w: string): string 
 const capitalize = (str: string): string => str.replace(/^[']*(\w)/, c => c.toUpperCase());
 
 const isVowel = (c: string): boolean => ['a', 'e', 'i', 'o', 'u'].includes(c);
+
+const getTotalWeightOfEntries = (entries: WeightedEntry[]): number => entries.reduce((acc, e) => e ? acc + e.weight : acc, 0);
