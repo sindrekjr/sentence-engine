@@ -21,9 +21,9 @@ describe('SentenceFactory.js', () => {
    */
   describe('createSentence()', () => {
     it('should create sentence with defaults if no params are provided', () => {
-      const DefaultSentence: Sentence = Factory.createSentence();
-      expect(DefaultSentence.templates).toEqual(defaults.templates);
-      expect(DefaultSentence.vocabulary).toEqual(defaults.vocabulary);
+      const { templates, vocabulary } = Factory.createSentence();
+      expect(templates).toEqual(defaults.templates);
+      expect(vocabulary).toEqual(defaults.vocabulary);
     });
 
     it('should be able to handle numeric template placeholders', () => {
@@ -56,13 +56,9 @@ describe('SentenceFactory.js', () => {
     });
 
     it('should not change options if none were provided', () => {
-      const prevOptions = Factory.defaultOptions;
-
-      Factory.configure({
-        options: undefined,
-      });
-
-      expect(Factory.defaultOptions).toEqual(prevOptions);
+      const { defaultOptions: prevOptions } = Factory;
+      const { defaultOptions: newOptions } = Factory.configure({ options: undefined });
+      expect(newOptions).toEqual(prevOptions);
     });
   });
 
@@ -114,9 +110,7 @@ describe('SentenceFactory.js', () => {
      */
     describe('options', () => {
       it('should correctly set the given options', () => {
-        const newOptions = {
-          capitalize: !Factory.defaultOptions?.capitalize,
-        };
+        const newOptions = { capitalize: !Factory.defaultOptions?.capitalize };
         Factory.defaultOptions = newOptions;
         expect(Factory.defaultOptions).toEqual(newOptions);
       });
@@ -132,15 +126,14 @@ describe('SentenceFactory.js', () => {
      */
     describe('addDefaultTemplates()', () => {
       it('should add the given singular template', () => {
-        Factory.addDefaultTemplates(templates[0]);
-        expect(Factory.defaultTemplates).toContain(templates[0]);
+        const { defaultTemplates } = Factory.addDefaultTemplates(templates[0]);
+        expect(defaultTemplates).toContain(templates[0]);
       });
 
       it('should add all the given templates', () => {
-        Factory.addDefaultTemplates(...templates);
-        const result: string[] = Factory.defaultTemplates as string[];
+        const { defaultTemplates: result } = Factory.addDefaultTemplates(...templates);
         expect(result).toContain(templates[0]);
-        expect(result.length).toEqual(3);
+        expect((result as string[]).length).toEqual(3);
       });
     });
 
@@ -149,17 +142,9 @@ describe('SentenceFactory.js', () => {
      */
     describe('addDefaultVocabulary()', () => {
       it('should add the given vocab', () => {
-        Factory.addDefaultVocabulary(vocabulary);
-        const expectedKeys: string[] = Object.keys(vocabulary);
-        const expectedValues: string[] = Object.values(vocabulary).flat();
-        const resultingVocab: Vocabulary = Factory.defaultVocabulary;
-
-        expectedKeys.forEach(key => {
-          expect(Object.keys(resultingVocab)).toContain(key);
-        });
-        expectedValues.forEach(val => {
-          expect(Object.values(resultingVocab).flat()).toContain(val);
-        });
+        const { defaultVocabulary: resultingVocab } = Factory.addDefaultVocabulary(vocabulary);
+        Object.keys(vocabulary).forEach(key => expect(Object.keys(resultingVocab)).toContain(key));
+        Object.values(vocabulary).flat().forEach(val => expect(Object.values(resultingVocab).flat()).toContain(val));
       });
     });
   });

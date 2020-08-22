@@ -41,11 +41,11 @@ describe('Sentence.js', () => {
       };
 
       it('should be able to resolve single weighted template', () => {
-        let sentence;
         expect(() => {
-          sentence = new Sentence(weightedTemplate, helloWorldVocab).get();
+          const { value: first } = new Sentence(weightedTemplate, helloWorldVocab);
+          const { value: second } = new Sentence(weightedTemplate, helloWorldVocab);
+          expect(first).toEqual(second);
         }).not.toThrow();
-        expect(sentence).toEqual(new Sentence(helloWorldTemplate, helloWorldVocab).get());
       });
 
       it('should default weight to 1 if given 0', () => {
@@ -154,7 +154,9 @@ describe('Sentence.js', () => {
 
       it('should result in same sentence even if true when there is only one possible outcome', () => {
         const sentence = new Sentence(helloWorldTemplate, helloWorldVocab, { forceNewSentence: true });
-        expect(sentence.generate().get()).toEqual(sentence.generate().get());
+        const { value: first } = sentence.generate();
+        const { value: second } = sentence.generate();
+        expect(first).toEqual(second);
       });
     });
 
@@ -163,8 +165,8 @@ describe('Sentence.js', () => {
      */
     describe('placeholderNotation', () => {
       it('should default to curly brackets', () => {
-        const sentence = new Sentence(helloWorldTemplate, helloWorldVocab);
-        expect(sentence.get()).toEqual('Hello, world.');
+        const { value } = new Sentence(helloWorldTemplate, helloWorldVocab);
+        expect(value).toEqual('Hello, world.');
       });
     });
 
@@ -173,14 +175,14 @@ describe('Sentence.js', () => {
      */
     describe('preservePlaceholderNotation', () => {
       it('should preserve placeholder notation if true', () => {
-        const sentence = new Sentence(
+        const { value } = new Sentence(
           '{test}',
           { test: ['Yup, just a test.']},
           {
             preservePlaceholderNotation: true
           }
         );
-        expect(sentence.get()).toBe('{Yup, just a test.}');
+        expect(value).toBe('{Yup, just a test.}');
       });
     });
   });
