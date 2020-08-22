@@ -12,7 +12,7 @@ const defaultOptions: Options = {
 export class Sentence {
   #templates: WeightedTemplate[] = [];
   #totalTemplatesWeight: number = 0;
-  #vocabulary: Vocabulary = {};
+  #vocabulary: WeightedVocabulary = {};
   #options: Options = defaultOptions;
 
   public value: string = '';
@@ -105,11 +105,28 @@ export class Sentence {
   }
 
   public get vocabulary(): Vocabulary {
-    return this.#vocabulary;
+    const vocab: Vocabulary = {};
+    for (const key in this.#vocabulary) {
+      const values: WeightedEntry[] = this.#vocabulary[key];
+      vocab[key] = values.map<StringResolvable>(vocabEntry => vocabEntry.entry);
+    }
+    return vocab;
   }
 
   public set vocabulary(vocab: Vocabulary) {
-    this.#vocabulary = vocab;
+    const weightedVocabulary: WeightedVocabulary = {};
+    for (const key in vocab) {
+      const values: [] = vocab[key] as [];
+      weightedVocabulary[key] = values.map<WeightedEntry>(vocabEntry => {
+        return typeof vocabEntry === 'object'
+          ? vocabEntry
+          : {
+            entry: vocabEntry,
+            weight: 1,
+          };
+      });
+    }
+    this.#vocabulary = weightedVocabulary;
   }
 
   /**
@@ -215,7 +232,7 @@ export class Sentence {
         }
       }
 
-      return articleAndPluralize(a_an, plural, this.resolveVocabularyEntries(this.vocabulary[key]));
+      return articleAndPluralize(a_an, plural, this.resolveVocabularyEntries(this.vocabulary[key] as StringResolvable[]));
     });
   }
 
