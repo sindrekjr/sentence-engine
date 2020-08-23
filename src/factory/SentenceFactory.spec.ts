@@ -45,12 +45,12 @@ describe('SentenceFactory.js', () => {
       const testVocab = { test: ['test'] };
 
       Factory.configure({
-        options: { allowDuplicates: false },
+        options: { capitalize: false },
         templates: testTemplate,
         vocabulary: testVocab,
       });
 
-      expect(Factory.defaultOptions).toEqual({ allowDuplicates: false });
+      expect(Factory.defaultOptions).toEqual({ capitalize: false });
       expect(Factory.defaultTemplates).toBe(testTemplate);
       expect(Factory.defaultVocabulary).toBe(testVocab);
     });

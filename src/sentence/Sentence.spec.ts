@@ -3,7 +3,6 @@ import { Sentence } from './Sentence';
 
 describe('Sentence.js', () => {
   const template: Template = 'Let\'s {verb} this, and hope for the {adjective}.';
-  const templates: Template[] = [template];
   const vocab: Vocabulary = {
     adjective: ['best', 'worst', 'hilarious'],
     verb: ['try', 'do']
@@ -35,6 +34,19 @@ describe('Sentence.js', () => {
    * TEMPLATES
    */
   describe('templates', () => {
+    it('should increase in weight when duplicates are added', () => {
+      const sentence = new Sentence(template, vocab);
+      expect(sentence.weightedTemplates[0].weight).toBe(1);
+      sentence.addTemplates(template);
+      expect(sentence.weightedTemplates[0].weight).toBe(2);
+      sentence.addTemplates({
+        entry: template,
+        weight: 5,
+      });
+      expect(sentence.weightedTemplates[0].weight).toBe(7);
+      expect(sentence.weightedTemplates.length).toBe(1);
+    });
+
     describe('WeightedTemplates', () => {
       const weightedTemplate: WeightedTemplate = {
         entry: helloWorldTemplate,
@@ -129,25 +141,6 @@ describe('Sentence.js', () => {
    * OPTIONS
    */
   describe('options', () => {
-    /**
-     * ALLOW DUPLICATES
-     */
-    describe('allowDuplicates', () => {
-      it('should store duplicates if true', () => {
-        const sentence = new Sentence(templates, vocab, { allowDuplicates: true });
-        const initialLength = sentence.templates.length;
-        sentence.addTemplates(...templates);
-        expect(sentence.templates.length).toBe(initialLength + templates.length);
-      });
-
-      it('should not store duplicates if false', () => {
-        const sentence = new Sentence(templates, vocab, { allowDuplicates: false });
-        const initialLength = sentence.templates.length;
-        sentence.addTemplates(...templates);
-        expect(sentence.templates.length).toBe(initialLength);
-      });
-    });
-
     /**
      * CAPITALIZE
      */

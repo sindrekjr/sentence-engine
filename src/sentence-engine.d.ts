@@ -18,7 +18,6 @@ declare interface Configuration {
 }
 
 declare interface Options {
-  allowDuplicates: boolean;
   capitalize: boolean;
   forceNewSentence: boolean;
   placeholderNotation: {
@@ -29,7 +28,6 @@ declare interface Options {
 }
 
 declare interface MaybeOptions {
-  allowDuplicates?: boolean;
   capitalize?: boolean;
   forceNewSentence?: boolean;
   placeholderNotation?: PlaceholderNotation | string;

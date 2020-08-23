@@ -92,11 +92,6 @@ Notice that vocabularies may be used very widely, whether formally within terms 
 
 ### Options
 Options is defined as an object with the fields listed below.
-#### `allowDuplicates: boolean`
-```js
-createSentence(template, vocabulary, { allowDuplicates: true });
-```
-If true, duplicate templates and words/phrases in a vocabulary can be stored, thereby increasing the chances of it being chosen randomly. In the future the sentence-engine will support weighted templates and vocabularies, possibly making this option redundant or merely a shorthand.
 #### `capitalize: boolean`
 ```js
 createSentence(template, vocabulary, { capitalize: true });

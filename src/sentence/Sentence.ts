@@ -1,5 +1,4 @@
 const defaultOptions: Options = {
-  allowDuplicates: true,
   capitalize: true,
   forceNewSentence: false,
   placeholderNotation: {
@@ -37,7 +36,7 @@ export class Sentence {
   }
 
   public addTemplates(...templates: Template[]): void {
-    this.templates = templates.concat(this.templates);
+    this.templates = templates.concat(this.weightedTemplates);
   }
 
   public addVocab(vocab: Vocabulary): void {
@@ -72,7 +71,6 @@ export class Sentence {
   }
 
   public set templates(templates: Template[]) {
-    const { allowDuplicates } = this.options;
     this.#templates = templates.map(toResolveWithWeight => {
       const defaultWeight = 1;
       if (typeof toResolveWithWeight === 'object') {
@@ -89,11 +87,14 @@ export class Sentence {
       }
     });
 
-    if (!allowDuplicates) {
-      this.#templates = this.#templates.filter((toInspect, i) => {
-        return !this.templates.slice(0, i).includes(toInspect.entry);
-      });
-    }
+    this.#templates = this.#templates.filter((template, i) => {
+      const indexOfDuplicate = this.#templates.slice(0, i).findIndex(t => t.entry === template.entry);
+      if (indexOfDuplicate >= 0) {
+        this.#templates[indexOfDuplicate].weight += template.weight;
+        return false;
+      }
+      return true;
+    });
   }
 
   public get vocabulary(): Vocabulary {
