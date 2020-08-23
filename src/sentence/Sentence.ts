@@ -39,8 +39,11 @@ export class Sentence {
     this.templates = templates.concat(this.weightedTemplates);
   }
 
-  public addVocab(vocab: Vocabulary): void {
-    this.vocabulary = Object.assign(this.vocabulary, vocab);
+  public addVocabulary(vocab: Vocabulary): void {
+    for (const key in vocab) {
+      vocab[key] = (vocab[key] as []).concat(this.weightedVocabulary[key] as []);
+    }
+    this.vocabulary = Object.assign(this.weightedVocabulary, vocab);
   }
 
   public restoreDefaultOptions(): void {
@@ -71,30 +74,7 @@ export class Sentence {
   }
 
   public set templates(templates: Template[]) {
-    this.#templates = templates.map(toResolveWithWeight => {
-      const defaultWeight = 1;
-      if (typeof toResolveWithWeight === 'object') {
-        const { entry, weight } = toResolveWithWeight;
-        return {
-          entry: entry,
-          weight: weight || defaultWeight,
-        };
-      } else {
-        return {
-          entry: toResolveWithWeight,
-          weight: defaultWeight,
-        };
-      }
-    });
-
-    this.#templates = this.#templates.filter((template, i) => {
-      const indexOfDuplicate = this.#templates.slice(0, i).findIndex(t => t.entry === template.entry);
-      if (indexOfDuplicate >= 0) {
-        this.#templates[indexOfDuplicate].weight += template.weight;
-        return false;
-      }
-      return true;
-    });
+    this.#templates = mapToWeightedEntryArray(templates as []);
   }
 
   public get vocabulary(): Vocabulary {
@@ -113,15 +93,7 @@ export class Sentence {
   public set vocabulary(vocab: Vocabulary) {
     const weightedVocabulary: WeightedVocabulary = {};
     for (const key in vocab) {
-      const values: [] = vocab[key] as [];
-      weightedVocabulary[key] = values.map<WeightedEntry>(vocabEntry => {
-        return typeof vocabEntry === 'object'
-          ? vocabEntry
-          : {
-            entry: vocabEntry,
-            weight: 1,
-          };
-      });
+      weightedVocabulary[key] = mapToWeightedEntryArray(vocab[key] as []);
     }
     this.#vocabulary = weightedVocabulary;
   }
@@ -288,12 +260,32 @@ export class Sentence {
   }
 }
 
-const articleAndPluralize = (a_an: boolean, plural: boolean, w: string): string => {
+export const articleAndPluralize = (a_an: boolean, plural: boolean, w: string): string => {
   return `${a_an ? isVowel(w[0]) ? 'an ' : 'a ' : ''}${w}${plural ? 's' : ''}`;
 };
 
-const capitalize = (str: string): string => str.replace(/^[']*(\w)/, c => c.toUpperCase());
+export const capitalize = (str: string): string => str.replace(/^[']*(\w)/, c => c.toUpperCase());
 
-const isVowel = (c: string): boolean => ['a', 'e', 'i', 'o', 'u'].includes(c);
+export const isVowel = (c: string): boolean => ['a', 'e', 'i', 'o', 'u'].includes(c);
 
-const getTotalWeightOfEntries = (entries: WeightedEntry[]): number => entries.reduce((acc, e) => e ? acc + e.weight : acc, 0);
+export const getTotalWeightOfEntries = (entries: WeightedEntry[]): number => entries.reduce((acc, e) => e ? acc + e.weight : acc, 0);
+
+export const mapToWeightedEntryArray = (entries: [], defaultWeight: number = 1): WeightedEntry[] => {
+  return entries.map<WeightedEntry>(element => {
+    const { entry, weight } = (typeof element === 'object') ? element : {
+      entry: element,
+      weight: 1,
+    };
+    return {
+      entry: entry,
+      weight: weight || defaultWeight,
+    };
+  }).filter((weightedEntry, index, newArray) => {
+    const indexOfDuplicate = newArray.slice(0, index).findIndex(el => el.entry === weightedEntry.entry);
+    if (indexOfDuplicate >= 0) {
+      newArray[indexOfDuplicate].weight += weightedEntry.weight;
+      return false;
+    }
+    return true;
+  });
+};

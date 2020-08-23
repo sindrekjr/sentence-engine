@@ -1,5 +1,5 @@
 import { mockRandom, resetMockRandom } from 'jest-mock-random';
-import { Sentence } from './Sentence';
+import { Sentence, getTotalWeightOfEntries } from './Sentence';
 
 describe('Sentence.js', () => {
   const template: Template = 'Let\'s {verb} this, and hope for the {adjective}.';
@@ -47,6 +47,9 @@ describe('Sentence.js', () => {
       expect(sentence.weightedTemplates.length).toBe(1);
     });
 
+    /**
+     * WEIGHTED TEMPLATES
+     */
     describe('WeightedTemplates', () => {
       const weightedTemplate: WeightedTemplate = {
         entry: helloWorldTemplate,
@@ -98,6 +101,25 @@ describe('Sentence.js', () => {
    * VOCABULARY
    */
   describe('vocabulary', () => {
+    it('should increase in weight when duplicates are added', () => {
+      const sentence = new Sentence(template, vocab);
+      for (const key in sentence.weightedVocabulary) {
+        const values = sentence.weightedVocabulary[key];
+        const totalWeight = getTotalWeightOfEntries(values);
+        expect(totalWeight).toBe(values.length);
+      }
+
+      sentence.addVocabulary(vocab);
+      for (const key in sentence.weightedVocabulary) {
+        const values = sentence.weightedVocabulary[key];
+        const totalWeight = getTotalWeightOfEntries(values);
+        expect(totalWeight).toBe(values.length * 2);
+      }
+    });
+
+    /**
+     * WEIGHTED VOCABULARY
+     */
     describe('WeightedVocabulary', () => {
       const weightedVocabulary: WeightedVocabulary = {
         adjective: [
