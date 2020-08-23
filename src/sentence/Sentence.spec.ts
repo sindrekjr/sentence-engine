@@ -35,7 +35,7 @@ describe('Sentence.js', () => {
    * TEMPLATES
    */
   describe('templates', () => {
-    describe('WeightedTemplate', () => {
+    describe('WeightedTemplates', () => {
       const weightedTemplate: WeightedTemplate = {
         entry: helloWorldTemplate,
         weight: 5,
@@ -98,12 +98,29 @@ describe('Sentence.js', () => {
         ]
       };
 
+      afterEach(() => {
+        resetMockRandom();
+      });
+
       it('should be able to resolve a weighted vocabulary', () => {
-        let sentence;
         expect(() => {
-          sentence = new Sentence(template, weightedVocabulary);
+          const { value } = new Sentence(template, weightedVocabulary);
+          expect(value).toBeDefined();
         }).not.toThrow();
-        expect(sentence).toBeDefined();
+      });
+
+      it('should correctly resolve to the lightest entry', () => {
+        mockRandom([0.75, 0.05]);
+        const { value } = new Sentence(template, weightedVocabulary);
+        expect(value).toEqual('Let\'s try this, and hope for the worst.');
+      });
+
+      it('should correctly resolve to the heaviest entry', () => {
+        mockRandom([0.1, 0.9, 0.2, 0.8, 0.3, 0.7, 0.4, 0.6, 0.5, 0.5, 0.9, 0.3]);
+        for (let i = 0; i < 100; i++) {
+          const { value } = new Sentence(template, weightedVocabulary);
+          expect(value).toEqual('Let\'s do this, and hope for the best.');
+        }
       });
     });
   });
