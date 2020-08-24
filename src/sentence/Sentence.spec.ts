@@ -1,8 +1,8 @@
-import { Sentence } from './Sentence';
+import { mockRandom, resetMockRandom } from 'jest-mock-random';
+import { Sentence, getTotalWeightOfEntries } from './Sentence';
 
 describe('Sentence.js', () => {
   const template: Template = 'Let\'s {verb} this, and hope for the {adjective}.';
-  const templates: Template[] = [template];
   const vocab: Vocabulary = {
     adjective: ['best', 'worst', 'hilarious'],
     verb: ['try', 'do']
@@ -31,28 +31,138 @@ describe('Sentence.js', () => {
   });
 
   /**
+   * TEMPLATES
+   */
+  describe('templates', () => {
+    it('should increase in weight when duplicates are added', () => {
+      const sentence = new Sentence(template, vocab);
+      expect(sentence.weightedTemplates[0].weight).toBe(1);
+      sentence.addTemplates(template);
+      expect(sentence.weightedTemplates[0].weight).toBe(2);
+      sentence.addTemplates({
+        entry: template,
+        weight: 5,
+      });
+      expect(sentence.weightedTemplates[0].weight).toBe(7);
+      expect(sentence.weightedTemplates.length).toBe(1);
+    });
+
+    /**
+     * WEIGHTED TEMPLATES
+     */
+    describe('WeightedTemplates', () => {
+      const weightedTemplate: WeightedTemplate = {
+        entry: helloWorldTemplate,
+        weight: 5,
+      };
+      const unevenTemplates: WeightedTemplate[] = [
+        weightedTemplate,
+        { entry: 'Fail', weight: 1 },
+      ];
+
+      afterEach(() => {
+        resetMockRandom();
+      });
+
+      it('should be able to resolve single weighted template', () => {
+        expect(() => {
+          const { value: first } = new Sentence(weightedTemplate, helloWorldVocab);
+          const { value: second } = new Sentence(weightedTemplate, helloWorldVocab);
+          expect(first).toEqual(second);
+        }).not.toThrow();
+      });
+
+      it('should default weight to 1 if given 0', () => {
+        const zeroWeightTemplate: WeightedTemplate = {
+          entry: helloWorldTemplate,
+          weight: 0,
+        };
+        const { weightedTemplates } = new Sentence(zeroWeightTemplate, helloWorldVocab);
+        expect(weightedTemplates[0].weight).toEqual(1);
+      });
+
+      it('should correctly resolve to the lightest entry', () => {
+        mockRandom(0.90);
+        const { value } = new Sentence(unevenTemplates, helloWorldVocab);
+        expect(value).toEqual('Fail');
+      });
+
+      it('should correctly resolve to the heaviest entry', () => {
+        mockRandom([0.1, 0.2, 0.17, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.83]);
+        for (let i = 0; i < 100; i++) {
+          const { value } = new Sentence(unevenTemplates, helloWorldVocab);
+          expect(value).not.toEqual('Fail');
+        }
+      });
+    });
+  });
+
+  /**
+   * VOCABULARY
+   */
+  describe('vocabulary', () => {
+    it('should increase in weight when duplicates are added', () => {
+      const sentence = new Sentence(template, vocab);
+      for (const key in sentence.weightedVocabulary) {
+        const values = sentence.weightedVocabulary[key];
+        const totalWeight = getTotalWeightOfEntries(values);
+        expect(totalWeight).toBe(values.length);
+      }
+
+      sentence.addVocabulary(vocab);
+      for (const key in sentence.weightedVocabulary) {
+        const values = sentence.weightedVocabulary[key];
+        const totalWeight = getTotalWeightOfEntries(values);
+        expect(totalWeight).toBe(values.length * 2);
+      }
+    });
+
+    /**
+     * WEIGHTED VOCABULARY
+     */
+    describe('WeightedVocabulary', () => {
+      const weightedVocabulary: WeightedVocabulary = {
+        adjective: [
+          { entry: 'best', weight: 5 },
+          { entry: 'worst', weight: 2 },
+        ],
+        verb: [
+          { entry: 'try', weight: 1 },
+          { entry: 'do', weight: 10 },
+        ]
+      };
+
+      afterEach(() => {
+        resetMockRandom();
+      });
+
+      it('should be able to resolve a weighted vocabulary', () => {
+        expect(() => {
+          const { value } = new Sentence(template, weightedVocabulary);
+          expect(value).toBeDefined();
+        }).not.toThrow();
+      });
+
+      it('should correctly resolve to the lightest entry', () => {
+        mockRandom([0.75, 0.05]);
+        const { value } = new Sentence(template, weightedVocabulary);
+        expect(value).toEqual('Let\'s try this, and hope for the worst.');
+      });
+
+      it('should correctly resolve to the heaviest entry', () => {
+        mockRandom([0.1, 0.9, 0.2, 0.8, 0.3, 0.7, 0.4, 0.6, 0.5, 0.5, 0.9, 0.3]);
+        for (let i = 0; i < 100; i++) {
+          const { value } = new Sentence(template, weightedVocabulary);
+          expect(value).toEqual('Let\'s do this, and hope for the best.');
+        }
+      });
+    });
+  });
+
+  /**
    * OPTIONS
    */
   describe('options', () => {
-    /**
-     * ALLOW DUPLICATES
-     */
-    describe('allowDuplicates', () => {
-      it('should store duplicates if true', () => {
-        const sentence = new Sentence(templates, vocab, { allowDuplicates: true });
-        const initialLength = sentence.templates.length;
-        sentence.addTemplates(...templates);
-        expect(sentence.templates.length).toBe(initialLength + templates.length);
-      });
-
-      it('should not store duplicates if false', () => {
-        const sentence = new Sentence(templates, vocab, { allowDuplicates: false });
-        const initialLength = sentence.templates.length;
-        sentence.addTemplates(...templates);
-        expect(sentence.templates.length).toBe(initialLength);
-      });
-    });
-
     /**
      * CAPITALIZE
      */
@@ -99,7 +209,9 @@ describe('Sentence.js', () => {
 
       it('should result in same sentence even if true when there is only one possible outcome', () => {
         const sentence = new Sentence(helloWorldTemplate, helloWorldVocab, { forceNewSentence: true });
-        expect(sentence.generate().get()).toEqual(sentence.generate().get());
+        const { value: first } = sentence.generate();
+        const { value: second } = sentence.generate();
+        expect(first).toEqual(second);
       });
     });
 
@@ -108,8 +220,8 @@ describe('Sentence.js', () => {
      */
     describe('placeholderNotation', () => {
       it('should default to curly brackets', () => {
-        const sentence = new Sentence(helloWorldTemplate, helloWorldVocab);
-        expect(sentence.get()).toEqual('Hello, world.');
+        const { value } = new Sentence(helloWorldTemplate, helloWorldVocab);
+        expect(value).toEqual('Hello, world.');
       });
     });
 
@@ -118,14 +230,14 @@ describe('Sentence.js', () => {
      */
     describe('preservePlaceholderNotation', () => {
       it('should preserve placeholder notation if true', () => {
-        const sentence = new Sentence(
+        const { value } = new Sentence(
           '{test}',
           { test: ['Yup, just a test.']},
           {
             preservePlaceholderNotation: true
           }
         );
-        expect(sentence.get()).toBe('{Yup, just a test.}');
+        expect(value).toBe('{Yup, just a test.}');
       });
     });
   });

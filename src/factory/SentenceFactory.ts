@@ -40,6 +40,9 @@ export class SentenceFactory {
   }
 
   public addDefaultVocabulary(vocab: Vocabulary): SentenceFactory {
+    for (const key in vocab) {
+      vocab[key] = (vocab[key] as []).concat(this.defaultVocabulary[key] as []);
+    }
     this.defaultVocabulary = Object.assign(this.defaultVocabulary, vocab);
     return this;
   }
