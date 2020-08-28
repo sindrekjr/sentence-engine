@@ -1,8 +1,0 @@
-{
-  "compilerOptions": {
-    "module": "esnext",
-    "outDir": "./dist/es"
-  },
-  "extends": "./tsconfig.json",
-  "exclude": ["node_modules", "dist", "**/*.spec.ts"]
-}

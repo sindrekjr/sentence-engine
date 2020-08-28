@@ -9,8 +9,8 @@
     "eslint": "eslint ./src/**/*.ts",
     "clean": "rm -rf dist",
     "build": "npm run clean && npm run build:cjs && npm run build:es",
-    "build:cjs": "tsc -p tsconfig.build.cjs.json",
-    "build:es": "tsc -p tsconfig.build.es.json",
+    "build:cjs": "tsc -p tsconfig.build.json --module commonjs --outDir dist/cjs",
+    "build:es": "tsc -p tsconfig.build.json --module esnext --outDir dist/es",
     "prepack": "npm run build"
   },
   "repository": {
