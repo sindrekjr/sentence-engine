@@ -4,6 +4,7 @@
   "description": "Sentence generator focused on versatility and user control.",
   "main": "./dist/cjs/index.js",
   "module": ".dist/es/index.js",
+  "types": "sentence-engine.d.ts",
   "scripts": {
     "test": "jest",
     "eslint": "eslint ./src/**/*.ts",
@@ -49,7 +50,6 @@
   "engines": {
     "node": ">=12.0.0"
   },
-  "types": "./src/sentence.d.ts",
   "jest": {
     "preset": "ts-jest"
   }
