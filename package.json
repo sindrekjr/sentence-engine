@@ -1,6 +1,6 @@
 {
   "name": "sentence-engine",
-  "version": "0.5.2",
+  "version": "0.6.0",
   "description": "Sentence generator focused on versatility and user control.",
   "main": "./dist/cjs/index.js",
   "module": ".dist/es/index.js",
@@ -42,6 +42,7 @@
     "eslint": "^7.5.0",
     "eslint-plugin-jest": "^23.18.0",
     "jest": "^25.5.4",
+    "jest-mock-random": "^1.1.0",
     "ts-jest": "^26.1.4",
     "typescript": "^3.9.7"
   },

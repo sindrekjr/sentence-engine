@@ -1,5 +1,22 @@
 # Changelog
 
+## [0.6.0](../../tree/v0.6.0) - Weighted Types
+> 24.08.2020
+### Breaking :boom:
+* **Changed** method `addVocab` to `addVocabulary` in class `Sentence`
+* **Removed** method `setOptions` in class `Sentence`
+* **Removed** option `allowDuplicates`
+### Features :tada:
+* **Added** type `WeightedTemplate`
+* **Added** type `WeightedVocabulary`
+* **Added** type `WeightedEntry`
+* **Added** setter `options` in `Sentence`
+* **Added** getter `weightedTemplates` in `Sentence`
+* **Added** getter `weightedVocabulary` in `Sentence`
+* **Changed** resolution of duplicates so that they simply increases the given entry's weight
+### Bugfixes :bug:
+* **Fix** `addVocabulary` so that it appends instead of overwriting
+
 ## [0.5.2](../../tree/v0.5.2) - StringResolvable
 > 18.08.2020
 ### Features :tada: 

@@ -7,9 +7,9 @@ describe('sentence-engine', () => {
    */
   describe('createSentence()', () => {
     it('should create sentence with defaults if no params are provided', () => {
-      const DefaultSentence: Sentence = createSentence();
-      expect(DefaultSentence.templates).toEqual(defaults.templates);
-      expect(DefaultSentence.vocabulary).toEqual(defaults.vocabulary);
+      const { templates, vocabulary } = createSentence();
+      expect(templates).toEqual(defaults.templates);
+      expect(vocabulary).toEqual(defaults.vocabulary);
     });
   });
 

@@ -18,7 +18,6 @@ declare interface Configuration {
 }
 
 declare interface Options {
-  allowDuplicates: boolean;
   capitalize: boolean;
   forceNewSentence: boolean;
   placeholderNotation: {
@@ -29,7 +28,6 @@ declare interface Options {
 }
 
 declare interface MaybeOptions {
-  allowDuplicates?: boolean;
   capitalize?: boolean;
   forceNewSentence?: boolean;
   placeholderNotation?: PlaceholderNotation | string;
@@ -41,29 +39,23 @@ declare type PlaceholderNotation = {
   end: string;
 };
 
-declare type Template = StringResolvable;
+declare type Template = StringResolvable | WeightedTemplate;
 
-declare type WeightedTemplate = {
-  template: Template;
-  weight?: number;
-};
+declare type WeightedTemplate = WeightedEntry;
 
 declare type Vocabulary = {
   [fieldName: string]: StringResolvable[];
-};
+} | WeightedVocabulary;
 
 declare type WeightedVocabulary = {
-  [fieldName: string]: {
-    entry: StringResolvable;
-    weight?: number;
-  }[]
+  [fieldName: string]: WeightedEntry[]
+};
+
+declare type WeightedEntry = {
+  entry: StringResolvable;
+  weight: number;
 };
 
 declare type StringResolvable = {
   (): string
 } | string;
-
-declare interface Array<T> {
-  any(): T;
-  unique(): T[];
-}
