@@ -1,3 +1,5 @@
+// eslint-disable-next-line no-unused-vars
+import { Template, Vocabulary, WeightedTemplate, WeightedVocabulary } from '../types';
 import { mockRandom, resetMockRandom } from 'jest-mock-random';
 import { Sentence, getTotalWeightOfEntries } from './Sentence';
 

@@ -1,10 +1,10 @@
-declare interface Configuration {
+export interface Configuration {
   options?: MaybeOptions;
   templates?: Templates;
   vocabulary?: Vocabulary;
 }
 
-declare interface Options {
+export interface Options {
   capitalize: boolean;
   forceNewSentence: boolean;
   placeholderNotation: {
@@ -14,35 +14,35 @@ declare interface Options {
   preservePlaceholderNotation: boolean;
 }
 
-declare interface MaybeOptions {
+export interface MaybeOptions {
   capitalize?: boolean;
   forceNewSentence?: boolean;
   placeholderNotation?: PlaceholderNotation | string;
   preservePlaceholderNotation?: boolean;
 }
 
-declare type PlaceholderNotation = {
+export type PlaceholderNotation = {
   start: string;
   end: string;
 };
 
-declare type Template = StringResolvable | WeightedTemplate;
+export type Template = StringResolvable | WeightedTemplate;
 
-declare type WeightedTemplate = WeightedEntry;
+export type WeightedTemplate = WeightedEntry;
 
-declare type Vocabulary = {
+export type Vocabulary = {
   [fieldName: string]: StringResolvable[];
 } | WeightedVocabulary;
 
-declare type WeightedVocabulary = {
+export type WeightedVocabulary = {
   [fieldName: string]: WeightedEntry[]
 };
 
-declare type WeightedEntry = {
+export type WeightedEntry = {
   entry: StringResolvable;
   weight: number;
 };
 
-declare type StringResolvable = {
+export type StringResolvable = {
   (): string
 } | string;

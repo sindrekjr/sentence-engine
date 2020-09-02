@@ -1,3 +1,6 @@
+// eslint-disable-next-line no-unused-vars
+import { Options, WeightedTemplate, WeightedVocabulary, Template, Vocabulary, MaybeOptions, Configuration, WeightedEntry, StringResolvable, PlaceholderNotation } from '../types';
+
 const defaultOptions: Options = {
   capitalize: true,
   forceNewSentence: false,
