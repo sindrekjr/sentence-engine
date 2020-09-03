@@ -41,7 +41,7 @@ describe('SentenceFactory.js', () => {
    */
   describe('configure()', () => {
     it('should correctly configure all provided values', () => {
-      const testTemplate = 'test';
+      const testTemplate = ['test'];
       const testVocab = { test: ['test'] };
 
       Factory.configure({
