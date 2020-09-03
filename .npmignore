@@ -1,13 +1,14 @@
 # dotfiles, configs
 .gitattributes
 .gitignore
-.github/workflows/
 .eslintrc*
 jest.*
 tsconfig.*
 
 # folders
+.github/
 src/
+types/
 
 # misc
 *.tgz
