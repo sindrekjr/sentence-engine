@@ -1,6 +1,6 @@
 export interface Configuration {
   options?: MaybeOptions;
-  templates?: Templates;
+  templates?: Template[];
   vocabulary?: Vocabulary;
 }
 

@@ -1,5 +1,5 @@
 // eslint-disable-next-line no-unused-vars
-import { Template, Vocabulary, MaybeOptions, Configuration } from './types';
+import { Template, Vocabulary, MaybeOptions, Configuration } from '../types';
 import { SentenceFactory } from './factory';
 import { Sentence } from './sentence';
 
