@@ -2,16 +2,18 @@
   "name": "sentence-engine",
   "version": "0.6.0",
   "description": "Sentence generator focused on versatility and user control.",
-  "main": "./dist/cjs/index.js",
-  "module": "./dist/es/index.js",
-  "types": "./dist/types/index.d.ts",
+  "main": "./dist/index.js",
+  "module": "./dist/index.es.js",
   "scripts": {
     "test": "jest",
     "eslint": "eslint ./src/**/*.ts",
     "clean": "rm -rf dist",
-    "build": "npm run clean && npm run build:cjs && npm run build:es && cp -r types dist/types",
-    "build:cjs": "tsc -p tsconfig.build.json --module commonjs --outDir dist/cjs",
+    "build": "npm run clean && npm run build:cjs && npm run build:es && npm run rollup",
+    "build:cjs": "tsc -p tsconfig.build.json --module commonjs --outDir dist",
     "build:es": "tsc -p tsconfig.build.json --module esnext --outDir dist/es",
+    "rollup": "npm run rollup:rename && npm run rollup:move",
+    "rollup:rename": "renamer --find js --replace es.js \"dist/es/**\"",
+    "rollup:move": "cp -r dist/es/* dist && rm -rf dist/es",
     "prepack": "npm run build"
   },
   "repository": {
@@ -44,6 +46,7 @@
     "eslint-plugin-jest": "^23.18.0",
     "jest": "^25.5.4",
     "jest-mock-random": "^1.1.0",
+    "renamer": "^2.0.1",
     "ts-jest": "^26.1.4",
     "typescript": "^3.9.7"
   },
