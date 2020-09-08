@@ -1,7 +1,12 @@
-import templates from './templates.json';
-import vocabulary from './vocabulary.json';
+export const templates = [
+  '{greeting}, {noun}. I am the {default} Sentence{self}.'
+];
 
-export default {
-  templates,
-  vocabulary,
+export const vocabulary = {
+  greeting: [ 'hello', 'greetings' ],
+  noun: [ 'world', 'user' ],
+  default: [ 'default', 'example' ],
+  self: [ 'Factory', 'Engine', 'r' ]
 };
+
+export default { templates, vocabulary };
