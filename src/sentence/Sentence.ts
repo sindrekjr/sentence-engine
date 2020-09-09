@@ -13,20 +13,12 @@ import {
 } from '../../types';
 /* eslint-enable no-unused-vars */
 
-const defaultOptions: DefinitelyOptions = {
-  capitalize: true,
-  forceNewSentence: false,
-  placeholderNotation: {
-    start: '{',
-    end: '}'
-  },
-  preservePlaceholderNotation: false,
-};
+import defaults from '../defaults';
 
 export class Sentence {
   #templates: WeightedTemplate[] = [];
   #vocabulary: WeightedVocabulary = {};
-  #options: DefinitelyOptions = defaultOptions;
+  #options: DefinitelyOptions = defaults.options;
 
   public value: string = '';
 
@@ -62,7 +54,7 @@ export class Sentence {
   }
 
   public restoreDefaultOptions(): void {
-    this.options = defaultOptions;
+    this.options = defaults.options;
   }
 
   public get options(): Options {

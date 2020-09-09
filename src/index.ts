@@ -1,8 +1,8 @@
 // eslint-disable-next-line no-unused-vars
 import { Template, Vocabulary, Options, Configuration, StringResolvable, WeightedEntry } from '../types';
 import { SentenceFactory } from './factory';
-import defaults from './factory/defaults';
 import { Sentence } from './sentence';
+import defaults from './defaults';
 
 const Facade = new SentenceFactory(defaults.templates, defaults.vocabulary, {});
 

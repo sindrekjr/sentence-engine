@@ -1,4 +1,4 @@
-import defaults from './factory/defaults';
+import defaults from './defaults';
 import { createSentence, configure } from '.';
 
 describe('sentence-engine', () => {
