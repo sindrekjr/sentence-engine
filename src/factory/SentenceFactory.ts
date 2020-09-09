@@ -2,23 +2,32 @@
 import {
   Template,
   Vocabulary,
-  MaybeOptions,
+  Options,
   Configuration
 } from '../../types';
 /* eslint-enable no-unused-vars */
 
-import defaults from './defaults';
 import { Sentence } from '../sentence';
 
 export class SentenceFactory {
-  public defaultTemplates: Template[] | Template = defaults.templates;
-  public defaultVocabulary: Vocabulary = defaults.vocabulary;
-  public defaultOptions?: MaybeOptions;
+  public defaultTemplates: Template[] | Template;
+  public defaultVocabulary: Vocabulary;
+  public defaultOptions: Options;
+
+  public constructor(
+    templates: Template[] | Template,
+    vocabulary: Vocabulary,
+    options: Options = {},
+  ) {
+    this.defaultTemplates = templates;
+    this.defaultVocabulary = vocabulary;
+    this.defaultOptions = options;
+  }
 
   public createSentence(
-    templates?: Template[] | Template,
-    vocabulary?: Vocabulary,
-    options?: MaybeOptions,
+    templates: Template[] | Template = this.defaultTemplates,
+    vocabulary: Vocabulary = this.defaultVocabulary,
+    options: Options = this.defaultOptions,
   ): Sentence {
     return new Sentence(
       templates || this.defaultTemplates,
@@ -48,18 +57,11 @@ export class SentenceFactory {
     return this;
   }
 
-  public addDefaultVocabulary(vocab: Vocabulary): SentenceFactory {
-    for (const key in vocab) {
-      vocab[key] = (vocab[key] as []).concat(this.defaultVocabulary[key] as []);
+  public addDefaultVocabulary(vocabulary: Vocabulary): SentenceFactory {
+    for (const key in vocabulary) {
+      vocabulary[key] = (vocabulary[key] as []).concat(this.defaultVocabulary[key] as []);
     }
-    this.defaultVocabulary = Object.assign(this.defaultVocabulary, vocab);
-    return this;
-  }
-
-  public restoreDefaults(): SentenceFactory {
-    this.defaultOptions = {};
-    this.defaultTemplates = defaults.templates;
-    this.defaultVocabulary = defaults.vocabulary;
+    this.defaultVocabulary = Object.assign(this.defaultVocabulary, vocabulary);
     return this;
   }
 }

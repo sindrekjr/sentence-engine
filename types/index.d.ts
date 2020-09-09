@@ -18,27 +18,27 @@ export interface Options {
   preservePlaceholderNotation?: boolean;
 }
 
-export type PlaceholderNotation = {
+export interface PlaceholderNotation {
   start: string;
   end: string;
-};
+}
 
-export type Template = StringResolvable | WeightedTemplate;
+export interface Vocabulary {
+  [fieldName: string]: Array<StringResolvable | WeightedEntry>;
+}
 
-export type WeightedTemplate = WeightedEntry;
+export interface WeightedVocabulary {
+  [fieldName: string]: WeightedEntry[];
+}
 
-export type Vocabulary = {
-  [fieldName: string]: StringResolvable[];
-} | WeightedVocabulary;
-
-export type WeightedVocabulary = {
-  [fieldName: string]: WeightedEntry[]
-};
-
-export type WeightedEntry = {
+export interface WeightedEntry {
   entry: StringResolvable;
   weight: number;
-};
+}
+
+export type Template = StringResolvable | WeightedEntry;
+
+export type WeightedTemplate = WeightedEntry;
 
 export type StringResolvable = {
   (): string

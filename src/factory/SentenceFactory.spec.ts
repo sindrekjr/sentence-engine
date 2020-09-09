@@ -2,7 +2,7 @@ import defaults from './defaults';
 import { SentenceFactory } from './SentenceFactory';
 
 describe('SentenceFactory.js', () => {
-  const Factory = new SentenceFactory();
+  const Factory = new SentenceFactory(defaults.templates, defaults.vocabulary);
   const templates = [
     '{a-animal} crossed the {object}.',
     'The {animal} crossed the {object}.'
@@ -13,7 +13,8 @@ describe('SentenceFactory.js', () => {
   };
 
   beforeEach(() => {
-    Factory.restoreDefaults();
+    Factory.defaultTemplates = defaults.templates;
+    Factory.defaultVocabulary = defaults.vocabulary;
   });
 
   /**
