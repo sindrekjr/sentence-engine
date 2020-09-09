@@ -1,1 +1,0 @@
-export { SentenceFactory } from './SentenceFactory';

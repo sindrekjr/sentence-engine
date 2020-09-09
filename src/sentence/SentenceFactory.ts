@@ -7,7 +7,7 @@ import {
 } from '../../types';
 /* eslint-enable no-unused-vars */
 
-import { Sentence } from '../sentence';
+import { Sentence } from './Sentence';
 
 export class SentenceFactory {
   public defaultTemplates: Template[] | Template;
