@@ -33,7 +33,11 @@ describe('SentenceFactory.js', () => {
         1: ['big', 'bad', 'wolf'],
         2: ['change', 'climb']
       };
-      expect(() => Factory.createSentence(template, vocab).get()).not.toThrow();
+      expect(() => {
+        const { value } = Factory.createSentence(template, vocab);
+        expect(value).toEqual(expect.stringMatching(/(big|bad|wolf)/));
+        expect(value).toEqual(expect.stringMatching(/(change|climb)/));
+      }).not.toThrow();
     });
   });
 
