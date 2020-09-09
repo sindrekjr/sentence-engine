@@ -185,8 +185,6 @@ export class Sentence {
   private resolveAlternatives(placeholder: string): WeightedEntry[] {
     const keys = this.findKeys(placeholder);
     return keys.flatMap<WeightedEntry>(key => {
-      if (!this.isValidKey(key)) return [];
-
       let a_an = false;
       if (key.substr(0, 2) == 'a-') {
         a_an = true;
@@ -202,6 +200,7 @@ export class Sentence {
         }
       }
 
+      if (!this.isValidKey(key)) return [];
       return this.resolveVocabularyEntries(this.weightedVocabulary[key]).map(vocabEntry => {
         const { entry, weight } = vocabEntry;
         return {
