@@ -1,5 +1,16 @@
 # Changelog
 
+## [Unreleased] 1.0.0
+> TBD
+### Breaking :boom:
+* **Changed** various types and interfaces
+* **Removed** method `restoreDefaults` from `SentenceFactory`
+### Features :tada:
+* **Added** needlessly complex esm build process
+* **Added** automatic type declarations to compile
+* **Added** following types to exports:
+  * `Template` `Vocabulary` `Options` `Configuration` `StringResolvable` `WeightedEntry`
+
 ## [0.6.0](../../tree/v0.6.0) - Weighted Types
 > 24.08.2020
 ### Breaking :boom:
