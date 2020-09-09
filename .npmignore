@@ -8,7 +8,6 @@ tsconfig.*
 # folders
 .github/
 src/
-types/
 
 # misc
 *.tgz
