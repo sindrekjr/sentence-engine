@@ -1,11 +1,11 @@
 /* eslint-disable no-unused-vars */
 import {
-  Options,
+  DefinitelyOptions,
   WeightedTemplate,
   WeightedVocabulary,
   Template,
   Vocabulary,
-  MaybeOptions,
+  Options,
   Configuration,
   WeightedEntry,
   StringResolvable,
@@ -13,7 +13,7 @@ import {
 } from '../../types';
 /* eslint-enable no-unused-vars */
 
-const defaultOptions: Options = {
+const defaultOptions: DefinitelyOptions = {
   capitalize: true,
   forceNewSentence: false,
   placeholderNotation: {
@@ -26,14 +26,14 @@ const defaultOptions: Options = {
 export class Sentence {
   #templates: WeightedTemplate[] = [];
   #vocabulary: WeightedVocabulary = {};
-  #options: Options = defaultOptions;
+  #options: DefinitelyOptions = defaultOptions;
 
   public value: string = '';
 
   constructor(
     templates: Template[] | Template,
     vocabulary: Vocabulary,
-    options?: MaybeOptions,
+    options?: Options,
   ) {
     this.configure({
       options: options,
@@ -65,11 +65,11 @@ export class Sentence {
     this.options = defaultOptions;
   }
 
-  public get options(): MaybeOptions {
+  public get options(): Options {
     return this.#options;
   }
 
-  public set options(options: MaybeOptions) {
+  public set options(options: Options) {
     const { placeholderNotation } = options;
     if (placeholderNotation && typeof placeholderNotation == 'string') {
       options.placeholderNotation = this.parsePlaceholderNotation(placeholderNotation);
@@ -77,7 +77,7 @@ export class Sentence {
     this.#options = {
       ...this.options,
       ...options,
-    } as Options;
+    } as DefinitelyOptions;
   }
 
   public get templates(): Template[] {
@@ -160,7 +160,7 @@ export class Sentence {
    * 'This is {a-adjective} example.' => ['{a-adjective}']
    */
   private findPlaceholders(template: StringResolvable): RegExpMatchArray | null {
-    const { placeholderNotation } = this.options as Options;
+    const { placeholderNotation } = this.options as DefinitelyOptions;
     const { start, end } = placeholderNotation;
     const regex = new RegExp(`([${start}]+(\\s*([a-z-0-9])*,?\\s*)*[${end}]+)`, 'gi');
     return (typeof template === 'string') ? template.match(regex) : template().match(regex);
@@ -174,7 +174,7 @@ export class Sentence {
     const alternatives = this.resolveAlternatives(placeholder);
     const chosenWord = shouldCapitalize ? capitalize(this.pickRandomEntryByWeight(alternatives)) : this.pickRandomEntryByWeight(alternatives);
 
-    const { placeholderNotation, preservePlaceholderNotation } = this.options as Options;
+    const { placeholderNotation, preservePlaceholderNotation } = this.options as DefinitelyOptions;
     if (preservePlaceholderNotation) {
       const { start, end } = placeholderNotation;
       return `${start}${chosenWord}${end}`;
@@ -240,7 +240,7 @@ export class Sentence {
    * '{a-adjective, a-curse, verb}' => ['a-adjective', 'a-curse', 'verb']
    */
   private findKeys(placeholder: string): string[] {
-    const { placeholderNotation } = this.options as Options;
+    const { placeholderNotation } = this.options as DefinitelyOptions;
     const { start, end } = placeholderNotation;
     return placeholder.replace(new RegExp(`${start}|${end}|\\s`, 'g'), '').split(',');
   }

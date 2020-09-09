@@ -35,7 +35,7 @@ export class SentenceFactory {
     return this;
   }
 
-  public addDefaultOptions(options: MaybeOptions): SentenceFactory {
+  public addDefaultOptions(options: Options): SentenceFactory {
     this.defaultOptions = {
       ...this.defaultOptions,
       ...options,

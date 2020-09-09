@@ -1,20 +1,17 @@
 export interface Configuration {
-  options?: MaybeOptions;
+  options?: Options;
   templates?: Template[];
   vocabulary?: Vocabulary;
 }
 
-export interface Options {
-  capitalize: boolean;
+export interface DefinitelyOptions {
+capitalize: boolean;
   forceNewSentence: boolean;
-  placeholderNotation: {
-    start: string;
-    end: string;
-  };
+  placeholderNotation: PlaceholderNotation;
   preservePlaceholderNotation: boolean;
 }
 
-export interface MaybeOptions {
+export interface Options {
   capitalize?: boolean;
   forceNewSentence?: boolean;
   placeholderNotation?: PlaceholderNotation | string;
