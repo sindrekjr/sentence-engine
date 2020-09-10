@@ -223,6 +223,12 @@ describe('Sentence.js', () => {
         const { value } = new Sentence(helloWorldTemplate, helloWorldVocab);
         expect(value).toEqual('Hello, world.');
       });
+
+      it('should be able to use special characters', () => {
+        const bracketsTemplate = '[greeting], [noun].';
+        const { value } = new Sentence(bracketsTemplate, helloWorldVocab, { placeholderNotation: '[ ]' });
+        expect(value).toEqual('Hello, world.');
+      });
     });
 
     /**
