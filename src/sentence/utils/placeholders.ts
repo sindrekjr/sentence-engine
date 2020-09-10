@@ -1,0 +1,1 @@
+export const escapeSpecialCharacters = (string: string): string => string.replace(/([\[\]])/g, '\\$1');

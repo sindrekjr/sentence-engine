@@ -8,3 +8,5 @@ export {
   capitalize,
   isVowel,
 } from './format';
+
+export { escapeSpecialCharacters } from './placeholders';

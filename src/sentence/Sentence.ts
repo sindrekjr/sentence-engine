@@ -17,6 +17,7 @@ import defaults from '../defaults';
 import {
   articleAndPluralize,
   capitalize,
+  escapeSpecialCharacters,
   getTotalWeightOfEntries,
   mapToWeightedEntryArray,
 } from './utils';
@@ -160,7 +161,7 @@ export class Sentence {
   private findPlaceholders(template: StringResolvable): RegExpMatchArray | null {
     const { placeholderNotation } = this.options as DefinitelyOptions;
     const { start, end } = placeholderNotation;
-    const regex = new RegExp(`([${start}]+(\\s*([a-z-0-9])*,?\\s*)*[${end}]+)`, 'gi');
+    const regex = new RegExp(`([${escapeSpecialCharacters(start)}]+(\\s*([a-z-0-9])*,?\\s*)*[${escapeSpecialCharacters(end)}]+)`, 'gi');
     return (typeof template === 'string') ? template.match(regex) : template().match(regex);
   }
 
@@ -239,7 +240,7 @@ export class Sentence {
   private findKeys(placeholder: string): string[] {
     const { placeholderNotation } = this.options as DefinitelyOptions;
     const { start, end } = placeholderNotation;
-    return placeholder.replace(new RegExp(`${start}|${end}|\\s`, 'g'), '').split(',');
+    return placeholder.replace(new RegExp(`${escapeSpecialCharacters(start)}|${escapeSpecialCharacters(end)}|\\s`, 'g'), '').split(',');
   }
 
   private shouldCapitalize(sentence: string, placeholder: string): boolean {

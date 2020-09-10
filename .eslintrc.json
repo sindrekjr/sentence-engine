@@ -23,6 +23,7 @@
         "no-multi-spaces": 2,
         "no-trailing-spaces": 2,
         "no-unreachable": 2,
+        "no-useless-escape": 0,
         "prefer-const": 2,
         "quotes": [
             "error",
