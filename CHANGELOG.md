@@ -11,6 +11,10 @@
 * **Added** following types to exports:
   * `Template` `Vocabulary` `Options` `Configuration` `StringResolvable` `WeightedEntry`
 
+## [0.6.1](../../tree/v0.6.1)
+### Bugfix :bug:
+* **Fix** error where adding `a-` or `-s` to a placeholder would break during runtime
+
 ## [0.6.0](../../tree/v0.6.0) - Weighted Types
 > 24.08.2020
 ### Breaking :boom:
