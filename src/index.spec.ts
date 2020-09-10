@@ -1,5 +1,5 @@
-import defaults from './factory/defaults';
-import { createSentence, configure } from '.';
+import defaults from './defaults';
+import { createSentence, configure } from './index';
 
 describe('sentence-engine', () => {
   /**

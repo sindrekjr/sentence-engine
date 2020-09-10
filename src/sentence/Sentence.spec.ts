@@ -2,14 +2,14 @@ import { mockRandom, resetMockRandom } from 'jest-mock-random';
 import { Sentence, getTotalWeightOfEntries } from './Sentence';
 
 describe('Sentence.js', () => {
-  const template: Template = 'Let\'s {verb} this, and hope for the {adjective}.';
-  const vocab: Vocabulary = {
+  const template= 'Let\'s {verb} this, and hope for the {adjective}.';
+  const vocab = {
     adjective: ['best', 'worst', 'hilarious'],
     verb: ['try', 'do']
   };
 
-  const helloWorldTemplate: Template = '{greeting}, {noun}.';
-  const helloWorldVocab: Vocabulary = {
+  const helloWorldTemplate = '{greeting}, {noun}.';
+  const helloWorldVocab = {
     greeting: [ 'Hello' ],
     noun: [ 'world' ]
   };
@@ -51,11 +51,11 @@ describe('Sentence.js', () => {
      * WEIGHTED TEMPLATES
      */
     describe('WeightedTemplates', () => {
-      const weightedTemplate: WeightedTemplate = {
+      const weightedTemplate = {
         entry: helloWorldTemplate,
         weight: 5,
       };
-      const unevenTemplates: WeightedTemplate[] = [
+      const unevenTemplates = [
         weightedTemplate,
         { entry: 'Fail', weight: 1 },
       ];
@@ -73,7 +73,7 @@ describe('Sentence.js', () => {
       });
 
       it('should default weight to 1 if given 0', () => {
-        const zeroWeightTemplate: WeightedTemplate = {
+        const zeroWeightTemplate = {
           entry: helloWorldTemplate,
           weight: 0,
         };
@@ -121,7 +121,7 @@ describe('Sentence.js', () => {
      * WEIGHTED VOCABULARY
      */
     describe('WeightedVocabulary', () => {
-      const weightedVocabulary: WeightedVocabulary = {
+      const weightedVocabulary = {
         adjective: [
           { entry: 'best', weight: 5 },
           { entry: 'worst', weight: 2 },
@@ -167,13 +167,13 @@ describe('Sentence.js', () => {
      * CAPITALIZE
      */
     describe('capitalize', () => {
-      const capitalizeTemplate: Template = '{greeting}, {noun}. {smalltalk}';
-      const firstVocab: Vocabulary = {
+      const capitalizeTemplate = '{greeting}, {noun}. {smalltalk}';
+      const firstVocab = {
         greeting: ['hello'],
         noun: ['world'],
         smalltalk: ['fine weather, I reckon.']
       };
-      const secondVocab: Vocabulary = {
+      const secondVocab = {
         greeting: ['\'sup'],
         noun: ['man'],
         smalltalk: ['is everything alright?']
@@ -246,13 +246,13 @@ describe('Sentence.js', () => {
    * RESOLVABLES
    */
   describe('resolvables', () => {
-    const normalTemplate: Template = '{test}. {forSure}.';
-    const resolvedTemplate: Template = () => '{test}. {forSure}.';
-    const normalVocab: Vocabulary = {
+    const normalTemplate = '{test}. {forSure}.';
+    const resolvedTemplate = () => '{test}. {forSure}.';
+    const normalVocab = {
       test: ['tested'],
       forSure: ['tested for sure'],
     };
-    const resolvableVocab: Vocabulary = {
+    const resolvableVocab = {
       test: [
         () => {
           return 'tested';

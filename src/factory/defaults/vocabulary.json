@@ -1,6 +1,0 @@
-{
-  "greeting": [ "hello", "greetings" ],
-  "noun": [ "world", "user" ],
-  "default": [ "default", "example" ],
-  "self": [ "Factory", "Engine", "r" ]
-}

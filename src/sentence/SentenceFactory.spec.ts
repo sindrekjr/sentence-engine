@@ -1,8 +1,8 @@
-import defaults from './defaults';
+import defaults from '../defaults';
 import { SentenceFactory } from './SentenceFactory';
 
 describe('SentenceFactory.js', () => {
-  const Factory = new SentenceFactory();
+  const Factory = new SentenceFactory(defaults.templates, defaults.vocabulary);
   const templates = [
     '{a-animal} crossed the {object}.',
     'The {animal} crossed the {object}.'
@@ -13,7 +13,8 @@ describe('SentenceFactory.js', () => {
   };
 
   beforeEach(() => {
-    Factory.restoreDefaults();
+    Factory.defaultTemplates = defaults.templates;
+    Factory.defaultVocabulary = defaults.vocabulary;
   });
 
   /**
@@ -32,7 +33,11 @@ describe('SentenceFactory.js', () => {
         1: ['big', 'bad', 'wolf'],
         2: ['change', 'climb']
       };
-      expect(() => Factory.createSentence(template, vocab).get()).not.toThrow();
+      expect(() => {
+        const { value } = Factory.createSentence(template, vocab);
+        expect(value).toEqual(expect.stringMatching(/(big|bad|wolf)/));
+        expect(value).toEqual(expect.stringMatching(/(change|climb)/));
+      }).not.toThrow();
     });
   });
 
@@ -41,7 +46,7 @@ describe('SentenceFactory.js', () => {
    */
   describe('configure()', () => {
     it('should correctly configure all provided values', () => {
-      const testTemplate = 'test';
+      const testTemplate = ['test'];
       const testVocab = { test: ['test'] };
 
       Factory.configure({
