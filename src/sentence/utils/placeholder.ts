@@ -27,5 +27,5 @@ export const findPlaceholdersByNotation = (template: StringResolvable, placehold
  */
 export const findKeysInPlaceholder = (placeholder: string, placeholderNotation: PlaceholderNotation): string[] => {
   const { start, end } = placeholderNotation;
-  return placeholder.replace(new RegExp(`${escapeSpecialCharacters(start)}|${escapeSpecialCharacters(end)}|\\s`, 'g'), '').split(',');
+  return placeholder.replace(start, '').replace(end, '').split(',').map(k => k.trim());
 };
