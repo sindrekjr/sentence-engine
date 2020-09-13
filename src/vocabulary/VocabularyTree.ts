@@ -1,46 +1,47 @@
-export declare type TreeEntry = {
-  entry: StringResolvable;
-  positionMin: number;
-  positionMax: number;
+export interface WeightedItem {
+  weight: number;
+}
+
+class TreeItem<T> {
+  public constructor(
+    public readonly item: T,
+    public readonly positionMin: number,
+    public readonly positionMax: number,
+  ) { }
 };
 
-export class TreeNode {
-  private readonly entry: TreeEntry;
+export class TreeNode<T> {
+  private constructor(
+    private readonly item: TreeItem<T>,
+    private readonly left?: TreeNode<T>,
+    private readonly right?: TreeNode<T>,
+  ) { }
 
-  private readonly left?: TreeNode;
-  private readonly right?: TreeNode;
-
-  private constructor(entry: TreeEntry, left?: TreeNode, right?: TreeNode) {
-    this.entry = entry;
-    this.left = left;
-    this.right = right;
-  };
-
-  static create(entries: TreeEntry[], indexMin: number = 0, indexMax?: number)
-    : TreeNode {
-    const resolvedIndexMax = indexMax ?? entries.length - 1;
+  static create<T>(items: TreeItem<T>[], indexMin: number = 0, indexMax?: number)
+    : TreeNode<T> {
+    const resolvedIndexMax = indexMax ?? items.length - 1;
     const averageIndex = Math.floor((indexMin + resolvedIndexMax) / 2);
-    const thisEntry = entries[averageIndex];
+    const thisEntry = items[averageIndex];
 
-    const left: TreeNode | undefined = indexMin == averageIndex ?
+    const left: TreeNode<T> | undefined = indexMin == averageIndex ?
       undefined :
-      TreeNode.create(entries, indexMin, averageIndex - 1);
-    const right: TreeNode | undefined = resolvedIndexMax == averageIndex ?
+      TreeNode.create(items, indexMin, averageIndex - 1);
+    const right: TreeNode<T> | undefined = resolvedIndexMax == averageIndex ?
       undefined :
-      TreeNode.create(entries, averageIndex + 1, resolvedIndexMax);
+      TreeNode.create(items, averageIndex + 1, resolvedIndexMax);
 
       return new TreeNode(thisEntry, left, right);
   };
 
-  find(position: number): StringResolvable | undefined {
-    if (position < this.entry.positionMin) {
+  find(position: number): T | undefined {
+    if (position < this.item.positionMin) {
       return this.left?.find(position) ?? undefined;
     }
-    if (position >= this.entry.positionMax) {
+    if (position >= this.item.positionMax) {
       return this.right?.find(position) ?? undefined;
     }
 
-    return this.entry.entry;
+    return this.item.item;
   };
 
   count(): number {
@@ -56,31 +57,27 @@ export class TreeNode {
   }
 }
 
-export class VocabularyTree {
-  private rootNode: TreeNode;
+export class RangeBinaryTree<T> {
+  private constructor(
+    private readonly rootNode: TreeNode<T>,
+    public readonly maxPosition: number
+  ) { }
 
-  maxPosition: number;
-
-  private constructor(rootNode: TreeNode, maxPosition: number) {
-    this.rootNode = rootNode;
-    this.maxPosition = maxPosition;
-  }
-
-  static create(entries: WeightedEntry[]) {
+  static create(items: WeightedItem[]) {
     let currentPosition = 0;
-    const treeEntries = entries.map(entry => {
-      const nextPosition = currentPosition + entry.weight;
-      const treeEntry = {
-        entry: entry.entry,
+    const treeEntries = items.map(item => {
+      const nextPosition = currentPosition + item.weight;
+      const treeItem = {
+        item,
         positionMin: currentPosition,
         positionMax: nextPosition,
       };
       currentPosition = nextPosition;
-      return treeEntry;
+      return treeItem;
     });
 
     const rootNode = TreeNode.create(treeEntries);
-    return new VocabularyTree(rootNode, currentPosition);
+    return new RangeBinaryTree(rootNode, currentPosition);
   }
 
   find(position: number) {
