@@ -1,6 +1,6 @@
 import { mockRandom, resetMockRandom } from 'jest-mock-random';
 import { Sentence } from './Sentence';
-import { getTotalWeightOfEntries } from './utils';
+import { getTotalWeightOfEntries } from './utils/array';
 
 describe('Sentence.js', () => {
   const template= 'Let\'s {verb} this, and hope for the {adjective}.';

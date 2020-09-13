@@ -16,12 +16,18 @@ import defaults from '../defaults';
 import {
   articleAndPluralize,
   capitalize,
-  escapeSpecialCharacters,
-  mapToWeightedEntryArray,
-  parsePlaceholderNotation,
+} from './utils/format';
+
+import {
+  findKeysInPlaceholder,
   findPlaceholdersByNotation,
+  parsePlaceholderNotation,
+} from './utils/placeholder';
+
+import {
+  mapToWeightedEntryArray,
   pickRandomEntryByWeight,
-} from './utils';
+} from './utils/array';
 
 export class Sentence {
   #templates: WeightedTemplate[] = [];
@@ -175,7 +181,8 @@ export class Sentence {
    * @param {string} placeholder
    */
   private resolveAlternatives(placeholder: string): WeightedEntry[] {
-    const keys = this.findKeys(placeholder);
+    const { placeholderNotation } = this.options as DefinitelyOptions;
+    const keys = findKeysInPlaceholder(placeholder, placeholderNotation);
     return keys.flatMap<WeightedEntry>(key => {
       let a_an = false;
       if (key.substr(0, 2) == 'a-') {
@@ -202,17 +209,6 @@ export class Sentence {
         };
       });
     });
-  }
-
-  /**
-   * Returns keys found in the given placeholder
-   * @param {string} placeholder
-   * '{a-adjective, a-curse, verb}' => ['a-adjective', 'a-curse', 'verb']
-   */
-  private findKeys(placeholder: string): string[] {
-    const { placeholderNotation } = this.options as DefinitelyOptions;
-    const { start, end } = placeholderNotation;
-    return placeholder.replace(new RegExp(`${escapeSpecialCharacters(start)}|${escapeSpecialCharacters(end)}|\\s`, 'g'), '').split(',');
   }
 
   private shouldCapitalize(sentence: string, placeholder: string): boolean {
