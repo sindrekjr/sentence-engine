@@ -9,4 +9,7 @@ export {
   isVowel,
 } from './format';
 
-export { escapeSpecialCharacters } from './placeholders';
+export {
+  escapeSpecialCharacters,
+  parsePlaceholderNotation,
+} from './placeholders';

@@ -9,7 +9,6 @@ import {
   Configuration,
   WeightedEntry,
   StringResolvable,
-  PlaceholderNotation
 } from '../../types';
 /* eslint-enable no-unused-vars */
 
@@ -20,6 +19,7 @@ import {
   escapeSpecialCharacters,
   getTotalWeightOfEntries,
   mapToWeightedEntryArray,
+  parsePlaceholderNotation,
 } from './utils';
 
 export class Sentence {
@@ -71,7 +71,7 @@ export class Sentence {
   public set options(options: Options) {
     const { placeholderNotation } = options;
     if (placeholderNotation && typeof placeholderNotation == 'string') {
-      options.placeholderNotation = this.parsePlaceholderNotation(placeholderNotation);
+      options.placeholderNotation = parsePlaceholderNotation(placeholderNotation);
     }
     this.#options = {
       ...this.options,
@@ -140,17 +140,6 @@ export class Sentence {
 
     this.value = sentence;
     return this;
-  }
-
-  private parsePlaceholderNotation(notation: string): PlaceholderNotation {
-    if (typeof notation === 'string') {
-      const splitBySpace = notation.split(' ');
-      return {
-        start: splitBySpace[0],
-        end: splitBySpace[1],
-      };
-    }
-    return notation;
   }
 
   /**
