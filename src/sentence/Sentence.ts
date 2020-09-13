@@ -20,6 +20,7 @@ import {
   getTotalWeightOfEntries,
   mapToWeightedEntryArray,
   parsePlaceholderNotation,
+  findPlaceholdersByNotation,
 } from './utils';
 
 export class Sentence {
@@ -147,11 +148,9 @@ export class Sentence {
    * @param {string} template
    * 'This is {a-adjective} example.' => ['{a-adjective}']
    */
-  private findPlaceholders(template: StringResolvable): RegExpMatchArray | null {
+  private findPlaceholders(template: string): RegExpMatchArray | null {
     const { placeholderNotation } = this.options as DefinitelyOptions;
-    const { start, end } = placeholderNotation;
-    const regex = new RegExp(`([${escapeSpecialCharacters(start)}]+(\\s*([a-z-0-9])*,?\\s*)*[${escapeSpecialCharacters(end)}]+)`, 'gi');
-    return (typeof template === 'string') ? template.match(regex) : template().match(regex);
+    return findPlaceholdersByNotation(template, placeholderNotation);
   }
 
   /**

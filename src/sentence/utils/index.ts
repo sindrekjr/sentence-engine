@@ -11,5 +11,6 @@ export {
 
 export {
   escapeSpecialCharacters,
+  findPlaceholdersByNotation,
   parsePlaceholderNotation,
 } from './placeholders';

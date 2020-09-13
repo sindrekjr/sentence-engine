@@ -1,5 +1,5 @@
 // eslint-disable-next-line no-unused-vars
-import { PlaceholderNotation } from '../../../types';
+import { PlaceholderNotation, StringResolvable } from '../../../types';
 
 export const parsePlaceholderNotation = (notation: string): PlaceholderNotation => {
   if (typeof notation === 'string') {
@@ -13,3 +13,9 @@ export const parsePlaceholderNotation = (notation: string): PlaceholderNotation 
 };
 
 export const escapeSpecialCharacters = (string: string): string => string.replace(/([\[\]])/g, '\\$1');
+
+export const findPlaceholdersByNotation = (template: StringResolvable, placeholderNotation: PlaceholderNotation): RegExpMatchArray | null => {
+  const { start, end } = placeholderNotation;
+  const regex = new RegExp(`([${escapeSpecialCharacters(start)}]+(\\s*([a-z-0-9])*,?\\s*)*[${escapeSpecialCharacters(end)}]+)`, 'gi');
+  return (typeof template === 'string') ? template.match(regex) : template().match(regex);
+};
