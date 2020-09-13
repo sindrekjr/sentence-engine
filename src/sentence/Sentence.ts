@@ -17,10 +17,10 @@ import {
   articleAndPluralize,
   capitalize,
   escapeSpecialCharacters,
-  getTotalWeightOfEntries,
   mapToWeightedEntryArray,
   parsePlaceholderNotation,
   findPlaceholdersByNotation,
+  pickRandomEntryByWeight,
 } from './utils';
 
 export class Sentence {
@@ -129,7 +129,7 @@ export class Sentence {
 
     let sentence;
     do {
-      sentence = this.pickRandomEntryByWeight(this.weightedTemplates);
+      sentence = pickRandomEntryByWeight(this.weightedTemplates);
       const matches = this.findPlaceholders(sentence);
       if (matches) {
         for (const match of matches) {
@@ -159,7 +159,7 @@ export class Sentence {
    */
   private resolveWord(placeholder: string, shouldCapitalize: boolean = false): string {
     const alternatives = this.resolveAlternatives(placeholder);
-    const chosenWord = shouldCapitalize ? capitalize(this.pickRandomEntryByWeight(alternatives)) : this.pickRandomEntryByWeight(alternatives);
+    const chosenWord = shouldCapitalize ? capitalize(pickRandomEntryByWeight(alternatives)) : pickRandomEntryByWeight(alternatives);
 
     const { placeholderNotation, preservePlaceholderNotation } = this.options as DefinitelyOptions;
     if (preservePlaceholderNotation) {
@@ -168,16 +168,6 @@ export class Sentence {
     } else {
       return chosenWord;
     }
-  }
-
-  private pickRandomEntryByWeight(entries: WeightedEntry[]): string {
-    const totalWeight = getTotalWeightOfEntries(entries);
-    let math = Math.floor((Math.random() * totalWeight) + 1);
-    const { entry } = entries.find(entry => {
-      math -= entry.weight;
-      return math <= 0;
-    }) as WeightedEntry;
-    return typeof entry === 'string' ? entry : entry();
   }
 
   /**
@@ -203,20 +193,14 @@ export class Sentence {
       }
 
       if (!this.isValidKey(key)) return [];
-      return this.resolveVocabularyEntries(this.weightedVocabulary[key]).map(vocabEntry => {
+      return this.weightedVocabulary[key].map(vocabEntry => {
         const { entry, weight } = vocabEntry;
+        const resolvedEntry = typeof entry === 'string' ? entry : entry();
         return {
-          entry: articleAndPluralize(a_an, plural, entry as string),
+          entry: articleAndPluralize(a_an, plural, resolvedEntry),
           weight: weight,
         };
       });
-    });
-  }
-
-  private resolveVocabularyEntries(entries: WeightedEntry[]): WeightedEntry[] {
-    return entries.map(weightedEntry => typeof weightedEntry.entry === 'string' ? weightedEntry : {
-      entry: weightedEntry.entry(),
-      weight: weightedEntry.weight,
     });
   }
 
@@ -249,7 +233,7 @@ export class Sentence {
     if (this.templates.length > 1) {
       return true;
     } else {
-      const theOnlyTemplate = this.pickRandomEntryByWeight(this.weightedTemplates);
+      const theOnlyTemplate = pickRandomEntryByWeight(this.weightedTemplates);
       if (theOnlyTemplate) {
         return this.findPlaceholders(theOnlyTemplate)?.some(placeholder => {
           const alternatives = this.resolveAlternatives(placeholder);

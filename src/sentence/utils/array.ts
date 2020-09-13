@@ -22,3 +22,13 @@ export const mapToWeightedEntryArray = (entries: [], defaultWeight: number = 1):
     return true;
   });
 };
+
+export const pickRandomEntryByWeight = (entries: WeightedEntry[]): string => {
+  const totalWeight = getTotalWeightOfEntries(entries);
+  let math = Math.floor((Math.random() * totalWeight) + 1);
+  const { entry } = entries.find(entry => {
+    math -= entry.weight;
+    return math <= 0;
+  }) as WeightedEntry;
+  return typeof entry === 'string' ? entry : entry();
+};

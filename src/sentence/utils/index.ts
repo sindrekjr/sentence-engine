@@ -1,6 +1,7 @@
 export {
   getTotalWeightOfEntries,
   mapToWeightedEntryArray,
+  pickRandomEntryByWeight,
 } from './array';
 
 export {
