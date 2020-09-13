@@ -49,11 +49,12 @@ export class Sentence {
     this.generate();
   }
 
-  public configure(config: Configuration) {
+  public configure(config: Configuration): Sentence {
     const { options, templates, vocabulary } = config;
     if (options) this.options = options;
     if (templates) this.templates = templates;
     if (vocabulary) this.vocabulary = vocabulary;
+    return this;
   }
 
   public addTemplates(...templates: Template[]): void {
@@ -90,12 +91,12 @@ export class Sentence {
     return this.#templates.map(template => template.entry);
   }
 
-  public get weightedTemplates(): WeightedTemplate[] {
-    return this.#templates;
-  }
-
   public set templates(templates: Template[]) {
     this.#templates = mapToWeightedEntryArray(templates as []);
+  }
+
+  public get weightedTemplates(): WeightedTemplate[] {
+    return this.#templates;
   }
 
   public get vocabulary(): Vocabulary {
@@ -107,16 +108,16 @@ export class Sentence {
     return vocab;
   }
 
-  public get weightedVocabulary(): WeightedVocabulary {
-    return this.#vocabulary;
-  }
-
   public set vocabulary(vocab: Vocabulary) {
     const weightedVocabulary: WeightedVocabulary = {};
     for (const key in vocab) {
       weightedVocabulary[key] = mapToWeightedEntryArray(vocab[key] as []);
     }
     this.#vocabulary = weightedVocabulary;
+  }
+
+  public get weightedVocabulary(): WeightedVocabulary {
+    return this.#vocabulary;
   }
 
   /**

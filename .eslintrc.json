@@ -3,7 +3,12 @@
         "node": true,
         "es2020": true
     },
-    "extends": ["eslint:recommended", "plugin:jest/recommended"],
+    "extends": [
+        "eslint:recommended",
+        "plugin:jest/recommended",
+        "plugin:@typescript-eslint/eslint-recommended",
+        "plugin:@typescript-eslint/recommended"
+    ],
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
         "ecmaVersion": 11,
@@ -11,6 +16,7 @@
     },
     "plugins": ["@typescript-eslint"],
     "rules": {
+        "@typescript-eslint/no-inferrable-types": 0,
         "arrow-spacing": 2,
         "indent": [
             "error",
