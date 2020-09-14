@@ -4,17 +4,21 @@ export interface WeightedItem {
 
 export class TreeItem<T> {
   public constructor(
+    /* eslint-disable no-unused-vars */
     public readonly item: T,
     public readonly positionMin: number,
     public readonly positionMax: number,
+    /* eslint-enable no-unused-vars */
   ) { }
-};
+}
 
 export class TreeNode<T> {
   private constructor(
+    /* eslint-disable no-unused-vars */
     private readonly item: TreeItem<T>,
     private readonly left?: TreeNode<T>,
     private readonly right?: TreeNode<T>,
+    /* eslint-enable no-unused-vars */
   ) { }
 
   static create<T>(items: TreeItem<T>[], indexMin: number = 0, indexMax?: number)
@@ -30,8 +34,8 @@ export class TreeNode<T> {
       undefined :
       TreeNode.create(items, averageIndex + 1, resolvedIndexMax);
 
-      return new TreeNode(thisEntry, left, right);
-  };
+    return new TreeNode(thisEntry, left, right);
+  }
 
   find(position: number): T | undefined {
     if (position < this.item.positionMin) {
@@ -42,7 +46,7 @@ export class TreeNode<T> {
     }
 
     return this.item.item;
-  };
+  }
 
   count(): number {
     return 1 +
@@ -59,8 +63,10 @@ export class TreeNode<T> {
 
 export class RangeBinaryTree<T> {
   private constructor(
+    /* eslint-disable no-unused-vars */
     private readonly rootNode: TreeNode<T>,
     public readonly maxPosition: number
+    /* eslint-enable no-unused-vars */
   ) { }
 
   static create(items: WeightedItem[]) {

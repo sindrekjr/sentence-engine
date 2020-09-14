@@ -1,4 +1,5 @@
-import { TreeItem, TreeNode, RangeBinaryTree, WeightedItem } from "./RangeBinaryTree";
+// eslint-disable-next-line no-unused-vars
+import { TreeItem, TreeNode, RangeBinaryTree } from './RangeBinaryTree';
 
 describe('VocabularyTree.ts', () => {
   describe('TreeNode', () => {
@@ -33,7 +34,7 @@ describe('VocabularyTree.ts', () => {
         const node = TreeNode.create(entries);
         expect(node.find(-1)).toBe(undefined);
         expect(node.find(12)).toBe(undefined);
-      })
+      });
     });
 
     describe('count()', () => {
@@ -51,7 +52,7 @@ describe('VocabularyTree.ts', () => {
       { entry: 'c', weight: 2, },
       { entry: 'd', weight: 1, },
     ];
-    const entryMap: any = entries.reduce((prev, current) => { return { ...prev, [current.entry]: current } }, {});
+    const entryMap: any = entries.reduce((prev, current) => { return { ...prev, [current.entry]: current }; }, {});
 
     describe('create()', () => {
       it('creates a tree with correct position ranges', () => {
