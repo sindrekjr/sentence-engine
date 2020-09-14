@@ -1,14 +1,14 @@
-import { TreeEntry, TreeNode, VocabularyTree, } from "./VocabularyTree";
+import { TreeItem, TreeNode, RangeBinaryTree, WeightedItem } from "./RangeBinaryTree";
 
 describe('VocabularyTree.ts', () => {
   describe('TreeNode', () => {
-    const entries: TreeEntry[] = [
-      { entry: 'a', positionMin: 0, positionMax: 1, },
-      { entry: 'b', positionMin: 1, positionMax: 3, },
-      { entry: 'c', positionMin: 3, positionMax: 8, },
-      { entry: 'd', positionMin: 8, positionMax: 8.5, },
-      { entry: 'e', positionMin: 8.5, positionMax: 11, },
-      { entry: 'f', positionMin: 11, positionMax: 12, },
+    const entries: TreeItem<string>[] = [
+      { item: 'a', positionMin: 0, positionMax: 1, },
+      { item: 'b', positionMin: 1, positionMax: 3, },
+      { item: 'c', positionMin: 3, positionMax: 8, },
+      { item: 'd', positionMin: 8, positionMax: 8.5, },
+      { item: 'e', positionMin: 8.5, positionMax: 11, },
+      { item: 'f', positionMin: 11, positionMax: 12, },
     ];
 
     describe('create()', () => {
@@ -51,24 +51,25 @@ describe('VocabularyTree.ts', () => {
       { entry: 'c', weight: 2, },
       { entry: 'd', weight: 1, },
     ];
+    const entryMap: any = entries.reduce((prev, current) => { return { ...prev, [current.entry]: current } }, {});
 
     describe('create()', () => {
       it('creates a tree with correct position ranges', () => {
-        const tree = VocabularyTree.create(entries);
+        const tree = RangeBinaryTree.create(entries);
         expect(tree.find(-0.5)).toBe(undefined);
-        expect(tree.find(0.5)).toBe('a');
-        expect(tree.find(1.5)).toBe('b');
-        expect(tree.find(2.5)).toBe('b');
-        expect(tree.find(3.5)).toBe('b');
-        expect(tree.find(4.5)).toBe('b');
-        expect(tree.find(5.5)).toBe('c');
-        expect(tree.find(6.5)).toBe('c');
-        expect(tree.find(7.5)).toBe('d');
+        expect(tree.find(0.5)).toBe(entryMap['a']);
+        expect(tree.find(1.5)).toBe(entryMap['b']);
+        expect(tree.find(2.5)).toBe(entryMap['b']);
+        expect(tree.find(3.5)).toBe(entryMap['b']);
+        expect(tree.find(4.5)).toBe(entryMap['b']);
+        expect(tree.find(5.5)).toBe(entryMap['c']);
+        expect(tree.find(6.5)).toBe(entryMap['c']);
+        expect(tree.find(7.5)).toBe(entryMap['d']);
         expect(tree.find(8.5)).toBe(undefined);
       });
 
       it('sets correct maxPosition', () => {
-        const tree = VocabularyTree.create(entries);
+        const tree = RangeBinaryTree.create(entries);
         expect(tree.maxPosition).toBe(8);
       });
     });

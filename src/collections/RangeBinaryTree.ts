@@ -2,7 +2,7 @@ export interface WeightedItem {
   weight: number;
 }
 
-class TreeItem<T> {
+export class TreeItem<T> {
   public constructor(
     public readonly item: T,
     public readonly positionMin: number,
