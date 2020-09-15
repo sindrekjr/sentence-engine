@@ -9,11 +9,25 @@ import {
   Configuration,
   WeightedEntry,
   StringResolvable,
-  PlaceholderNotation
 } from '../../types';
 /* eslint-enable no-unused-vars */
 
 import defaults from '../defaults';
+import {
+  articleAndPluralize,
+  capitalize,
+} from './utils/format';
+
+import {
+  findKeysInPlaceholder,
+  findPlaceholdersByNotation,
+  parsePlaceholderNotation,
+} from './utils/placeholder';
+
+import {
+  mapToWeightedEntryArray,
+  pickRandomEntryByWeight,
+} from './utils/array';
 
 export class Sentence {
   #templates: WeightedTemplate[] = [];
@@ -35,11 +49,12 @@ export class Sentence {
     this.generate();
   }
 
-  public configure(config: Configuration) {
+  public configure(config: Configuration): Sentence {
     const { options, templates, vocabulary } = config;
     if (options) this.options = options;
     if (templates) this.templates = templates;
     if (vocabulary) this.vocabulary = vocabulary;
+    return this;
   }
 
   public addTemplates(...templates: Template[]): void {
@@ -64,7 +79,7 @@ export class Sentence {
   public set options(options: Options) {
     const { placeholderNotation } = options;
     if (placeholderNotation && typeof placeholderNotation == 'string') {
-      options.placeholderNotation = this.parsePlaceholderNotation(placeholderNotation);
+      options.placeholderNotation = parsePlaceholderNotation(placeholderNotation);
     }
     this.#options = {
       ...this.options,
@@ -76,12 +91,12 @@ export class Sentence {
     return this.#templates.map(template => template.entry);
   }
 
-  public get weightedTemplates(): WeightedTemplate[] {
-    return this.#templates;
-  }
-
   public set templates(templates: Template[]) {
     this.#templates = mapToWeightedEntryArray(templates as []);
+  }
+
+  public get weightedTemplates(): WeightedTemplate[] {
+    return this.#templates;
   }
 
   public get vocabulary(): Vocabulary {
@@ -93,16 +108,16 @@ export class Sentence {
     return vocab;
   }
 
-  public get weightedVocabulary(): WeightedVocabulary {
-    return this.#vocabulary;
-  }
-
   public set vocabulary(vocab: Vocabulary) {
     const weightedVocabulary: WeightedVocabulary = {};
     for (const key in vocab) {
       weightedVocabulary[key] = mapToWeightedEntryArray(vocab[key] as []);
     }
     this.#vocabulary = weightedVocabulary;
+  }
+
+  public get weightedVocabulary(): WeightedVocabulary {
+    return this.#vocabulary;
   }
 
   /**
@@ -121,7 +136,7 @@ export class Sentence {
 
     let sentence;
     do {
-      sentence = this.pickRandomEntryByWeight(this.weightedTemplates);
+      sentence = pickRandomEntryByWeight(this.weightedTemplates);
       const matches = this.findPlaceholders(sentence);
       if (matches) {
         for (const match of matches) {
@@ -135,27 +150,14 @@ export class Sentence {
     return this;
   }
 
-  private parsePlaceholderNotation(notation: string): PlaceholderNotation {
-    if (typeof notation === 'string') {
-      const splitBySpace = notation.split(' ');
-      return {
-        start: splitBySpace[0],
-        end: splitBySpace[1],
-      };
-    }
-    return notation;
-  }
-
   /**
    * Returns placeholders in the given template string
    * @param {string} template
    * 'This is {a-adjective} example.' => ['{a-adjective}']
    */
-  private findPlaceholders(template: StringResolvable): RegExpMatchArray | null {
+  private findPlaceholders(template: string): RegExpMatchArray | null {
     const { placeholderNotation } = this.options as DefinitelyOptions;
-    const { start, end } = placeholderNotation;
-    const regex = new RegExp(`([${start}]+(\\s*([a-z-0-9])*,?\\s*)*[${end}]+)`, 'gi');
-    return (typeof template === 'string') ? template.match(regex) : template().match(regex);
+    return findPlaceholdersByNotation(template, placeholderNotation);
   }
 
   /**
@@ -164,7 +166,7 @@ export class Sentence {
    */
   private resolveWord(placeholder: string, shouldCapitalize: boolean = false): string {
     const alternatives = this.resolveAlternatives(placeholder);
-    const chosenWord = shouldCapitalize ? capitalize(this.pickRandomEntryByWeight(alternatives)) : this.pickRandomEntryByWeight(alternatives);
+    const chosenWord = shouldCapitalize ? capitalize(pickRandomEntryByWeight(alternatives)) : pickRandomEntryByWeight(alternatives);
 
     const { placeholderNotation, preservePlaceholderNotation } = this.options as DefinitelyOptions;
     if (preservePlaceholderNotation) {
@@ -175,22 +177,13 @@ export class Sentence {
     }
   }
 
-  private pickRandomEntryByWeight(entries: WeightedEntry[]): string {
-    const totalWeight = getTotalWeightOfEntries(entries);
-    let math = Math.floor((Math.random() * totalWeight) + 1);
-    const { entry } = entries.find(entry => {
-      math -= entry.weight;
-      return math <= 0;
-    }) as WeightedEntry;
-    return typeof entry === 'string' ? entry : entry();
-  }
-
   /**
    * Returns an array of alternatives depending on the given placeholder
    * @param {string} placeholder
    */
   private resolveAlternatives(placeholder: string): WeightedEntry[] {
-    const keys = this.findKeys(placeholder);
+    const { placeholderNotation } = this.options as DefinitelyOptions;
+    const keys = findKeysInPlaceholder(placeholder, placeholderNotation);
     return keys.flatMap<WeightedEntry>(key => {
       let a_an = false;
       if (key.substr(0, 2) == 'a-') {
@@ -208,32 +201,15 @@ export class Sentence {
       }
 
       if (!this.isValidKey(key)) return [];
-      return this.resolveVocabularyEntries(this.weightedVocabulary[key]).map(vocabEntry => {
+      return this.weightedVocabulary[key].map(vocabEntry => {
         const { entry, weight } = vocabEntry;
+        const resolvedEntry = typeof entry === 'string' ? entry : entry();
         return {
-          entry: articleAndPluralize(a_an, plural, entry as string),
+          entry: articleAndPluralize(a_an, plural, resolvedEntry),
           weight: weight,
         };
       });
     });
-  }
-
-  private resolveVocabularyEntries(entries: WeightedEntry[]): WeightedEntry[] {
-    return entries.map(weightedEntry => typeof weightedEntry.entry === 'string' ? weightedEntry : {
-      entry: weightedEntry.entry(),
-      weight: weightedEntry.weight,
-    });
-  }
-
-  /**
-   * Returns keys found in the given placeholder
-   * @param {string} placeholder
-   * '{a-adjective, a-curse, verb}' => ['a-adjective', 'a-curse', 'verb']
-   */
-  private findKeys(placeholder: string): string[] {
-    const { placeholderNotation } = this.options as DefinitelyOptions;
-    const { start, end } = placeholderNotation;
-    return placeholder.replace(new RegExp(`${start}|${end}|\\s`, 'g'), '').split(',');
   }
 
   private shouldCapitalize(sentence: string, placeholder: string): boolean {
@@ -254,7 +230,7 @@ export class Sentence {
     if (this.templates.length > 1) {
       return true;
     } else {
-      const theOnlyTemplate = this.pickRandomEntryByWeight(this.weightedTemplates);
+      const theOnlyTemplate = pickRandomEntryByWeight(this.weightedTemplates);
       if (theOnlyTemplate) {
         return this.findPlaceholders(theOnlyTemplate)?.some(placeholder => {
           const alternatives = this.resolveAlternatives(placeholder);
@@ -265,33 +241,3 @@ export class Sentence {
     return false;
   }
 }
-
-export const articleAndPluralize = (a_an: boolean, plural: boolean, w: string): string => {
-  return `${a_an ? isVowel(w[0]) ? 'an ' : 'a ' : ''}${w}${plural ? 's' : ''}`;
-};
-
-export const capitalize = (str: string): string => str.replace(/^[']*(\w)/, c => c.toUpperCase());
-
-export const isVowel = (c: string): boolean => ['a', 'e', 'i', 'o', 'u'].includes(c);
-
-export const getTotalWeightOfEntries = (entries: WeightedEntry[]): number => entries.reduce((acc, e) => e ? acc + e.weight : acc, 0);
-
-export const mapToWeightedEntryArray = (entries: [], defaultWeight: number = 1): WeightedEntry[] => {
-  return entries.map<WeightedEntry>(element => {
-    const { entry, weight } = (typeof element === 'object') ? element : {
-      entry: element,
-      weight: 1,
-    };
-    return {
-      entry: entry,
-      weight: weight || defaultWeight,
-    };
-  }).filter((weightedEntry, index, newArray) => {
-    const indexOfDuplicate = newArray.slice(0, index).findIndex(el => el.entry === weightedEntry.entry);
-    if (indexOfDuplicate >= 0) {
-      newArray[indexOfDuplicate].weight += weightedEntry.weight;
-      return false;
-    }
-    return true;
-  });
-};

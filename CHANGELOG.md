@@ -10,6 +10,8 @@
 * **Added** automatic type declarations to compile
 * **Added** following types to exports:
   * `Template` `Vocabulary` `Options` `Configuration` `StringResolvable` `WeightedEntry`
+### Bugfixes :bug:
+* **Fixed** various issues/bugs with special characters in placeholder notation
 
 ## [0.6.1](../../tree/v0.6.1)
 ### Bugfix :bug:

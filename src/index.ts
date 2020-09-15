@@ -9,21 +9,21 @@ export const createSentence = (
   templates?: Template[] | Template,
   vocabulary?: Vocabulary,
   options?: Options,
-) => Facade.createSentence(templates, vocabulary, options);
+): Sentence => Facade.createSentence(templates, vocabulary, options);
 
-export const configure = (config: Configuration) => {
+export const configure = (config: Configuration): void => {
   Facade.configure(config);
 };
 
-export const addDefaultOptions = (options: Options) => {
+export const addDefaultOptions = (options: Options): void => {
   Facade.addDefaultOptions(options);
 };
 
-export const addDefaultTemplates = (...templates: Template[]) => {
+export const addDefaultTemplates = (...templates: Template[]): void => {
   Facade.addDefaultTemplates(...templates);
 };
 
-export const addDefaultVocabulary = (vocab: Vocabulary) => {
+export const addDefaultVocabulary = (vocab: Vocabulary): void => {
   Facade.addDefaultVocabulary(vocab);
 };
 
