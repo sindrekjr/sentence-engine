@@ -1,6 +1,7 @@
 # dotfiles, configs
 .gitattributes
 .gitignore
+.editorconfig
 .eslintrc*
 jest.*
 tsconfig.*
