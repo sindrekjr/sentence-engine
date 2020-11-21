@@ -1,7 +1,7 @@
 # Changelog
 
-## [Unreleased] 1.0.0
-> TBD
+## [0.7.0](../../tree/v0.7.0)
+> 21.11.2020
 ### Breaking :boom:
 * **Changed** various types and interfaces
 * **Removed** method `restoreDefaults` from `SentenceFactory`
