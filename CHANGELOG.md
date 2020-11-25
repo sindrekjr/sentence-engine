@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.8.0](../../tree/v0.8.0)
+> 25.11.2020
+### Breaking :boom:
+* **Changed** return type of `Sentence.generate` to string
+
 ## [0.7.0](../../tree/v0.7.0)
 > 21.11.2020
 ### Breaking :boom:

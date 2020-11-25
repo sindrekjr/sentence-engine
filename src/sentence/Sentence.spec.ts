@@ -185,7 +185,7 @@ describe('Sentence.js', () => {
         expect(sentence.get()).toEqual('Hello, world. Fine weather, I reckon.');
 
         sentence.vocabulary = secondVocab;
-        expect(sentence.generate().get()).toEqual('\'Sup, man. Is everything alright?');
+        expect(sentence.generate()).toEqual('\'Sup, man. Is everything alright?');
       });
 
       it('should not capitalize the sentence if false', () => {
@@ -193,7 +193,7 @@ describe('Sentence.js', () => {
         expect(sentence.get()).toEqual('hello, world. fine weather, I reckon.');
 
         sentence.vocabulary = secondVocab;
-        expect(sentence.generate().get()).toEqual('\'sup, man. is everything alright?');
+        expect(sentence.generate()).toEqual('\'sup, man. is everything alright?');
       });
     });
 
@@ -203,15 +203,15 @@ describe('Sentence.js', () => {
     describe('forceNewSentence', () => {
       it('should result in a new sentence being generated if true', () => {
         const sentence = new Sentence(template, vocab, { forceNewSentence: true });
-        const { value: first } = sentence;
-        const { value: second } = sentence.generate();
+        const first = sentence;
+        const second = sentence.generate();
         expect(first).not.toEqual(second);
       });
 
       it('should result in same sentence even if true when there is only one possible outcome', () => {
         const sentence = new Sentence(helloWorldTemplate, helloWorldVocab, { forceNewSentence: true });
-        const { value: first } = sentence.generate();
-        const { value: second } = sentence.generate();
+        const first = sentence.generate();
+        const second = sentence.generate();
         expect(first).toEqual(second);
       });
     });

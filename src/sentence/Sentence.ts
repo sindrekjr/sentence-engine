@@ -130,7 +130,7 @@ export class Sentence {
   /**
    * May be called repeatedly to randomly regenerate the sentence
    */
-  public generate(): Sentence {
+  public generate(): string {
     const { forceNewSentence } = this.options;
     const shouldForceNewSentence = forceNewSentence && this.isForceNewSentencePossible();
 
@@ -147,7 +147,7 @@ export class Sentence {
     } while (sentence === this.value && shouldForceNewSentence);
 
     this.value = sentence;
-    return this;
+    return this.value;
   }
 
   /**
